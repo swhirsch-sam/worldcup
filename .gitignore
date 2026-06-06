@@ -19,6 +19,8 @@ data/raw/*.csv
 data/raw/*.json
 data/raw/*.tsv
 data/processed/
+# Exception: static team Elo ratings needed by tests in CI
+!data/raw/elo_ratings.csv
 
 # Results (generated; committed after a confirmed run)
 results/simulation_summary.json
