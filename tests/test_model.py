@@ -2,14 +2,14 @@
 and the statistical fitting routines.
 
 Class inventory:
-  TestKFactor            – _k_factor() tournament classification
-  TestGoalWeight         – _goal_weight() multiplier values
-  TestDixonColesTau      – DixonColesModel.tau() correction factors
-  TestSimulateMatch      – Single-match draws (DC model)
-  TestSimulateBatch      – Vectorised batch draws (DC model)
-  TestBivariatePoisson   – BivariatePoissonModel properties
-  TestGoalsModelFit      – fit_goals_model() recovers known parameters
-  TestDixonColesFit      – fit_dixon_coles() recovers known rho
+  TestKFactor            - _k_factor() tournament classification
+  TestGoalWeight         - _goal_weight() multiplier values
+  TestDixonColesTau      - DixonColesModel.tau() correction factors
+  TestSimulateMatch      - Single-match draws (DC model)
+  TestSimulateBatch      - Vectorised batch draws (DC model)
+  TestBivariatePoisson   - BivariatePoissonModel properties
+  TestGoalsModelFit      - fit_goals_model() recovers known parameters
+  TestDixonColesFit      - fit_dixon_coles() recovers known rho
 """
 
 from __future__ import annotations
@@ -195,15 +195,9 @@ class TestSimulateMatch:
         rng = default_rng(2)
         model = self._model()
         n = 10_000
-        home_wins = sum(
-            1 for _ in range(n) if model.simulate_match(3.0, 0.5, rng)[0] > model.simulate_match(3.0, 0.5, rng)[1]
-        )
         # Simply check: home wins a majority
         home_wins_direct = sum(
-            1
-            for _ in range(n)
-            for h, a in [model.simulate_match(3.0, 0.5, rng)]
-            if h > a
+            1 for _ in range(n) for h, a in [model.simulate_match(3.0, 0.5, rng)] if h > a
         )
         assert home_wins_direct / n > 0.60
 
@@ -271,7 +265,7 @@ class TestSimulateBatch:
         assert (a <= 10).all()
 
     def test_batch_matches_single(self) -> None:
-        """Batch(N=5000) should produce same distribution as single called 5000 times (same seed)."""
+        """Batch(N=5000) should match single-draw distribution (same seed)."""
         model = self._model()
         n = 5000
         lam_h = 1.35

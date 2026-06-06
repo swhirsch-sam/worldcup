@@ -42,7 +42,7 @@ class MatchSimulator(Protocol):
 
 # Precomputed grid for PMF evaluation: 0..10
 _GRID = np.arange(11, dtype=np.int32)
-_LOG_FACTORIAL = np.array([0.0] + list(np.cumsum(np.log(np.arange(1, 11)))))
+_LOG_FACTORIAL = np.array([0.0, *list(np.cumsum(np.log(np.arange(1, 11))))])
 
 
 class DixonColesModel:
@@ -121,25 +121,11 @@ class DixonColesModel:
             (home_goals, away_goals) arrays of shape (N,).
         """
         n = len(lambda_h)
-        grid = _GRID  # (11,)
 
-        # Poisson PMF: shape (N, 11)
-        # P(k|lam) = exp(-lam) * lam^k / k!
-        log_p_h = (
-            -lambda_h[:, None]
-            + np.outer(lambda_h, np.zeros(11))  # broadcast placeholder
-            + grid[None, :] * np.log(np.maximum(lambda_h[:, None], 1e-300))
-            - _LOG_FACTORIAL[grid][None, :]
-        )
-        log_p_a = (
-            -lambda_a[:, None]
-            + grid[None, :] * np.log(np.maximum(lambda_a[:, None], 1e-300))
-            - _LOG_FACTORIAL[grid][None, :]
-        )
-        # Simpler, clearer implementation using broadcasting directly
+        # log PMF per team using broadcasting: (N, 1) op (1, 11) -> (N, 11)
         lh = lambda_h[:, None]  # (N, 1)
         la = lambda_a[:, None]  # (N, 1)
-        k = grid[None, :]       # (1, 11)
+        k = _GRID[None, :]  # (1, 11)
 
         # log PMF per team: (N, 11)
         log_pmf_h = -lh + k * np.log(np.maximum(lh, 1e-300)) - _LOG_FACTORIAL[_GRID][None, :]
@@ -166,10 +152,10 @@ class DixonColesModel:
         flat = flat / flat.sum(axis=1, keepdims=True)
 
         # Vectorized categorical sampling
-        cumsum = flat.cumsum(axis=1)   # (N, 121)
-        u = rng.random(n)              # (N,)
+        cumsum = flat.cumsum(axis=1)  # (N, 121)
+        u = rng.random(n)  # (N,)
         indices = (cumsum < u[:, None]).sum(axis=1)  # (N,)
-        indices = np.minimum(indices, 120)            # clamp
+        indices = np.minimum(indices, 120)  # clamp
 
         home_goals = (indices // 11).astype(np.int32)
         away_goals = (indices % 11).astype(np.int32)

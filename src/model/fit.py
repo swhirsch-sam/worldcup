@@ -24,7 +24,7 @@ def _load_config() -> dict:  # type: ignore[type-arg]
         return yaml.safe_load(f)
 
 
-def load_historical_with_elo(cfg: dict, cutoff_date=None) -> pd.DataFrame:  # type: ignore[type-arg]
+def load_historical_with_elo(cfg: dict, cutoff_date: str | None = None) -> pd.DataFrame:  # type: ignore[type-arg]
     """Return match records with pre-match Elo, filtered to earliest_date <= date <= cutoff_date.
 
     Calls fetch_historical() then compute_elo_with_records().
@@ -81,12 +81,7 @@ def fit_goals_model(match_records: pd.DataFrame, cfg: dict) -> dict[str, float]:
         alpha, beta = params
         lam_h = np.exp(alpha + beta * elo_diff)
         lam_a = np.exp(alpha - beta * elo_diff)
-        ll = (
-            home_goals * np.log(lam_h)
-            - lam_h
-            + away_goals * np.log(lam_a)
-            - lam_a
-        )
+        ll = home_goals * np.log(lam_h) - lam_h + away_goals * np.log(lam_a) - lam_a
         return -ll.sum()
 
     x0 = np.array([np.log(1.35), 0.001])
@@ -173,9 +168,7 @@ def fit_dixon_coles(
     return {"rho": rho_fit}
 
 
-def write_fitted_coefficients(
-    goals_coef: dict[str, float], dc_coef: dict[str, float]
-) -> None:
+def write_fitted_coefficients(goals_coef: dict[str, float], dc_coef: dict[str, float]) -> None:
     """Write fitted coefficients back to config.yaml and print a clear summary."""
     with open("config.yaml") as f:
         cfg = yaml.safe_load(f)
@@ -219,7 +212,9 @@ if __name__ == "__main__":
     print("Loading historical match records with pre-match Elo ratings...")
     match_records = load_historical_with_elo(cfg, cutoff_date=args.cutoff)
     print(f"Loaded {len(match_records):,} match records for fitting.")
-    print(f"  Date range : {match_records['date'].min().date()} – {match_records['date'].max().date()}")
+    date_min = match_records["date"].min().date()
+    date_max = match_records["date"].max().date()
+    print(f"  Date range : {date_min} to {date_max}")
     print()
 
     print("Fitting goals model (Poisson MLE)...")
