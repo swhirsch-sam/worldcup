@@ -128,6 +128,64 @@ def _cond_prob(probs: dict[str, Any], team: str, from_s: str, to_s: str) -> floa
     return p_to / p_from if p_from > 1e-9 else 0.0
 
 
+def _pick_prob(probs: dict[str, Any], team: str, role: str) -> float:
+    """Joint probability that a pre-tournament pick succeeds.
+
+    For a pick to survive a given round the team must (a) reach that round
+    AND (b) win it.  Using raw P(reach next stage) captures both factors and
+    is stable even with few simulation iterations.
+    """
+    stage_map = {
+        "gs": "r32",      # must qualify for R32
+        "r32": "r16",     # must win R32 match → reach R16
+        "r16": "qf",      # must win R16 match → reach QF
+        "qf": "sf",       # must win QF → reach SF
+        "sf": "final",    # must win SF → reach Final
+        "champ": "champion",  # must win Final
+    }
+    return probs.get(team, {}).get(stage_map[role], 0.0)
+
+
+def _recommend_picks(probs: dict[str, Any]) -> dict[str, Any]:
+    """Greedy survivor picks maximising joint survival probability.
+
+    Uses P(reach next stage) for each role — this is the true probability that
+    a pre-tournament pick survives that round (team must both reach AND win it).
+    Fills most-constrained roles first: champion odds are lowest (~5-20%) so
+    we assign the best available team there before filling Group Stage slots
+    where top teams have 80-95% P(advance).
+
+    Assignment order: Championship -> SF -> QF -> R16 -> R32 (x2) -> GS (x4).
+    """
+    all_teams = list(probs.keys())
+    used: set[str] = set()
+
+    def _pick(role: str, n: int) -> list[str]:
+        ranked = sorted(
+            (t for t in all_teams if t not in used),
+            key=lambda t: _pick_prob(probs, t, role),
+            reverse=True,
+        )[:n]
+        used.update(ranked)
+        return ranked
+
+    champ_picks = _pick("champ", 1)
+    sf_picks = _pick("sf", 1)
+    qf_picks = _pick("qf", 1)
+    r16_picks = _pick("r16", 1)
+    r32_picks = _pick("r32", 2)
+    gs_picks = _pick("gs", 4)
+
+    return {
+        "gs": gs_picks,
+        "r32": r32_picks,
+        "r16": r16_picks[0] if r16_picks else "",
+        "qf": qf_picks[0] if qf_picks else "",
+        "sf": sf_picks[0] if sf_picks else "",
+        "champ": champ_picks[0] if champ_picks else "",
+    }
+
+
 # ---------------------------------------------------------------------------
 # Main
 # ---------------------------------------------------------------------------
@@ -551,13 +609,78 @@ def _render_pickem(
     team_to_group = {t: g for g, ts in groups.items() for t in ts}
     teams_by_r32 = team_df.sort_values("r32", ascending=False)["team"].tolist()
 
-    def _lbl(team: str, from_s: str, to_s: str | None = None) -> str:
-        g = team_to_group.get(team, "?")
-        p = (
-            probs.get(team, {}).get(from_s, 0.0)
-            if to_s is None
-            else _cond_prob(probs, team, from_s, to_s)
+    # ── Model Recommendations ─────────────────────────────────────────────────
+    rec = _recommend_picks(probs)
+
+    with st.expander("💡 Model Recommendations", expanded=True):
+        st.markdown(
+            "The model picks the team with the **highest P(survive that round)** "
+            "for each role — the joint probability of both reaching and winning it. "
+            "Most-constrained roles are filled first "
+            "(Championship → SF → QF → R16 → R32 → Group Stage). "
+            "Each team is used at most once."
         )
+
+        # Build recommendation table
+        rec_rows: list[dict[str, Any]] = []
+        for t in rec["gs"]:
+            rec_rows.append(
+                {
+                    "Round": "Group Stage",
+                    "Team": t,
+                    "Grp": team_to_group.get(t, "?"),
+                    "P(survive)": probs[t].get("r32", 0.0),
+                    "Rationale": "Highest P(advance to R32)",
+                }
+            )
+        for t in rec["r32"]:
+            rec_rows.append(
+                {
+                    "Round": "R32",
+                    "Team": t,
+                    "Grp": team_to_group.get(t, "?"),
+                    "P(survive)": _pick_prob(probs, t, "r32"),
+                    "Rationale": "Highest P(reach R16)",
+                }
+            )
+        for pick, rnd, role, rationale in [
+            (rec["r16"], "R16", "r16", "Highest P(reach QF)"),
+            (rec["qf"], "QF", "qf", "Highest P(reach SF)"),
+            (rec["sf"], "SF", "sf", "Highest P(reach Final)"),
+            (rec["champ"], "Championship", "champ", "Highest P(win title)"),
+        ]:
+            if pick:
+                rec_rows.append(
+                    {
+                        "Round": rnd,
+                        "Team": pick,
+                        "Grp": team_to_group.get(pick, "?"),
+                        "P(survive)": _pick_prob(probs, pick, role),
+                        "Rationale": rationale,
+                    }
+                )
+
+        rec_df = pd.DataFrame(rec_rows)
+        overall_rec = math.prod(r["P(survive)"] for r in rec_rows)
+        st.dataframe(
+            rec_df.style.format({"P(survive)": "{:.1%}"}),
+            hide_index=True,
+            use_container_width=True,
+        )
+        st.metric("Recommended entry survival probability", f"{overall_rec:.4%}")
+
+        if st.button("Apply recommendations to my picks", type="primary"):
+            st.session_state["pk_gs"] = rec["gs"]
+            st.session_state["pk_r32"] = rec["r32"]
+            st.session_state["pk_r16"] = rec["r16"] or "(none)"
+            st.session_state["pk_qf"] = rec["qf"] or "(none)"
+            st.session_state["pk_sf"] = rec["sf"] or "(none)"
+            st.session_state["pk_champ"] = rec["champ"] or "(none)"
+            st.rerun()
+
+    def _lbl(team: str, role: str) -> str:
+        g = team_to_group.get(team, "?")
+        p = _pick_prob(probs, team, role)
         return f"{team} [{g}]  ·  {p:.1%}"
 
     # Initialise session state on first visit
@@ -584,7 +707,7 @@ def _render_pickem(
         "Group Stage picks (choose exactly 4)",
         options=teams_by_r32,
         max_selections=4,
-        format_func=lambda t: _lbl(t, "r32"),
+        format_func=lambda t: _lbl(t, "gs"),
         key="pk_gs",
     )
 
@@ -607,7 +730,7 @@ def _render_pickem(
     def _avail(exclude: set[str]) -> list[str]:
         return [t for t in teams_by_r32 if t not in exclude]
 
-    def _safe_select(label_str: str, key: str, opts: list[str], from_s: str, to_s: str) -> str:
+    def _safe_select(label_str: str, key: str, opts: list[str], role: str) -> str:
         choices = ["(none)", *opts]
         cur = st.session_state.get(key, "(none)")
         if cur not in choices:
@@ -617,7 +740,7 @@ def _render_pickem(
             label_str,
             options=choices,
             index=choices.index(cur),
-            format_func=lambda t: "— not yet picked —" if t == "(none)" else _lbl(t, from_s, to_s),
+            format_func=lambda t: "— not yet picked —" if t == "(none)" else _lbl(t, role),
             key=key,
         )
         return result or "(none)"
@@ -632,34 +755,32 @@ def _render_pickem(
         "R32 picks (choose exactly 2)",
         options=r32_opts,
         max_selections=2,
-        format_func=lambda t: _lbl(t, "r32", "r16"),
+        format_func=lambda t: _lbl(t, "r32"),
         key="pk_r32",
     )
     used.update(r32_picks)
 
     # R16 — 1 pick
     st.markdown("##### Round of 16 — Pick 1 team to win their R16 match")
-    r16_pick: str = _safe_select("R16 pick", "pk_r16", _avail(used), "r16", "qf")
+    r16_pick: str = _safe_select("R16 pick", "pk_r16", _avail(used), "r16")
     if r16_pick != "(none)":
         used.add(r16_pick)
 
     # QF — 1 pick
     st.markdown("##### Quarterfinals — Pick 1 team to win their QF match")
-    qf_pick: str = _safe_select("QF pick", "pk_qf", _avail(used), "qf", "sf")
+    qf_pick: str = _safe_select("QF pick", "pk_qf", _avail(used), "qf")
     if qf_pick != "(none)":
         used.add(qf_pick)
 
     # SF — 1 pick
     st.markdown("##### Semifinals — Pick 1 team to win their SF match")
-    sf_pick: str = _safe_select("SF pick", "pk_sf", _avail(used), "sf", "final")
+    sf_pick: str = _safe_select("SF pick", "pk_sf", _avail(used), "sf")
     if sf_pick != "(none)":
         used.add(sf_pick)
 
     # Championship — 1 pick
     st.markdown("##### Championship — Pick 1 team to win the tournament")
-    champ_pick: str = _safe_select(
-        "Championship pick", "pk_champ", _avail(used), "final", "champion"
-    )
+    champ_pick: str = _safe_select("Championship pick", "pk_champ", _avail(used), "champ")
 
     # ── Summary ──────────────────────────────────────────────────────────────
     st.divider()
@@ -682,15 +803,15 @@ def _render_pickem(
                 "Round": "R32",
                 "Team": t,
                 "Grp": team_to_group.get(t, "?"),
-                "P(survive)": _cond_prob(probs, t, "r32", "r16"),
+                "P(survive)": _pick_prob(probs, t, "r32"),
                 "Must": "Win R32 match",
             }
         )
-    for pick, rnd, fs, ts, must in [
-        (r16_pick, "R16", "r16", "qf", "Win R16 match"),
-        (qf_pick, "QF", "qf", "sf", "Win QF match"),
-        (sf_pick, "SF", "sf", "final", "Win SF match"),
-        (champ_pick, "Championship", "final", "champion", "Win the Final"),
+    for pick, rnd, role, must in [
+        (r16_pick, "R16", "r16", "Win R16 match"),
+        (qf_pick, "QF", "qf", "Win QF match"),
+        (sf_pick, "SF", "sf", "Win SF match"),
+        (champ_pick, "Championship", "champ", "Win the Final"),
     ]:
         if pick and pick != "(none)":
             rows.append(
@@ -698,7 +819,7 @@ def _render_pickem(
                     "Round": rnd,
                     "Team": pick,
                     "Grp": team_to_group.get(pick, "?"),
-                    "P(survive)": _cond_prob(probs, pick, fs, ts),
+                    "P(survive)": _pick_prob(probs, pick, role),
                     "Must": must,
                 }
             )
@@ -717,7 +838,7 @@ def _render_pickem(
             f"{overall:.4%}",
         )
         st.caption(
-            "Survival probability is the product of each pick's conditional win probability. "
+            "Survival probability is the product of each pick's P(advance to next stage). "
             "Assumes picks are independent — actual probability differs slightly due to "
             "bracket correlations."
         )
