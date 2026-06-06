@@ -375,7 +375,7 @@ def _parse_eloratings_tsv(raw: str, cfg: dict[str, Any]) -> pd.DataFrame:
     result = []
     for r in rows:
         try:
-            canon = resolve(r["team"])
+            canon = resolve(str(r["team"]))
             if canon in CANONICAL_TEAMS:
                 result.append(
                     {

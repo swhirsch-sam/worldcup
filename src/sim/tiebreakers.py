@@ -74,8 +74,7 @@ def _resolve_tie(
 
     # Build H2H records from matches exclusively between these teams
     h2h: dict[str, dict[str, int]] = {
-        t: {"wins": 0, "draws": 0, "losses": 0, "gf": 0, "ga": 0}
-        for t in tied
+        t: {"wins": 0, "draws": 0, "losses": 0, "gf": 0, "ga": 0} for t in tied
     }
     for mr in match_results:
         if mr.home in tied_set and mr.away in tied_set:
@@ -103,9 +102,7 @@ def _resolve_tie(
     def h2h_gf(t: str) -> int:
         return h2h[t]["gf"]
 
-    h2h_sorted = sorted(
-        tied, key=lambda t: (-h2h_pts(t), -h2h_gd(t), -h2h_gf(t))
-    )
+    h2h_sorted = sorted(tied, key=lambda t: (-h2h_pts(t), -h2h_gd(t), -h2h_gf(t)))
 
     result: list[str] = []
     i = 0

@@ -58,8 +58,13 @@ def _minimal_group_result(gid: str, first: str, second: str, third: str) -> Grou
     """Build a GroupResult with the minimum fields needed for bracket resolution."""
     records = {t: TeamRecord(team=t) for t in [first, second, third]}
     return GroupResult(
-        group_id=gid, first=first, second=second, third=third, fourth="X",
-        records=records, match_results=[],
+        group_id=gid,
+        first=first,
+        second=second,
+        third=third,
+        fourth="X",
+        records=records,
+        match_results=[],
     )
 
 
@@ -143,9 +148,7 @@ class TestAllCombinationsSolvable:
     def test_all_slots_distinct(self, all_assignments):
         for combo, mapping in all_assignments.items():
             slots = list(mapping.values())
-            assert len(slots) == len(set(slots)), (
-                f"Duplicate slots in combination {combo}: {slots}"
-            )
+            assert len(slots) == len(set(slots)), f"Duplicate slots in combination {combo}: {slots}"
 
     def test_all_groups_in_valid_slot(self, all_assignments):
         violations = []
@@ -158,9 +161,9 @@ class TestAllCombinationsSolvable:
     def test_all_groups_from_combo(self, all_assignments):
         """The assigned groups in each mapping must match the combo key."""
         for combo, mapping in all_assignments.items():
-            assert set(mapping.keys()) == set(combo), (
-                f"Mismatch: combo={combo} but mapping keys={set(mapping.keys())}"
-            )
+            assert set(mapping.keys()) == set(
+                combo
+            ), f"Mismatch: combo={combo} but mapping keys={set(mapping.keys())}"
 
 
 # ---------------------------------------------------------------------------
@@ -184,6 +187,7 @@ class TestAssignThirdsToSlots:
     def test_fallback_works_without_precomputed(self):
         """With empty annex_c, fallback matching still produces valid result."""
         import copy
+
         bm_empty = copy.deepcopy(_BRACKET_MAP)
         bm_empty["annex_c_combinations"] = {}
         result = assign_thirds_to_slots(list("ABCDEFGH"), bm_empty)
@@ -301,8 +305,7 @@ class TestSimulateKoMatch:
         # p_a = 0.5 + 0.1 = 0.6 → consistent with stronger team winning more
         n = 2000
         fav_wins = sum(
-            simulate_ko_match("Fav", "Dog", strength, model, default_rng(i), _SIM_CFG)
-            == "Fav"
+            simulate_ko_match("Fav", "Dog", strength, model, default_rng(i), _SIM_CFG) == "Fav"
             for i in range(n)
         )
         assert fav_wins / n > 0.55, f"Fav won only {fav_wins}/{n}"
@@ -355,7 +358,7 @@ class TestSimulateKnockout:
 
     def test_deterministic_with_seed(self):
         teams = [f"T{i:02d}" for i in range(1, 33)]
-        strength = {t: 1500.0 for t in teams}
+        strength = dict.fromkeys(teams, 1500.0)
         model = DixonColesModel(rho=-0.061)
         matchups = [(teams[i], teams[i + 1]) for i in range(0, 32, 2)]
         r1 = simulate_knockout(matchups, strength, model, default_rng(5), _SIM_CFG)
@@ -365,7 +368,7 @@ class TestSimulateKnockout:
 
     def test_wrong_matchup_count_raises(self):
         teams = [f"T{i}" for i in range(10)]
-        strength = {t: 1500.0 for t in teams}
+        strength = dict.fromkeys(teams, 1500.0)
         model = DixonColesModel(rho=-0.061)
         matchups = [("T0", "T1")] * 10  # wrong count
         with pytest.raises(ValueError, match="16 R32 matchups"):
@@ -384,7 +387,7 @@ class TestFullPipelineIntegration:
             cfg = yaml.safe_load(f)
 
         all_teams = [t for tl in groups_data.values() for t in tl]
-        strength = {t: 1500.0 for t in all_teams}
+        strength = dict.fromkeys(all_teams, 1500.0)
         model = DixonColesModel(rho=-0.061)
         rng = default_rng(0)
 
@@ -394,21 +397,20 @@ class TestFullPipelineIntegration:
 
         best_thirds = pick_best_thirds(list(group_results.values()), n=8, rng=rng)
         best_third_groups = [
-            gr.group_id
-            for gr in group_results.values()
-            if gr.third in best_thirds
+            gr.group_id for gr in group_results.values() if gr.third in best_thirds
         ]
 
         bm = load_bracket_map()
         matchups = resolve_r32(group_results, best_third_groups, bm)
-        strength_ko = {t: 1500.0 for t in all_teams}
+        strength_ko = dict.fromkeys(all_teams, 1500.0)
         result = simulate_knockout(matchups, strength_ko, model, rng, cfg)
         return result, group_results, best_thirds
 
     def test_champion_is_wc_team(self, pipeline_result):
         result, group_results, _ = pipeline_result
-        all_teams = {t for gr in group_results.values()
-                     for t in [gr.first, gr.second, gr.third, gr.fourth]}
+        all_teams = {
+            t for gr in group_results.values() for t in [gr.first, gr.second, gr.third, gr.fourth]
+        }
         assert result["champion"] in all_teams
 
     def test_full_bracket_produces_valid_rounds(self, pipeline_result):

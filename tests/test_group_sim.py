@@ -27,6 +27,7 @@ from src.sim.tiebreakers import rank_group
 # Shared helpers
 # ---------------------------------------------------------------------------
 
+
 def _rec(
     team: str,
     wins: int = 0,
@@ -140,7 +141,7 @@ class TestRankGroupClear:
         }
         results = [MatchResult("A", "B", 1, 0)] + [
             MatchResult(h, a, 0, 0)
-            for h, a in [("A","C"),("A","D"),("B","C"),("B","D"),("C","D")]
+            for h, a in [("A", "C"), ("A", "D"), ("B", "C"), ("B", "D"), ("C", "D")]
         ]
         ranking = rank_group(records, results, default_rng(0))
         assert ranking[0] == "A"
@@ -250,10 +251,10 @@ class TestRankGroupFairPlay:
     def test_fewer_yellow_cards_wins(self):
         """A and B fully tied except A has 0 cards, B has 1 yellow."""
         records = {
-            "A": _rec("A", wins=1, draws=1, losses=1, gf=3, ga=3, fp=0),   # no cards
+            "A": _rec("A", wins=1, draws=1, losses=1, gf=3, ga=3, fp=0),  # no cards
             "B": _rec("B", wins=1, draws=1, losses=1, gf=3, ga=3, fp=-1),  # 1 yellow
-            "C": _rec("C", wins=2, draws=0, losses=1, gf=5, ga=2),         # 6pts (clear)
-            "D": _rec("D", wins=0, draws=0, losses=3, gf=0, ga=6),         # 0pts (clear)
+            "C": _rec("C", wins=2, draws=0, losses=1, gf=5, ga=2),  # 6pts (clear)
+            "D": _rec("D", wins=0, draws=0, losses=3, gf=0, ga=6),  # 0pts (clear)
         }
         # A vs B draw, H2H all level; fair-play separates
         results = [
@@ -367,6 +368,7 @@ class TestSimulateGroup:
     def test_match_goals_match_records(self, result):
         """GF in records must equal sum of goals from individual match results."""
         from collections import defaultdict
+
         computed_gf: dict[str, int] = defaultdict(int)
         for mr in result.match_results:
             computed_gf[mr.home] += mr.home_goals
@@ -417,7 +419,7 @@ class TestPickBestThirds:
             cfg = yaml.safe_load(f)
 
         all_teams = [t for teams in groups_data.values() for t in teams]
-        strength = {t: 1500.0 for t in all_teams}
+        strength = dict.fromkeys(all_teams, 1500.0)
         model = DixonColesModel(rho=-0.061)
         rng = default_rng(0)
 

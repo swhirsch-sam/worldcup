@@ -39,6 +39,7 @@ _BRACKET_MAP_PATH = Path("data/bracket_map.json")
 # Data loading
 # ---------------------------------------------------------------------------
 
+
 def load_bracket_map(path: str | Path = _BRACKET_MAP_PATH) -> dict[str, Any]:
     with open(path) as f:
         return json.load(f)
@@ -47,6 +48,7 @@ def load_bracket_map(path: str | Path = _BRACKET_MAP_PATH) -> dict[str, Any]:
 # ---------------------------------------------------------------------------
 # Annex C: bipartite matching fallback
 # ---------------------------------------------------------------------------
+
 
 def _bipartite_matching(
     qualifying_groups: list[str],
@@ -123,6 +125,7 @@ def assign_thirds_to_slots(
 # R32 matchup resolution
 # ---------------------------------------------------------------------------
 
+
 def resolve_r32(
     group_results: dict[str, GroupResult],
     best_third_groups: list[str],
@@ -151,14 +154,14 @@ def resolve_r32(
         return group_results[slot_to_group[code]].third
 
     return [
-        (resolve_code(t["team_a"]), resolve_code(t["team_b"]))
-        for t in bracket_map["r32_templates"]
+        (resolve_code(t["team_a"]), resolve_code(t["team_b"])) for t in bracket_map["r32_templates"]
     ]
 
 
 # ---------------------------------------------------------------------------
 # Knockout match simulation
 # ---------------------------------------------------------------------------
+
 
 def simulate_ko_match(
     team_a: str,
@@ -213,6 +216,7 @@ def simulate_ko_match(
 # Full bracket simulation
 # ---------------------------------------------------------------------------
 
+
 def _play_round(
     matchups: list[tuple[str, str]],
     strength: dict[str, float],
@@ -266,6 +270,7 @@ def simulate_knockout(
 # ---------------------------------------------------------------------------
 # Annex C pre-computation
 # ---------------------------------------------------------------------------
+
 
 def generate_annex_c_table(
     bracket_map: dict[str, Any] | None = None,

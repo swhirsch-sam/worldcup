@@ -103,9 +103,7 @@ def simulate_group(
         lam_h = float(np.clip(np.exp(alpha + beta * elo_diff), lam_floor, lam_cap))
         lam_a = float(np.clip(np.exp(alpha - beta * elo_diff), lam_floor, lam_cap))
         h_goals, a_goals = model.simulate_match(lam_h, lam_a, rng)
-        match_results.append(
-            MatchResult(home_team, away_team, int(h_goals), int(a_goals))
-        )
+        match_results.append(MatchResult(home_team, away_team, int(h_goals), int(a_goals)))
 
     records: dict[str, TeamRecord] = {t: TeamRecord(team=t) for t in teams}
     for mr in match_results:

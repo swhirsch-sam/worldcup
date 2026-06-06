@@ -39,9 +39,7 @@ def pick_best_thirds(
         Unordered list of n qualifying team names.
     """
     if len(group_results) < n:
-        raise ValueError(
-            f"pick_best_thirds requires at least {n} groups; got {len(group_results)}"
-        )
+        raise ValueError(f"pick_best_thirds requires at least {n} groups; got {len(group_results)}")
 
     thirds = [(gr.third, gr.records[gr.third]) for gr in group_results]
 
