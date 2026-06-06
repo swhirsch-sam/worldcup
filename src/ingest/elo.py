@@ -156,6 +156,87 @@ def compute_elo_from_historical(
     return ratings, match_counts
 
 
+def compute_elo_with_records(
+    hist_df: pd.DataFrame,
+    cfg: dict[str, Any],
+) -> tuple[dict[str, float], dict[str, int], pd.DataFrame]:
+    """Compute Elo ratings while saving pre-match ratings for each match.
+
+    Iterates over every match in chronological order, records the pre-match
+    Elo for both teams, then applies the same update as
+    compute_elo_from_historical().
+
+    Args:
+        hist_df: Full historical results (all matches, not filtered by date).
+        cfg: Parsed config dict.
+
+    Returns:
+        (ratings, match_counts, match_records_df) where match_records_df has
+        columns: date (datetime), home_team, away_team, home_score, away_score,
+        home_elo, away_elo, neutral (bool), tournament.
+    """
+    ec = cfg["elo_computation"]
+    home_adv: float = float(ec["home_advantage_elo"])
+    start: float = float(ec["starting_rating"])
+
+    ratings: dict[str, float] = {}
+    match_counts: dict[str, int] = {}
+
+    df = hist_df.sort_values("date").reset_index(drop=True)
+
+    records: list[dict[str, Any]] = []
+
+    for row in df.itertuples(index=False):
+        home: str = row.home_team
+        away: str = row.away_team
+
+        r_h = ratings.get(home, start)
+        r_a = ratings.get(away, start)
+
+        # Save pre-match ratings
+        records.append(
+            {
+                "date": row.date,
+                "home_team": home,
+                "away_team": away,
+                "home_score": row.home_score,
+                "away_score": row.away_score,
+                "home_elo": r_h,
+                "away_elo": r_a,
+                "neutral": bool(row.neutral),
+                "tournament": row.tournament,
+            }
+        )
+
+        adv = 0.0 if row.neutral else home_adv
+        e_h = 1.0 / (1.0 + 10.0 ** (-(r_h + adv - r_a) / 400.0))
+
+        if row.home_score > row.away_score:
+            a_h = 1.0
+        elif row.home_score == row.away_score:
+            a_h = 0.5
+        else:
+            a_h = 0.0
+
+        k = _k_factor(row.tournament, cfg)
+        g = _goal_weight(abs(row.home_score - row.away_score))
+        delta_h = k * g * (a_h - e_h)
+
+        ratings[home] = r_h + delta_h
+        ratings[away] = r_a - delta_h  # symmetric update
+
+        match_counts[home] = match_counts.get(home, 0) + 1
+        match_counts[away] = match_counts.get(away, 0) + 1
+
+    match_records_df = pd.DataFrame(records)
+    logger.info(
+        "Elo-with-records complete. %d unique teams, %d match records.",
+        len(ratings),
+        len(match_records_df),
+    )
+    return ratings, match_counts, match_records_df
+
+
 def ratings_to_dataframe(
     ratings: dict[str, float],
     match_counts: dict[str, int],
