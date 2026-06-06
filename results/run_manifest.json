@@ -1,0 +1,24 @@
+{
+  "git_commit_sha": "712b36bc2714debab0415871d2bc10c5374be1f9",
+  "rng_seed": 42,
+  "config_hash": "ee3c4e5d04090b44",
+  "n_iterations": 1000,
+  "timestamp_utc": "2026-06-06T17:04:46Z",
+  "model": {
+    "type": "dixon_coles",
+    "rho": -0.060918682601896486,
+    "intercept": 0.18805260559433645,
+    "slope": 0.0018876860720877838
+  },
+  "data_sources": {
+    "groups": "data/groups.json",
+    "bracket_map": "data/bracket_map.json",
+    "elo_ratings": "data/raw/elo_ratings.csv"
+  },
+  "signal_fallbacks": [],
+  "library_versions": {
+    "numpy": "1.26.4",
+    "pandas": "2.2.2",
+    "scipy": "1.13.0"
+  }
+}

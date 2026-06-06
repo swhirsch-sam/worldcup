@@ -22,9 +22,7 @@ data/processed/
 # Exception: static team Elo ratings needed by tests in CI
 !data/raw/elo_ratings.csv
 
-# Results (generated; committed after a confirmed run)
-results/simulation_summary.json
-results/run_manifest.json
+# Results (large PNGs not committed; JSON results are committed)
 results/*.png
 
 # Notebooks

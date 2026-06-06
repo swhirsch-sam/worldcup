@@ -55,7 +55,7 @@ HOSTS = {"United States", "Canada", "Mexico"}
 
 st.set_page_config(
     page_title="WC 2026 Predictor",
-    page_icon="soccer",
+    page_icon="⚽",
     layout="wide",
 )
 
