@@ -201,19 +201,33 @@ def main() -> None:
     n_iter: int = int(meta["iterations"])
 
     team_df = build_team_df(probs, groups)
+    top_team = team_df.iloc[0]["team"]
+    top_prob = team_df.iloc[0]["champion"]
 
     # -- Header --
     st.title("FIFA World Cup 2026 — Bracket Predictor")
     c1, c2, c3, c4 = st.columns(4)
-    c1.metric("Simulations", f"{n_iter:,}")
-    c2.metric("Model", meta.get("model", "dixon_coles").replace("_", "-").title())
-    c3.metric("Rho (Dixon-Coles)", f"{meta.get('rho', 0):.4f}")
-    c4.metric("Generated", meta.get("generated_at", "")[:10])
+    c1.metric("Projected Champion", top_team)
+    c2.metric("Title Odds", f"{top_prob:.1%}")
+    c3.metric("Simulations Run", f"{n_iter:,}")
+    c4.metric("Last Updated", meta.get("generated_at", "")[:10])
+
+    st.markdown(
+        f"**How it works:** We simulated the entire 2026 World Cup **{n_iter:,} times** using a "
+        "statistical model trained on **49,000+ historical international matches** (1872-present). "
+        "Each match outcome is determined by team strength learned from decades of real results - "
+        "stronger teams win more often, but upsets still happen. After all those simulations, we "
+        "count how often each team reached each round. Those frequencies become the percentages "
+        "you see throughout this app. For the technical details, see the "
+        "**Model Stats** and **Methodology** tabs.\n\n"
+        "**Data sources:** Historical match results (49k+ games, 1872-present) · "
+        "Elo strength ratings · FIFA rankings · WC 2026 official bracket format"
+    )
 
     if n_iter < 10_000:
         st.warning(
-            f"Only {n_iter:,} iterations — run `python3 -m src.model.montecarlo` "
-            "for 50k iterations and reload for tighter confidence intervals."
+            f"Only {n_iter:,} simulations run — probabilities will sharpen with more. "
+            "Run `python3 -m src.model.montecarlo` for 50k iterations."
         )
 
     st.divider()
@@ -221,9 +235,9 @@ def main() -> None:
     tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs(
         [
             "Group Stage",
-            "Best Third",
             "Bracket",
             "Champion Odds",
+            "Best Third",
             "Pick 'Em",
             "Model Stats",
             "Methodology",
@@ -233,11 +247,11 @@ def main() -> None:
     with tab1:
         _render_group_stage(probs, groups)
     with tab2:
-        _render_best_third(team_df, groups, n_iter)
-    with tab3:
         _render_bracket(team_df, n_iter)
-    with tab4:
+    with tab3:
         _render_champion_odds(team_df, n_iter)
+    with tab4:
+        _render_best_third(team_df, groups, n_iter)
     with tab5:
         _render_pickem(team_df, probs, groups, n_iter)
     with tab6:
@@ -252,10 +266,12 @@ def main() -> None:
 
 
 def _render_group_stage(probs: dict[str, Any], groups: dict[str, list[str]]) -> None:
-    st.header("Group Stage Advancement Probabilities")
-    st.caption(
-        "P(1st) / P(2nd) / P(Advance R32) for each group. "
-        "P(Advance) includes automatic top-2 qualification plus best-third selection."
+    st.header("Group Stage — Who Advances?")
+    st.markdown(
+        "The **top 2 teams** in each group automatically qualify for the knockout round. "
+        "The best 8 third-place teams also advance as wildcards (see the **Best Third** tab). "
+        "Percentages show each team's estimated chance of finishing in that position. "
+        "Teams marked **HOST** represent the United States, Canada, or Mexico."
     )
 
     cols = st.columns(3)
@@ -269,16 +285,20 @@ def _render_group_stage(probs: dict[str, Any], groups: dict[str, list[str]]) -> 
                 rows.append(
                     {
                         "Team": flag + team,
-                        "P(1st)": p.get("group_first", 0.0),
-                        "P(2nd)": p.get("group_second", 0.0),
-                        "P(R32)": p.get("r32", 0.0),
+                        "Finish 1st": p.get("group_first", 0.0),
+                        "Finish 2nd": p.get("group_second", 0.0),
+                        "Qualify %": p.get("r32", 0.0),
                     }
                 )
-            df = pd.DataFrame(rows).sort_values("P(R32)", ascending=False).reset_index(drop=True)
+            df = (
+                pd.DataFrame(rows)
+                .sort_values("Qualify %", ascending=False)
+                .reset_index(drop=True)
+            )
             st.dataframe(
                 df.style.format(
-                    {"P(1st)": "{:.1%}", "P(2nd)": "{:.1%}", "P(R32)": "{:.1%}"}
-                ).background_gradient(subset=["P(R32)"], cmap="YlGn"),
+                    {"Finish 1st": "{:.1%}", "Finish 2nd": "{:.1%}", "Qualify %": "{:.1%}"}
+                ).background_gradient(subset=["Qualify %"], cmap="YlGn"),
                 hide_index=True,
                 use_container_width=True,
             )
@@ -289,10 +309,12 @@ def _render_best_third(
     groups: dict[str, list[str]],
     n_iter: int,
 ) -> None:
-    st.header("Best-Third Qualification Probabilities")
-    st.caption(
-        "8 of the 12 third-place teams qualify for the R32. "
-        "P(Best Third) is the probability of finishing 3rd AND being selected among the top 8."
+    st.header("The Wildcard Spots — Best Third-Place Teams")
+    st.markdown(
+        "This World Cup has **48 teams split into 12 groups of 4**. Only the top 2 from each "
+        "group automatically advance — but **8 of the 12 third-place finishers** also qualify "
+        "based on their combined points, goal difference, and goals scored across all groups. "
+        "Gold bars show the teams most likely to grab one of those 8 wildcard spots."
     )
 
     keep_cols = ["team", "group", "group_first", "group_second", "third_qualify", "r32"]
@@ -314,8 +336,8 @@ def _render_best_third(
         )
     )
     fig.update_layout(
-        title="P(Qualify as Best Third) — gold = likely top-8",
-        xaxis_title="Probability (%)",
+        title="Estimated chance of qualifying as a best third-place team — gold = likely top 8",
+        xaxis_title="Estimated probability (%)",
         height=max(400, len(plot_df) * 28),
         margin={"l": 220, "r": 80, "t": 50, "b": 40},
         yaxis={"autorange": "reversed"},
@@ -341,14 +363,16 @@ def _render_best_third(
 
 
 def _render_bracket(team_df: pd.DataFrame, n_iter: int) -> None:
-    st.header("Knockout Bracket Advancement Probabilities")
-    st.caption(
-        "Probability of reaching each knockout round, conditional on being in the tournament. "
-        "All 48 teams shown; teams that rarely qualify have near-zero values."
+    st.header("How Far Will Each Team Go?")
+    st.markdown(
+        "Each number shows a team's estimated chance of **reaching** that round. "
+        "Darker color = higher probability. Columns go left to right: "
+        "R32 → Round of 16 → Quarterfinals → Semifinals → Final → Champion. "
+        "Use the slider to compare more or fewer teams."
     )
 
     # Heatmap: teams x stages
-    top_n = st.slider("Show top N teams by champion probability", 10, 48, 24)
+    top_n = st.slider("How many teams to show", 10, 48, 24)
     df = team_df.head(top_n)[["team", *STAGE_ORDER]].set_index("team")
     df.columns = [STAGE_SHORT[s] for s in STAGE_ORDER]
 
@@ -362,7 +386,7 @@ def _render_bracket(team_df: pd.DataFrame, n_iter: int) -> None:
         aspect="auto",
     )
     fig.update_layout(
-        title=f"Advancement probabilities (%) — top {top_n} by champion odds",
+        title=f"Estimated chance of reaching each round (%) — top {top_n} teams",
         height=max(400, top_n * 22 + 100),
         coloraxis_colorbar_title="%",
         xaxis_side="top",
@@ -391,13 +415,14 @@ def _render_bracket(team_df: pd.DataFrame, n_iter: int) -> None:
 
 
 def _render_champion_odds(team_df: pd.DataFrame, n_iter: int) -> None:
-    st.header("Champion Probability")
-    st.caption(
-        "Horizontal bar chart with 95% confidence intervals (normal approximation). "
-        "Wider bars indicate less certainty; run more iterations to tighten them."
+    st.header("Who Wins the World Cup?")
+    st.markdown(
+        "Each bar shows a team's estimated chance of **winning the tournament outright**. "
+        "Football is unpredictable, but decades of match data give the model a strong signal "
+        "on which teams are legitimate contenders. Hover over any bar for the exact percentage."
     )
 
-    top_n = st.slider("Show top N teams", 10, 48, 20, key="champ_n")
+    top_n = st.slider("How many teams to show", 10, 48, 20, key="champ_n")
     df = team_df.head(top_n).copy()
     df["ci"] = df["champion"].apply(lambda p: ci_half(p, n_iter))
     df["pct"] = df["champion"] * 100
@@ -419,14 +444,14 @@ def _render_champion_odds(team_df: pd.DataFrame, n_iter: int) -> None:
         )
     )
     fig.update_layout(
-        xaxis_title="Probability (%)",
+        xaxis_title="Estimated win probability (%)",
         height=max(400, top_n * 28 + 80),
         margin={"l": 200, "r": 80, "t": 40, "b": 40},
     )
     st.plotly_chart(fig, use_container_width=True)
 
     # Group-level champion totals
-    st.subheader("Champion probability by group")
+    st.subheader("Win probability by group")
     group_champ = (
         team_df.groupby("group")["champion"]
         .sum()
@@ -453,6 +478,15 @@ def _render_model_stats(
     n_iter: int,
 ) -> None:
     st.header("Model & Simulation Statistics")
+    st.markdown(
+        "For the technically curious — here's what's powering the numbers throughout this app. "
+        "The model is a **Dixon-Coles Poisson regression** fitted on 49k+ historical matches. "
+        "It learns how Elo rating differences translate into expected goals, then applies a "
+        "low-score correction (rho) since scorelines like 0-0 and 1-1 happen more often in "
+        "football than a naive Poisson model would predict. "
+        "See the **Methodology** tab for a full walkthrough."
+    )
+    st.divider()
 
     col1, col2 = st.columns(2)
 
