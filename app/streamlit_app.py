@@ -121,6 +121,13 @@ def ci_half(p: float, n: int) -> float:
     return 1.96 * math.sqrt(max(p * (1.0 - p) / max(n, 1), 0.0))
 
 
+def _cond_prob(probs: dict[str, Any], team: str, from_s: str, to_s: str) -> float:
+    """P(reach to_s | reached from_s) from simulation counts."""
+    p_from = probs.get(team, {}).get(from_s, 0.0)
+    p_to = probs.get(team, {}).get(to_s, 0.0)
+    return p_to / p_from if p_from > 1e-9 else 0.0
+
+
 # ---------------------------------------------------------------------------
 # Main
 # ---------------------------------------------------------------------------
@@ -153,8 +160,16 @@ def main() -> None:
 
     st.divider()
 
-    tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs(
-        ["Group Stage", "Best Third", "Bracket", "Champion Odds", "Model Stats", "Methodology"]
+    tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs(
+        [
+            "Group Stage",
+            "Best Third",
+            "Bracket",
+            "Champion Odds",
+            "Pick 'Em",
+            "Model Stats",
+            "Methodology",
+        ]
     )
 
     with tab1:
@@ -166,8 +181,10 @@ def main() -> None:
     with tab4:
         _render_champion_odds(team_df, n_iter)
     with tab5:
-        _render_model_stats(team_df, meta, n_iter)
+        _render_pickem(team_df, probs, groups, n_iter)
     with tab6:
+        _render_model_stats(team_df, meta, n_iter)
+    with tab7:
         _render_methodology(manifest, meta)
 
 
@@ -205,7 +222,7 @@ def _render_group_stage(probs: dict[str, Any], groups: dict[str, list[str]]) -> 
                     {"P(1st)": "{:.1%}", "P(2nd)": "{:.1%}", "P(R32)": "{:.1%}"}
                 ).background_gradient(subset=["P(R32)"], cmap="YlGn"),
                 hide_index=True,
-                width="stretch",
+                use_container_width=True,
             )
 
 
@@ -507,6 +524,205 @@ bracket map, pre-computed for all C(12,8)=495 combinations.
                     st.markdown(f"  - {lib}: {ver}")
     else:
         st.info("Run manifest not found. Run `python3 -m src.model.montecarlo` to generate it.")
+
+
+def _render_pickem(
+    team_df: pd.DataFrame,
+    probs: dict[str, Any],
+    groups: dict[str, list[str]],
+    n_iter: int,
+) -> None:
+    st.header("Pick 'Em — Survivor Contest")
+
+    hdr, reset_col = st.columns([6, 1])
+    with hdr:
+        st.caption(
+            "**Phase 1 — Group Stage:** Pick 4 teams to advance to the R32 (all 4 must survive). "
+            "**Phase 2 — Knockout:** R32 (2 picks) → R16 → QF → SF → Championship (1 pick each). "
+            "All picks in a round must win to advance. "
+            "Each team usable **once** in the entire contest."
+        )
+    with reset_col:
+        if st.button("↺ Reset", use_container_width=True):
+            for k in ("pk_gs", "pk_r32", "pk_r16", "pk_qf", "pk_sf", "pk_champ"):
+                st.session_state.pop(k, None)
+            st.rerun()
+
+    team_to_group = {t: g for g, ts in groups.items() for t in ts}
+    teams_by_r32 = team_df.sort_values("r32", ascending=False)["team"].tolist()
+
+    def _lbl(team: str, from_s: str, to_s: str | None = None) -> str:
+        g = team_to_group.get(team, "?")
+        p = (
+            probs.get(team, {}).get(from_s, 0.0)
+            if to_s is None
+            else _cond_prob(probs, team, from_s, to_s)
+        )
+        return f"{team} [{g}]  ·  {p:.1%}"
+
+    # Initialise session state on first visit
+    for k, v in [
+        ("pk_gs", []),
+        ("pk_r32", []),
+        ("pk_r16", "(none)"),
+        ("pk_qf", "(none)"),
+        ("pk_sf", "(none)"),
+        ("pk_champ", "(none)"),
+    ]:
+        if k not in st.session_state:
+            st.session_state[k] = v
+
+    # ── Phase 1: Group Stage ─────────────────────────────────────────────────
+    st.subheader("Phase 1 — Group Stage")
+    st.markdown(
+        "Pick **4 teams** you believe will advance to the Round of 32. "
+        "All 4 must advance or you are eliminated. "
+        "Probability shown = P(qualify for R32)."
+    )
+
+    gs_picks: list[str] = st.multiselect(
+        "Group Stage picks (choose exactly 4)",
+        options=teams_by_r32,
+        max_selections=4,
+        format_func=lambda t: _lbl(t, "r32"),
+        key="pk_gs",
+    )
+
+    if len(gs_picks) == 4:
+        gs_prob = math.prod(probs[t].get("r32", 0.0) for t in gs_picks)
+        st.success(f"P(all 4 advance to R32) = **{gs_prob:.3%}**")
+    else:
+        rem = 4 - len(gs_picks)
+        st.info(f"Select {rem} more team{'s' if rem > 1 else ''} to complete Phase 1.")
+
+    # ── Phase 2: Knockout Stage ──────────────────────────────────────────────
+    st.divider()
+    st.subheader("Phase 2 — Knockout Stage")
+    st.markdown(
+        "Teams used in the Group Stage are excluded. Probability = P(win that specific match)."
+    )
+
+    used: set[str] = set(gs_picks)
+
+    def _avail(exclude: set[str]) -> list[str]:
+        return [t for t in teams_by_r32 if t not in exclude]
+
+    def _safe_select(label_str: str, key: str, opts: list[str], from_s: str, to_s: str) -> str:
+        choices = ["(none)", *opts]
+        cur = st.session_state.get(key, "(none)")
+        if cur not in choices:
+            cur = "(none)"
+            st.session_state[key] = "(none)"
+        result = st.selectbox(
+            label_str,
+            options=choices,
+            index=choices.index(cur),
+            format_func=lambda t: "— not yet picked —" if t == "(none)" else _lbl(t, from_s, to_s),
+            key=key,
+        )
+        return result or "(none)"
+
+    # R32 — 2 picks
+    st.markdown("##### Round of 32 — Pick 2 teams to win their R32 match")
+    r32_opts = _avail(used)
+    prev_r32 = [t for t in st.session_state.get("pk_r32", []) if t in r32_opts]
+    if prev_r32 != st.session_state.get("pk_r32", []):
+        st.session_state["pk_r32"] = prev_r32
+    r32_picks: list[str] = st.multiselect(
+        "R32 picks (choose exactly 2)",
+        options=r32_opts,
+        max_selections=2,
+        format_func=lambda t: _lbl(t, "r32", "r16"),
+        key="pk_r32",
+    )
+    used.update(r32_picks)
+
+    # R16 — 1 pick
+    st.markdown("##### Round of 16 — Pick 1 team to win their R16 match")
+    r16_pick: str = _safe_select("R16 pick", "pk_r16", _avail(used), "r16", "qf")
+    if r16_pick != "(none)":
+        used.add(r16_pick)
+
+    # QF — 1 pick
+    st.markdown("##### Quarterfinals — Pick 1 team to win their QF match")
+    qf_pick: str = _safe_select("QF pick", "pk_qf", _avail(used), "qf", "sf")
+    if qf_pick != "(none)":
+        used.add(qf_pick)
+
+    # SF — 1 pick
+    st.markdown("##### Semifinals — Pick 1 team to win their SF match")
+    sf_pick: str = _safe_select("SF pick", "pk_sf", _avail(used), "sf", "final")
+    if sf_pick != "(none)":
+        used.add(sf_pick)
+
+    # Championship — 1 pick
+    st.markdown("##### Championship — Pick 1 team to win the tournament")
+    champ_pick: str = _safe_select(
+        "Championship pick", "pk_champ", _avail(used), "final", "champion"
+    )
+
+    # ── Summary ──────────────────────────────────────────────────────────────
+    st.divider()
+    st.subheader("Your Picks Summary")
+
+    rows: list[dict[str, Any]] = []
+    for t in gs_picks:
+        rows.append(
+            {
+                "Round": "Group Stage",
+                "Team": t,
+                "Grp": team_to_group.get(t, "?"),
+                "P(survive)": probs.get(t, {}).get("r32", 0.0),
+                "Must": "Advance to R32",
+            }
+        )
+    for t in r32_picks:
+        rows.append(
+            {
+                "Round": "R32",
+                "Team": t,
+                "Grp": team_to_group.get(t, "?"),
+                "P(survive)": _cond_prob(probs, t, "r32", "r16"),
+                "Must": "Win R32 match",
+            }
+        )
+    for pick, rnd, fs, ts, must in [
+        (r16_pick, "R16", "r16", "qf", "Win R16 match"),
+        (qf_pick, "QF", "qf", "sf", "Win QF match"),
+        (sf_pick, "SF", "sf", "final", "Win SF match"),
+        (champ_pick, "Championship", "final", "champion", "Win the Final"),
+    ]:
+        if pick and pick != "(none)":
+            rows.append(
+                {
+                    "Round": rnd,
+                    "Team": pick,
+                    "Grp": team_to_group.get(pick, "?"),
+                    "P(survive)": _cond_prob(probs, pick, fs, ts),
+                    "Must": must,
+                }
+            )
+
+    if rows:
+        sdf = pd.DataFrame(rows)
+        st.dataframe(
+            sdf.style.format({"P(survive)": "{:.1%}"}),
+            hide_index=True,
+            use_container_width=True,
+        )
+        overall = math.prod(r["P(survive)"] for r in rows)
+        n_made = len(rows)
+        st.metric(
+            f"Estimated survival probability  ({n_made} / 10 picks made)",
+            f"{overall:.4%}",
+        )
+        st.caption(
+            "Survival probability is the product of each pick's conditional win probability. "
+            "Assumes picks are independent — actual probability differs slightly due to "
+            "bracket correlations."
+        )
+    else:
+        st.info("Make your picks above to see your summary here.")
 
 
 # ---------------------------------------------------------------------------
