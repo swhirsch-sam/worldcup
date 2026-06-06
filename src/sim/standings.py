@@ -1,7 +1,7 @@
 """Group-stage simulation: round-robin matches and standings.
 
 simulate_group() plays out all 6 pairings for a 4-team group, builds per-team
-records, and returns a GroupResult with teams ranked 1st–4th via FIFA
+records, and returns a GroupResult with teams ranked 1st-4th via FIFA
 tiebreaker rules.
 
 All WC 2026 group matches are treated as neutral (no home advantage additive
@@ -13,10 +13,13 @@ from __future__ import annotations
 import itertools
 import logging
 from dataclasses import dataclass, field
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import numpy as np
 from numpy.random import Generator
+
+if TYPE_CHECKING:
+    from src.model.poisson import MatchSimulator
 
 from src.sim.tiebreakers import rank_group
 
@@ -68,16 +71,16 @@ def simulate_group(
     group_id: str,
     teams: list[str],
     strength: dict[str, float],
-    model: Any,
+    model: MatchSimulator,
     rng: Generator,
     cfg: dict[str, Any],
 ) -> GroupResult:
     """Simulate one 4-team round-robin and return ranked standings.
 
     Args:
-        group_id: Group label ('A'–'L').
+        group_id: Group label ('A'-'L').
         teams: The 4 team names.
-        strength: team → composite Elo-scale strength (from strength.py).
+        strength: team to composite Elo-scale strength (from strength.py).
         model: MatchSimulator (DixonColesModel or BivariatePoissonModel).
         rng: NumPy random Generator.
         cfg: Parsed config dict.

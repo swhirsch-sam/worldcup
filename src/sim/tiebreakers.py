@@ -26,8 +26,8 @@ if TYPE_CHECKING:
 
 
 def rank_group(
-    records: dict[str, "TeamRecord"],
-    match_results: list["MatchResult"],
+    records: dict[str, TeamRecord],
+    match_results: list[MatchResult],
     rng: Generator,
 ) -> list[str]:
     """Rank all teams in a group using the full FIFA 8-level tiebreaker.
@@ -51,11 +51,11 @@ def rank_group(
     return result
 
 
-def _overall_key(r: "TeamRecord") -> tuple[int, int, int]:
+def _overall_key(r: TeamRecord) -> tuple[int, int, int]:
     return (-r.points, -r.goal_difference, -r.goals_for)
 
 
-def _same_overall(a: "TeamRecord", b: "TeamRecord") -> bool:
+def _same_overall(a: TeamRecord, b: TeamRecord) -> bool:
     return (
         a.points == b.points
         and a.goal_difference == b.goal_difference
@@ -65,8 +65,8 @@ def _same_overall(a: "TeamRecord", b: "TeamRecord") -> bool:
 
 def _resolve_tie(
     tied: list[str],
-    records: dict[str, "TeamRecord"],
-    match_results: list["MatchResult"],
+    records: dict[str, TeamRecord],
+    match_results: list[MatchResult],
     rng: Generator,
 ) -> list[str]:
     """Apply H2H once, then fair-play, then lots for any remaining sub-ties."""
@@ -129,7 +129,7 @@ def _resolve_tie(
 
 def _fair_play_then_lots(
     tied: list[str],
-    records: dict[str, "TeamRecord"],
+    records: dict[str, TeamRecord],
     rng: Generator,
 ) -> list[str]:
     """Sort by fair-play (fewer penalties = better), then random lots."""
