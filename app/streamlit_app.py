@@ -18,12 +18,13 @@ import plotly.graph_objects as go
 import streamlit as st
 
 # ---------------------------------------------------------------------------
-# Paths
+# Paths (relative to repo root, resolved from this file's location)
 # ---------------------------------------------------------------------------
 
-SIMULATION_SUMMARY = Path("results/simulation_summary.json")
-RUN_MANIFEST = Path("results/run_manifest.json")
-GROUPS_JSON = Path("data/groups.json")
+_ROOT = Path(__file__).resolve().parent.parent
+SIMULATION_SUMMARY = _ROOT / "results" / "simulation_summary.json"
+RUN_MANIFEST = _ROOT / "results" / "run_manifest.json"
+GROUPS_JSON = _ROOT / "data" / "groups.json"
 
 # ---------------------------------------------------------------------------
 # Constants
