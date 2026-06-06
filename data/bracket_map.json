@@ -1,0 +1,6 @@
+{
+  "_comment": "PLACEHOLDER — replace with the official R32 allocation table before Phase 5.",
+  "_status": "AWAITING_CONFIRMATION",
+  "_risk": "TOP CORRECTNESS RISK: this file encodes which group positions and best-third combinations map to which R32 slots. Verify against FIFA documentation before use.",
+  "r32_slots": {}
+}

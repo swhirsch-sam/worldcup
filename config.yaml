@@ -1,0 +1,223 @@
+# =============================================================================
+# World Cup 2026 Bracket Predictor — master configuration
+# All numeric parameters live here. No magic numbers in source code.
+# =============================================================================
+
+# ---------------------------------------------------------------------------
+# Simulation
+# ---------------------------------------------------------------------------
+simulation:
+  iterations: 50000
+  seed: 42
+  # Set to true to run at reduced iterations for fast CI smoke tests
+  fast_mode: false
+  fast_mode_iterations: 1000
+
+# ---------------------------------------------------------------------------
+# Ensemble weights (must sum to 1.0 when all signals are active)
+# Renormalized automatically when a signal is unavailable
+# ---------------------------------------------------------------------------
+ensemble:
+  weights:
+    elo: 0.60
+    fifa: 0.20
+    market: 0.20
+  # Strength rating scale: ratings are normalized to this midpoint before use
+  global_mean_rating: 1500.0
+  # Shrinkage strength for provisional teams (0=no shrink, 1=full mean)
+  provisional_shrinkage: 0.30
+  # Teams with fewer than this many caps are flagged provisional
+  provisional_cap_threshold: 30
+
+# ---------------------------------------------------------------------------
+# Host bump (additive Elo points applied to host teams in their group games)
+# ---------------------------------------------------------------------------
+host:
+  teams:
+    - "United States"
+    - "Canada"
+    - "Mexico"
+  elo_bump: 75.0
+  # Host effect applies only during group stage
+  group_stage_only: true
+
+# ---------------------------------------------------------------------------
+# Venue / home-field advantage
+# Applied to non-neutral group fixtures for the designated home side
+# ---------------------------------------------------------------------------
+home_advantage:
+  elo_points: 65.0
+
+# ---------------------------------------------------------------------------
+# Strength-to-goals mapping (fitted via fit.py; defaults override on fit)
+# lambda = exp(intercept + slope * strength_diff + home_term)
+# ---------------------------------------------------------------------------
+goals_model:
+  # Fitted coefficients (overwritten by fit.py; hand-tuned fallback shown)
+  intercept: 0.27
+  slope: 0.00416
+  # Maximum plausible expected goals per team per match
+  lambda_cap: 6.0
+  # Minimum (prevents degenerate 0 or negative lambdas)
+  lambda_floor: 0.10
+
+# ---------------------------------------------------------------------------
+# Dixon-Coles model parameters
+# ---------------------------------------------------------------------------
+dixon_coles:
+  # Low-score correction (rho). Fitted value overrides this on fit.
+  rho: 0.10
+  # Time-decay half-life in days for historical match weighting
+  time_decay_halflife_days: 365
+  # xi: decay rate derived from half-life; set to null to compute from halflife
+  xi: null
+
+# ---------------------------------------------------------------------------
+# Bivariate Poisson model (alternative to Dixon-Coles; config switch)
+# ---------------------------------------------------------------------------
+bivariate_poisson:
+  enabled: false
+
+# ---------------------------------------------------------------------------
+# Knockout-round adjustments
+# ---------------------------------------------------------------------------
+knockout:
+  # Caution factor: multiplicative reduction of expected goals
+  caution_factor: 0.85
+  # Extra time: fraction of normal match duration (30/90)
+  extra_time_duration_fraction: 0.333
+  # Penalty shootout: base probability for stronger team
+  # Final probability = penalty_base + strength_tilt * delta
+  penalty_base: 0.50
+  # Maximum tilt from strength difference (bounded)
+  penalty_strength_tilt: 0.05
+  penalty_strength_tilt_max: 0.10
+
+# ---------------------------------------------------------------------------
+# Tiebreaker settings
+# ---------------------------------------------------------------------------
+tiebreaker:
+  # Card weights for fair-play tiebreaker
+  yellow_card_weight: 1
+  red_card_weight: 3
+  second_yellow_weight: 3   # second yellow == indirect red
+
+# ---------------------------------------------------------------------------
+# Best-third-place ranking criteria order (must match FIFA rules)
+# Allowed values: points, goal_difference, goals_scored, fair_play
+# ---------------------------------------------------------------------------
+best_third:
+  criteria:
+    - points
+    - goal_difference
+    - goals_scored
+    - fair_play
+  slots: 8
+
+# ---------------------------------------------------------------------------
+# Data sources
+# ---------------------------------------------------------------------------
+data:
+  cache_dir: "data/raw"
+  processed_dir: "data/processed"
+  cache_ttl_hours: 24
+  request_timeout_seconds: 15
+  retry_max_attempts: 4
+  retry_backoff_base_seconds: 2
+
+  elo:
+    enabled: true
+    url: "https://www.eloratings.net/World.tsv"
+    # Local CSV fallback (relative to repo root); set to null to force remote
+    local_csv: "data/raw/elo_ratings.csv"
+    filename: "elo_ratings.csv"
+
+  fifa:
+    enabled: true
+    # FIFA ranking API endpoint (public JSON)
+    url: "https://www.fifa.com/en/ranking/men?dateId=id14317"
+    filename: "fifa_rankings.json"
+
+  market:
+    enabled: false
+    # The Odds API free tier
+    url: "https://api.the-odds-api.com/v4/sports/soccer_world_cup_winner/odds/"
+    api_key_env: "ODDS_API_KEY"
+    filename: "market_odds.json"
+
+  historical:
+    # Local file; download instructions in README
+    filename: "historical_results.csv"
+    # Oldest match to include in fitting (ISO date)
+    earliest_date: "2000-01-01"
+
+# ---------------------------------------------------------------------------
+# Validation
+# ---------------------------------------------------------------------------
+validation:
+  # Expected number of teams in the tournament
+  expected_teams: 48
+  expected_groups: 12
+  teams_per_group: 4
+  # Expected total rounds in the bracket
+  expected_advancing_per_group: 2
+  expected_best_third_slots: 8
+  expected_r32_teams: 32
+
+# ---------------------------------------------------------------------------
+# Backtesting
+# ---------------------------------------------------------------------------
+backtest:
+  tournaments:
+    - year: 2018
+      historical_cutoff: "2018-06-14"
+    - year: 2022
+      historical_cutoff: "2022-11-20"
+  # Minimum matches for calibration bin to be plotted
+  calibration_min_bin_size: 10
+  calibration_bins: 10
+
+# ---------------------------------------------------------------------------
+# Convergence analysis
+# ---------------------------------------------------------------------------
+convergence:
+  iteration_checkpoints: [1000, 5000, 25000, 100000]
+  # Teams to track in convergence plots
+  tracked_teams:
+    - "Brazil"
+    - "France"
+    - "England"
+    - "Argentina"
+    - "Germany"
+    - "United States"
+
+# ---------------------------------------------------------------------------
+# Sensitivity analysis (parameter perturbation)
+# ---------------------------------------------------------------------------
+sensitivity:
+  parameters:
+    ensemble_elo_weight:
+      base: 0.60
+      delta: 0.15
+    host_elo_bump:
+      base: 75.0
+      delta: 37.5
+    home_advantage:
+      base: 65.0
+      delta: 32.5
+    knockout_caution_factor:
+      base: 0.85
+      delta: 0.10
+  # Iterations for each sensitivity run (fewer for speed)
+  iterations: 10000
+
+# ---------------------------------------------------------------------------
+# Output paths
+# ---------------------------------------------------------------------------
+output:
+  results_dir: "results"
+  simulation_summary: "results/simulation_summary.json"
+  run_manifest: "results/run_manifest.json"
+  convergence_plot: "results/convergence.png"
+  sensitivity_plot: "results/sensitivity_tornado.png"
+  calibration_plot: "results/calibration.png"
