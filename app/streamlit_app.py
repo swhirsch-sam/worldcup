@@ -205,7 +205,7 @@ def _render_group_stage(probs: dict[str, Any], groups: dict[str, list[str]]) -> 
                     {"P(1st)": "{:.1%}", "P(2nd)": "{:.1%}", "P(R32)": "{:.1%}"}
                 ).background_gradient(subset=["P(R32)"], cmap="YlGn"),
                 hide_index=True,
-                use_container_width=True,
+                width="stretch",
             )
 
 
