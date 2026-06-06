@@ -1,6 +1,41 @@
 {
-  "_comment": "PLACEHOLDER — replace with the official R32 allocation table before Phase 5.",
-  "_status": "AWAITING_CONFIRMATION",
-  "_risk": "TOP CORRECTNESS RISK: this file encodes which group positions and best-third combinations map to which R32 slots. Verify against FIFA documentation before use.",
-  "r32_slots": {}
+  "_metadata": {
+    "source": "FIFA 2026 Competition Regulations + public sources",
+    "confirmed": "r32_templates and third_place_slot_candidates confirmed; annex_c_combinations PENDING - see _risk below",
+    "_risk": "TOP CORRECTNESS RISK: annex_c_combinations encodes the official Annex C table from FIFA regulations mapping each of the 495 possible combinations of 8 qualifying third-place groups to specific R32 slot assignments. This must be verified against the official FIFA document before any simulation. The r32_templates and third_place_slot_candidates fields are confirmed; annex_c_combinations is a placeholder."
+  },
+
+  "r32_templates": [
+    {"match_id": "R32_01", "team_a": "1E", "team_b": "3ABCDF"},
+    {"match_id": "R32_02", "team_a": "1I", "team_b": "3CDFGH"},
+    {"match_id": "R32_03", "team_a": "2A", "team_b": "2B"},
+    {"match_id": "R32_04", "team_a": "1F", "team_b": "2C"},
+    {"match_id": "R32_05", "team_a": "2K", "team_b": "2L"},
+    {"match_id": "R32_06", "team_a": "1H", "team_b": "2J"},
+    {"match_id": "R32_07", "team_a": "1D", "team_b": "3BEFIJ"},
+    {"match_id": "R32_08", "team_a": "1G", "team_b": "3AEHIJ"},
+    {"match_id": "R32_09", "team_a": "1C", "team_b": "2F"},
+    {"match_id": "R32_10", "team_a": "2E", "team_b": "2I"},
+    {"match_id": "R32_11", "team_a": "1A", "team_b": "3CEFHI"},
+    {"match_id": "R32_12", "team_a": "1L", "team_b": "3EHIJK"},
+    {"match_id": "R32_13", "team_a": "1J", "team_b": "2H"},
+    {"match_id": "R32_14", "team_a": "2D", "team_b": "2G"},
+    {"match_id": "R32_15", "team_a": "1B", "team_b": "3EFGIJ"},
+    {"match_id": "R32_16", "team_a": "1K", "team_b": "3DEIJL"}
+  ],
+
+  "third_place_slot_candidates": {
+    "3ABCDF":  ["A", "B", "C", "D", "F"],
+    "3CDFGH":  ["C", "D", "F", "G", "H"],
+    "3BEFIJ":  ["B", "E", "F", "I", "J"],
+    "3AEHIJ":  ["A", "E", "H", "I", "J"],
+    "3CEFHI":  ["C", "E", "F", "H", "I"],
+    "3EHIJK":  ["E", "H", "I", "J", "K"],
+    "3EFGIJ":  ["E", "F", "G", "I", "J"],
+    "3DEIJL":  ["D", "E", "I", "J", "L"]
+  },
+
+  "_annex_c_note": "The full 495-combination table (C(12,8) = 495 ways to choose 8 qualifying groups from 12, each mapped to a specific assignment of third-place teams to slots above) is encoded in FIFA Annex C. PLACEHOLDER below — must be replaced with the official table before simulation. Phase 5 will implement this; the startup validator will check completeness.",
+
+  "annex_c_combinations": {}
 }

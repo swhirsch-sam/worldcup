@@ -15,10 +15,72 @@ class NameResolutionError(ValueError):
 
 
 # ---------------------------------------------------------------------------
-# Canonical team list (48 teams, ordered by group as of the Dec 5 2025 draw)
-# Populated in Phase 2 once groups.json is confirmed.
+# Canonical team list - all 48 teams from the Dec 5 2025 draw (groups A-L)
 # ---------------------------------------------------------------------------
-CANONICAL_TEAMS: Final[frozenset[str]] = frozenset()  # filled in Phase 2
+CANONICAL_TEAMS: Final[frozenset[str]] = frozenset(
+    {
+        # Group A
+        "Mexico",
+        "South Korea",
+        "South Africa",
+        "Czechia",
+        # Group B
+        "Canada",
+        "Switzerland",
+        "Qatar",
+        "Bosnia and Herzegovina",
+        # Group C
+        "Brazil",
+        "Morocco",
+        "Haiti",
+        "Scotland",
+        # Group D
+        "United States",
+        "Paraguay",
+        "Australia",
+        "Türkiye",
+        # Group E
+        "Germany",
+        "Curaçao",
+        "Côte d'Ivoire",
+        "Ecuador",
+        # Group F
+        "Netherlands",
+        "Japan",
+        "Tunisia",
+        "Sweden",
+        # Group G
+        "Belgium",
+        "Egypt",
+        "Iran",
+        "New Zealand",
+        # Group H
+        "Spain",
+        "Cabo Verde",
+        "Saudi Arabia",
+        "Uruguay",
+        # Group I
+        "France",
+        "Senegal",
+        "Norway",
+        "Iraq",
+        # Group J
+        "Argentina",
+        "Algeria",
+        "Austria",
+        "Jordan",
+        # Group K
+        "Portugal",
+        "Uzbekistan",
+        "Colombia",
+        "DR Congo",
+        # Group L
+        "England",
+        "Croatia",
+        "Ghana",
+        "Panama",
+    }
+)
 
 
 # ---------------------------------------------------------------------------
@@ -27,26 +89,85 @@ CANONICAL_TEAMS: Final[frozenset[str]] = frozenset()  # filled in Phase 2
 # Values are canonical names that must be members of CANONICAL_TEAMS.
 # ---------------------------------------------------------------------------
 _ALIAS_MAP: dict[str, str] = {
-    # FIFA / Elo common divergences
+    # United States
     "United States": "United States",
     "USA": "United States",
     "US": "United States",
     "United States of America": "United States",
+    # South Korea
     "Korea Republic": "South Korea",
     "South Korea": "South Korea",
     "Republic of Korea": "South Korea",
+    # Iran
     "IR Iran": "Iran",
     "Iran": "Iran",
     "Islamic Republic of Iran": "Iran",
+    # Côte d'Ivoire
     "Ivory Coast": "Côte d'Ivoire",
     "Cote d'Ivoire": "Côte d'Ivoire",
     "Côte d'Ivoire": "Côte d'Ivoire",
+    # DR Congo
     "DR Congo": "DR Congo",
     "Congo DR": "DR Congo",
     "Democratic Republic of the Congo": "DR Congo",
-    "Kyrgyzstan": "Kyrgyzstan",
+    "Congo, DR": "DR Congo",
+    # Curaçao
     "Curacao": "Curaçao",
     "Curaçao": "Curaçao",
+    # Czechia
+    "Czechia": "Czechia",
+    "Czech Republic": "Czechia",
+    "Czechia Republic": "Czechia",
+    # Türkiye
+    "Türkiye": "Türkiye",
+    "Turkey": "Türkiye",
+    # Cabo Verde
+    "Cabo Verde": "Cabo Verde",
+    "Cape Verde": "Cabo Verde",
+    # Bosnia and Herzegovina
+    "Bosnia and Herzegovina": "Bosnia and Herzegovina",
+    "Bosnia & Herzegovina": "Bosnia and Herzegovina",
+    "Bosnia-Herzegovina": "Bosnia and Herzegovina",
+    "Bosnia Herzegovina": "Bosnia and Herzegovina",
+    # Other passthrough canonicals (names that are already correct)
+    "Mexico": "Mexico",
+    "South Africa": "South Africa",
+    "Canada": "Canada",
+    "Switzerland": "Switzerland",
+    "Qatar": "Qatar",
+    "Brazil": "Brazil",
+    "Morocco": "Morocco",
+    "Haiti": "Haiti",
+    "Scotland": "Scotland",
+    "Paraguay": "Paraguay",
+    "Australia": "Australia",
+    "Germany": "Germany",
+    "Ecuador": "Ecuador",
+    "Netherlands": "Netherlands",
+    "Japan": "Japan",
+    "Tunisia": "Tunisia",
+    "Sweden": "Sweden",
+    "Belgium": "Belgium",
+    "Egypt": "Egypt",
+    "New Zealand": "New Zealand",
+    "Spain": "Spain",
+    "Saudi Arabia": "Saudi Arabia",
+    "Uruguay": "Uruguay",
+    "France": "France",
+    "Senegal": "Senegal",
+    "Norway": "Norway",
+    "Iraq": "Iraq",
+    "Argentina": "Argentina",
+    "Algeria": "Algeria",
+    "Austria": "Austria",
+    "Jordan": "Jordan",
+    "Portugal": "Portugal",
+    "Uzbekistan": "Uzbekistan",
+    "Colombia": "Colombia",
+    "England": "England",
+    "Croatia": "Croatia",
+    "Ghana": "Ghana",
+    "Panama": "Panama",
 }
 
 

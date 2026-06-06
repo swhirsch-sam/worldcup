@@ -1,5 +1,28 @@
 {
-  "_comment": "PLACEHOLDER — replace with the actual Dec 5 2025 draw before Phase 2.",
-  "_status": "AWAITING_CONFIRMATION",
-  "groups": {}
+  "_metadata": {
+    "draw_date": "2025-12-05",
+    "draw_location": "John F. Kennedy Center for the Performing Arts, Washington D.C.",
+    "confirmed": true,
+    "source": "FIFA official draw + multiple independent sources (ESPN, FOX, Yahoo Sports)"
+  },
+  "groups": {
+    "A": ["Mexico", "South Korea", "South Africa", "Czechia"],
+    "B": ["Canada", "Switzerland", "Qatar", "Bosnia and Herzegovina"],
+    "C": ["Brazil", "Morocco", "Haiti", "Scotland"],
+    "D": ["United States", "Paraguay", "Australia", "Türkiye"],
+    "E": ["Germany", "Curaçao", "Côte d'Ivoire", "Ecuador"],
+    "F": ["Netherlands", "Japan", "Tunisia", "Sweden"],
+    "G": ["Belgium", "Egypt", "Iran", "New Zealand"],
+    "H": ["Spain", "Cabo Verde", "Saudi Arabia", "Uruguay"],
+    "I": ["France", "Senegal", "Norway", "Iraq"],
+    "J": ["Argentina", "Algeria", "Austria", "Jordan"],
+    "K": ["Portugal", "Uzbekistan", "Colombia", "DR Congo"],
+    "L": ["England", "Croatia", "Ghana", "Panama"]
+  },
+  "hosts": ["Mexico", "Canada", "United States"],
+  "host_group_assignments": {
+    "Mexico": "A",
+    "Canada": "B",
+    "United States": "D"
+  }
 }

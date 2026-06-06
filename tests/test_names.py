@@ -9,7 +9,9 @@ Tests:
 
 from __future__ import annotations
 
-from src.ingest.names import NameResolutionError, resolve, resolve_all  # noqa: F401
+import pytest
+
+from src.ingest.names import CANONICAL_TEAMS, NameResolutionError, resolve, resolve_all
 
 
 class TestKnownAliases:
@@ -44,25 +46,64 @@ class TestKnownAliases:
         assert resolve("Curacao") == "Curaçao"
 
 
+class TestNewAliases:
+    def test_czech_republic_resolves(self) -> None:
+        assert resolve("Czech Republic") == "Czechia"
+
+    def test_turkey_resolves(self) -> None:
+        assert resolve("Turkey") == "Türkiye"
+
+    def test_cape_verde_resolves(self) -> None:
+        assert resolve("Cape Verde") == "Cabo Verde"
+
+    def test_bosnia_hyphen_resolves(self) -> None:
+        assert resolve("Bosnia-Herzegovina") == "Bosnia and Herzegovina"
+
+    def test_congo_comma_resolves(self) -> None:
+        assert resolve("Congo, DR") == "DR Congo"
+
+
 class TestPassthrough:
     def test_canonical_name_passes_through(self) -> None:
-        # When CANONICAL_TEAMS is empty (Phase 1 placeholder), canonical names
-        # that are already in _ALIAS_MAP resolve to themselves.
         assert resolve("United States") == "United States"
 
     def test_south_korea_canonical_passes(self) -> None:
         assert resolve("South Korea") == "South Korea"
 
+    def test_turkiye_canonical_passes(self) -> None:
+        assert resolve("Türkiye") == "Türkiye"
+
+    def test_cabo_verde_canonical_passes(self) -> None:
+        assert resolve("Cabo Verde") == "Cabo Verde"
+
+
+class TestCanonicalRegistry:
+    def test_registry_has_48_teams(self) -> None:
+        assert len(CANONICAL_TEAMS) == 48
+
+    def test_all_three_hosts_in_registry(self) -> None:
+        for host in ("Mexico", "Canada", "United States"):
+            assert host in CANONICAL_TEAMS
+
+    def test_all_12_groups_represented(self) -> None:
+        import json
+
+        with open("data/groups.json") as f:
+            groups = json.load(f)["groups"]
+        for group_label, teams in groups.items():
+            for team in teams:
+                assert team in CANONICAL_TEAMS, f"{team} (Group {group_label}) not in registry"
+
 
 class TestErrors:
     def test_unmapped_name_raises(self) -> None:
-        # Once CANONICAL_TEAMS is populated, an unknown name should raise.
-        # In Phase 1 with empty CANONICAL_TEAMS the resolver passes through;
-        # this test documents the expected post-Phase-2 behaviour.
-        # TODO: activate strict check in Phase 2 by populating CANONICAL_TEAMS.
-        pass  # placeholder — see Phase 2
+        with pytest.raises(NameResolutionError, match="not in canonical registry"):
+            resolve("Nonexistentland FC")
 
     def test_resolve_all_propagates_error(self) -> None:
-        # Smoke test: resolve_all on a valid list returns a list.
         result = resolve_all(["USA", "Korea Republic"])
         assert result == ["United States", "South Korea"]
+
+    def test_resolve_all_raises_on_bad_name(self) -> None:
+        with pytest.raises(NameResolutionError):
+            resolve_all(["Brazil", "NotATeam"])
