@@ -11,10 +11,11 @@ Both models expose the same interface: simulate_match(lambda_h, lambda_a, rng) -
 
 from __future__ import annotations
 
-from typing import Protocol
+from typing import Any, Protocol
 
 import numpy as np
 from numpy.random import Generator
+from numpy.typing import NDArray
 from scipy.stats import poisson as scipy_poisson
 
 
@@ -32,10 +33,10 @@ class MatchSimulator(Protocol):
 
     def simulate_match_batch(
         self,
-        lambda_h: np.ndarray,
-        lambda_a: np.ndarray,
+        lambda_h: NDArray[Any],
+        lambda_a: NDArray[Any],
         rng: Generator,
-    ) -> tuple[np.ndarray, np.ndarray]:
+    ) -> tuple[NDArray[Any], NDArray[Any]]:
         """Vectorized batch draw; arrays must have the same shape."""
         ...
 
@@ -106,10 +107,10 @@ class DixonColesModel:
 
     def simulate_match_batch(
         self,
-        lambda_h: np.ndarray,
-        lambda_a: np.ndarray,
+        lambda_h: NDArray[Any],
+        lambda_a: NDArray[Any],
         rng: Generator,
-    ) -> tuple[np.ndarray, np.ndarray]:
+    ) -> tuple[NDArray[Any], NDArray[Any]]:
         """Vectorized batch simulation for Monte Carlo use.
 
         Args:
@@ -198,10 +199,10 @@ class BivariatePoissonModel:
 
     def simulate_match_batch(
         self,
-        lambda_h: np.ndarray,
-        lambda_a: np.ndarray,
+        lambda_h: NDArray[Any],
+        lambda_a: NDArray[Any],
         rng: Generator,
-    ) -> tuple[np.ndarray, np.ndarray]:
+    ) -> tuple[NDArray[Any], NDArray[Any]]:
         """Fully vectorized bivariate Poisson batch draw."""
         lam3 = np.minimum(self.lambda_corr, np.minimum(lambda_h, lambda_a))
         lam1 = lambda_h - lam3

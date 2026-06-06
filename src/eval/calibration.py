@@ -6,13 +6,15 @@ Used by both the backtest module and the Streamlit app summary section.
 
 from __future__ import annotations
 
-import numpy as np
+from typing import Any
+
 import pandas as pd
+from numpy.typing import NDArray
 
 
 def reliability_diagram_data(
-    predicted: np.ndarray,
-    observed: np.ndarray,
+    predicted: NDArray[Any],
+    observed: NDArray[Any],
     n_bins: int = 10,
     min_bin_size: int = 10,
 ) -> pd.DataFrame:
@@ -31,8 +33,8 @@ def reliability_diagram_data(
 
 
 def calibration_summary(
-    predicted: np.ndarray,
-    observed: np.ndarray,
+    predicted: NDArray[Any],
+    observed: NDArray[Any],
 ) -> dict[str, float]:
     """Return a dict with overall_brier, overall_log_loss, and expected_calibration_error."""
     raise NotImplementedError("calibration_summary: implement in Phase 7.")

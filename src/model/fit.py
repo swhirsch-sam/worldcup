@@ -7,10 +7,12 @@ Running `make fit` invokes this module.
 from __future__ import annotations
 
 import logging
+from typing import Any
 
 import numpy as np
 import pandas as pd
 import yaml
+from numpy.typing import NDArray
 from scipy.optimize import minimize, minimize_scalar
 
 from src.ingest.elo import compute_elo_with_records
@@ -77,7 +79,7 @@ def fit_goals_model(match_records: pd.DataFrame, cfg: dict) -> dict[str, float]:
     home_goals = match_records["home_score"].to_numpy(dtype=float)
     away_goals = match_records["away_score"].to_numpy(dtype=float)
 
-    def neg_log_likelihood(params: np.ndarray) -> float:
+    def neg_log_likelihood(params: NDArray[Any]) -> float:
         alpha, beta = params
         lam_h = np.exp(alpha + beta * elo_diff)
         lam_a = np.exp(alpha - beta * elo_diff)

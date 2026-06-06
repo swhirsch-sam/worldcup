@@ -15,6 +15,7 @@ from typing import Any
 
 import numpy as np
 import yaml
+from numpy.typing import NDArray
 
 logger = logging.getLogger(__name__)
 
@@ -33,7 +34,7 @@ def run_backtest(year: int, cutoff_date: str, cfg: dict[str, Any]) -> dict[str, 
 
 
 def ranked_probability_score(
-    predicted: np.ndarray,
+    predicted: NDArray[Any],
     observed_outcome: int,
     n_outcomes: int = 3,
 ) -> float:
