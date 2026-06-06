@@ -30,6 +30,25 @@ ensemble:
   provisional_cap_threshold: 30
 
 # ---------------------------------------------------------------------------
+# Elo computation from historical results (used when eloratings.net unavailable)
+# Based on eloratings.net methodology (https://www.eloratings.net/about)
+# ---------------------------------------------------------------------------
+elo_computation:
+  # K-factors by match importance (before goal-difference multiplier)
+  k_factors:
+    world_cup_final: 60        # FIFA World Cup tournament matches
+    continental_championship: 50  # Euros, Copa América, AFCON, AFC Asian Cup, Gold Cup
+    world_cup_qualifier: 40    # WC qualifiers, continental qualifiers, Nations Leagues
+    other_official: 30         # Other competitive tournaments
+    friendly: 20               # Friendlies
+  # Additive Elo points for home advantage in non-neutral venues
+  home_advantage_elo: 100.0
+  # Starting Elo for all teams (warm start from all available history)
+  starting_rating: 1500.0
+  # Historical dataset GitHub URL (Mart Jürisoo international results)
+  historical_url: "https://raw.githubusercontent.com/martj42/international_results/master/results.csv"
+
+# ---------------------------------------------------------------------------
 # Host bump (additive Elo points applied to host teams in their group games)
 # ---------------------------------------------------------------------------
 host:

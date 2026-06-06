@@ -30,14 +30,9 @@ _ODDS_SCHEMA: dict[str, type] = {
     "implied_probability": float,
 }
 
-_HISTORICAL_SCHEMA: dict[str, type] = {
-    "date": str,
-    "home_team": str,
-    "away_team": str,
-    "home_score": int,
-    "away_score": int,
-    "neutral": bool,
-}
+_HISTORICAL_REQUIRED_COLUMNS: frozenset[str] = frozenset(
+    {"date", "home_team", "away_team", "home_score", "away_score", "neutral"}
+)
 
 
 def validate_elo(df: pd.DataFrame) -> None:
@@ -67,7 +62,11 @@ def validate_odds(df: pd.DataFrame) -> None:
 
 def validate_historical(df: pd.DataFrame) -> None:
     """Validate historical match results data frame."""
-    _check_columns(df, _HISTORICAL_SCHEMA, "Historical")
+    missing = _HISTORICAL_REQUIRED_COLUMNS - set(df.columns)
+    if missing:
+        raise SchemaValidationError(
+            f"Historical: missing columns {sorted(missing)}. Got: {sorted(df.columns.tolist())}"
+        )
     _check_nonempty(df, "Historical")
     if (df["home_score"] < 0).any() or (df["away_score"] < 0).any():
         raise SchemaValidationError("Historical: negative scoreline found.")

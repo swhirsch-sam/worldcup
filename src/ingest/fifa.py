@@ -49,15 +49,23 @@ def fetch_fifa(*, refresh: bool = False) -> pd.DataFrame | None:
         return df
 
     logger.info("Fetching FIFA rankings from %s", fifa_cfg["url"])
-    raw = _fetch_with_retry(fifa_cfg["url"], cfg["data"])
-    df = _parse_fifa_json(raw)
-    validate_fifa(df)
-    df["team"] = df["team"].map(resolve)
+    try:
+        raw = _fetch_with_retry(fifa_cfg["url"], cfg["data"])
+        df = _parse_fifa_json(raw)
+        validate_fifa(df)
+        df["team"] = df["team"].map(resolve)
 
-    cache_path.parent.mkdir(parents=True, exist_ok=True)
-    df.to_json(cache_path, orient="records")
-    logger.info("Saved FIFA rankings to %s", cache_path)
-    return df
+        cache_path.parent.mkdir(parents=True, exist_ok=True)
+        df.to_json(cache_path, orient="records")
+        logger.info("Saved FIFA rankings to %s", cache_path)
+        return df
+    except Exception as exc:
+        logger.warning(
+            "FIFA rankings fetch/parse failed (%s). Signal unavailable; "
+            "Elo-only ensemble will be used.",
+            exc,
+        )
+        return None
 
 
 def _parse_fifa_json(raw: str) -> pd.DataFrame:

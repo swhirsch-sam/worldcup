@@ -12,6 +12,7 @@ help:
 	@echo ""
 	@echo "Data / model targets:"
 	@echo "  ingest           Fetch and cache all data sources"
+	@echo "  strength         Build data/processed/strength.csv (ingest + ensemble)"
 	@echo "  fit              Fit the goals model on historical data"
 	@echo "  simulate         Run the 50k Monte Carlo simulation"
 	@echo "  backtest         Run backtests for 2018 and 2022"
@@ -56,6 +57,10 @@ refresh:
 	$(PYTHON) -m src.ingest.elo --refresh
 	$(PYTHON) -m src.ingest.fifa --refresh
 	$(PYTHON) -m src.ingest.odds --refresh
+
+.PHONY: strength
+strength:
+	$(PYTHON) -m src.model.strength
 
 .PHONY: fit
 fit:
