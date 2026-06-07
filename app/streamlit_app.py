@@ -244,13 +244,14 @@ def main() -> None:
     st.markdown(
         f"**How it works:** We simulated the entire 2026 World Cup **{n_iter:,} times** using a "
         "statistical model trained on **49,000+ historical international matches** (1872-present). "
-        "Each match outcome is determined by team strength learned from decades of real results - "
+        "Each match outcome is determined by team strength learned from decades of real results — "
         "stronger teams win more often, but upsets still happen. After all those simulations, we "
         "count how often each team reached each round. Those frequencies become the percentages "
         "you see throughout this app. For the technical details, see the "
         "**Model Stats** and **Methodology** tabs.\n\n"
         "**Data sources:** Historical match results (49k+ games, 1872-present) · "
-        "Elo strength ratings · FIFA rankings · WC 2026 official bracket format"
+        "Elo strength ratings · FIFA rankings · Polymarket predictions · "
+        "WC 2026 official bracket format"
     )
 
     if n_iter < 10_000:
@@ -309,12 +310,17 @@ def _render_footer() -> None:
   gap: 16px;
 ">
   <span style="color: #4a4a4a; font-size: 0.82em; flex: 1;">
-    <b>Built with:</b> Dixon-Coles statistical model &nbsp;&middot;&nbsp;
-    49,000+ historical matches (1872-present) &nbsp;&middot;&nbsp;
-    Elo strength ratings &nbsp;&middot;&nbsp;
-    Betting market odds &nbsp;&middot;&nbsp;
-    Polymarket predictions &nbsp;&middot;&nbsp;
-    50,000 Monte Carlo simulations
+    <a href="https://www.eloratings.net/" target="_blank"
+    style="color:#1a6eb5;">Elo strength ratings</a>
+    &nbsp;&middot;&nbsp;
+    <a href="https://www.rsssf.org/miscellaneous/intlrecs.html"
+    target="_blank" style="color:#1a6eb5;">49,000+ historical matches</a>
+    &nbsp;&middot;&nbsp;
+    <a href="https://polymarket.com/event/2026-fifa-world-cup-winner"
+    target="_blank" style="color:#1a6eb5;">Polymarket predictions</a>
+    &nbsp;&middot;&nbsp;
+    <a href="https://www.fifa.com/en/ranking/men"
+    target="_blank" style="color:#1a6eb5;">FIFA rankings</a>
     &nbsp;&nbsp;|&nbsp;&nbsp;
     See the <b>Methodology</b> tab for details
   </span>
@@ -339,7 +345,7 @@ def _render_group_stage(probs: dict[str, Any], groups: dict[str, list[str]]) -> 
         "The **top 2 teams** in each group automatically qualify for the knockout round. "
         "The best 8 third-place teams also advance as wildcards (see the **Best Third** tab). "
         "Percentages show each team's estimated chance of finishing in that position. "
-        "Teams marked **HOST** represent the United States, Canada, or Mexico."
+        "United States, Canada, and Mexico receive a home-field strength boost as tournament hosts."
     )
 
     cols = st.columns(3)
@@ -349,10 +355,9 @@ def _render_group_stage(probs: dict[str, Any], groups: dict[str, list[str]]) -> 
             rows = []
             for team in teams:
                 p = probs.get(team, {})
-                flag = "HOST " if team in HOSTS else ""
                 rows.append(
                     {
-                        "Team": flag + team,
+                        "Team": team,
                         "Finish 1st": p.get("group_first", 0.0),
                         "Finish 2nd": p.get("group_second", 0.0),
                         "Qualify %": p.get("r32", 0.0),
