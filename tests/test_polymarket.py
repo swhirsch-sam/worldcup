@@ -4,9 +4,7 @@ from __future__ import annotations
 
 import json
 
-import pandas as pd
-
-from src.ingest.polymarket import _extract_prices, _fetch_and_parse
+from src.ingest.polymarket import _extract_prices
 
 
 def _market(outcomes: list[str], prices: list[float]) -> dict:
@@ -75,10 +73,7 @@ def test_extract_prices_malformed_json_returns_empty() -> None:
 def test_normalization_sums_to_one() -> None:
     m = _market(["France", "Brazil", "Argentina"], [0.25, 0.20, 0.15])
     rows = _extract_prices(m)
-    df = pd.DataFrame(rows)
-    total = float(df["implied_probability"].sum())
-    # Normalization happens in _fetch_and_parse, not _extract_prices, so raw sum here
-    # Just verify types are correct
+    # Normalization happens in _fetch_and_parse, not _extract_prices
     assert all(isinstance(r["implied_probability"], float) for r in rows)
 
 
