@@ -33,8 +33,8 @@ make app         # launch Streamlit report
 
 ### Historical results
 
-Download international match results from [international_results.csv on Kaggle]
-or the [Mart Jürisoo dataset on GitHub] covering matches from 1872 onward.
+Download international match results from [international_results.csv on Kaggle](https://www.kaggle.com/datasets/martj42/international-football-results-from-1872-to-2017)
+or the [Mart Jürisoo dataset on GitHub](https://github.com/martj42/international_results) covering matches from 1872 onward.
 Place at `data/raw/historical_results.csv`. The pipeline filters by
 `config.yaml:data.historical.earliest_date` (default `2000-01-01`).
 
