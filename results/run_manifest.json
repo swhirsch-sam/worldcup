@@ -1,9 +1,9 @@
 {
-  "git_commit_sha": "712b36bc2714debab0415871d2bc10c5374be1f9",
+  "git_commit_sha": "3e64b103fbbad01c741415beca985bb4329a81dd",
   "rng_seed": 42,
-  "config_hash": "ee3c4e5d04090b44",
-  "n_iterations": 1000,
-  "timestamp_utc": "2026-06-06T17:04:46Z",
+  "config_hash": "42e22ee39267c199",
+  "n_iterations": 50000,
+  "timestamp_utc": "2026-06-07T00:36:02Z",
   "model": {
     "type": "dixon_coles",
     "rho": -0.060918682601896486,
