@@ -74,9 +74,44 @@ def fetch_odds(*, refresh: bool = False) -> pd.DataFrame | None:
 def _parse_and_devige(raw: str) -> pd.DataFrame:
     """Parse Odds API JSON and remove bookmaker overround via multiplicative method.
 
-    De-vigging: p_fair_i = p_raw_i / sum(p_raw_j)
+    The Odds API outrights endpoint returns a list of events, each with a list of
+    bookmakers, each with an outrights market whose outcomes carry decimal odds.
+    We average raw implied probs across bookmakers then normalise to sum to 1.
+
+    De-vigging: p_fair_i = mean_raw_i / sum(mean_raw_j)
     """
-    raise NotImplementedError("_parse_and_devige: implement in Phase 2 after confirming API shape.")
+    import json as _json
+
+    data = _json.loads(raw)
+
+    # Aggregate 1/decimal_odds per team across all bookmakers
+    team_raw: dict[str, list[float]] = {}
+    for event in data:
+        for bookmaker in event.get("bookmakers", []):
+            for market in bookmaker.get("markets", []):
+                if market.get("key") != "outrights":
+                    continue
+                for outcome in market.get("outcomes", []):
+                    name: str = str(outcome.get("name", ""))
+                    price = float(outcome.get("price", 0))
+                    if price > 1.0:  # decimal odds only
+                        team_raw.setdefault(name, []).append(1.0 / price)
+
+    if not team_raw:
+        raise ValueError("No outright outcomes found in Odds API response.")
+
+    rows = [
+        {"team": team, "implied_probability": sum(ps) / len(ps)}
+        for team, ps in team_raw.items()
+    ]
+    df = pd.DataFrame(rows)
+
+    # Multiplicative de-vig: normalise to sum to 1
+    total = float(df["implied_probability"].sum())
+    if total < 1e-9:
+        raise ValueError("Sum of implied probabilities is zero after de-vigging.")
+    df["implied_probability"] = df["implied_probability"] / total
+    return df
 
 
 def _fetch_with_retry(url: str, data_cfg: dict) -> str:  # type: ignore[type-arg]

@@ -261,6 +261,25 @@ def main() -> None:
 
 
 # ---------------------------------------------------------------------------
+# Shared footer
+# ---------------------------------------------------------------------------
+
+
+def _render_footer() -> None:
+    st.divider()
+    left, right = st.columns([5, 1])
+    with left:
+        st.caption(
+            "**Methodology:** Dixon-Coles Poisson model trained on 49,000+ historical matches "
+            "(1872-present) · Elo strength ratings · Betting market odds (The Odds API) · "
+            "Polymarket prediction market · 50,000 Monte Carlo simulations. "
+            "See the **Methodology** tab for full details."
+        )
+    with right:
+        st.caption("Created by [Sam Hirsch](https://samhirsch.com)")
+
+
+# ---------------------------------------------------------------------------
 # Tab renderers
 # ---------------------------------------------------------------------------
 
@@ -302,6 +321,7 @@ def _render_group_stage(probs: dict[str, Any], groups: dict[str, list[str]]) -> 
                 hide_index=True,
                 use_container_width=True,
             )
+    _render_footer()
 
 
 def _render_best_third(
@@ -360,6 +380,7 @@ def _render_best_third(
             hide_index=True,
             use_container_width=True,
         )
+    _render_footer()
 
 
 def _render_bracket(team_df: pd.DataFrame, n_iter: int) -> None:
@@ -412,6 +433,7 @@ def _render_bracket(team_df: pd.DataFrame, n_iter: int) -> None:
             hide_index=True,
             use_container_width=True,
         )
+    _render_footer()
 
 
 def _render_champion_odds(team_df: pd.DataFrame, n_iter: int) -> None:
@@ -470,6 +492,7 @@ def _render_champion_odds(team_df: pd.DataFrame, n_iter: int) -> None:
     fig2.update_traces(textposition="outside")
     fig2.update_layout(coloraxis_showscale=False, height=350)
     st.plotly_chart(fig2, use_container_width=True)
+    _render_footer()
 
 
 def _render_model_stats(
@@ -558,6 +581,7 @@ def _render_model_stats(
         "Formal backtesting against 2018 and 2022 World Cup results will be "
         "added in Phase 7 (calibration & eval suite)."
     )
+    _render_footer()
 
 
 def _render_methodology(manifest: dict[str, Any], meta: dict[str, Any]) -> None:
@@ -575,9 +599,10 @@ a low-score correction factor tau(x,y; rho). rho is negative for football (more
 0-0/1-1 than independent Poisson predicts). Both teams' lambdas are derived from
 `lambda = exp(alpha + beta * elo_diff)`, fitted by Poisson MLE on the same dataset.
 
-**Strength ensemble** — z-score blend of Elo, FIFA rankings (when available), and
-market implied probabilities (when available). Provisional teams are shrunk 30%
-toward the mean; host nations receive an Elo bump.
+**Strength ensemble** — z-score blend of four signals (weights renormalize when a source
+is unavailable): Elo 50%, Betting odds 20%, Polymarket 20%, FIFA 10%. Bookmaker implied
+probabilities are de-vigged via the multiplicative method; Polymarket prices are normalized
+to sum to 1. Provisional teams are shrunk 30% toward the mean; host nations receive an Elo bump.
 
 **Group stage** — 12 groups of 4, round-robin (6 matches each). Rankings use FIFA
 8-level tiebreakers: points, GD, GF, H2H points, H2H GD, H2H GF, fair-play, lots.
@@ -616,6 +641,7 @@ bracket map, pre-computed for all C(12,8)=495 combinations.
                     st.markdown(f"  - {lib}: {ver}")
     else:
         st.info("Run manifest not found. Run `python3 -m src.model.montecarlo` to generate it.")
+    _render_footer()
 
 
 def _render_pickem(
@@ -878,6 +904,7 @@ def _render_pickem(
         )
     else:
         st.info("Make your picks above to see your summary here.")
+    _render_footer()
 
 
 # ---------------------------------------------------------------------------
