@@ -266,17 +266,37 @@ def main() -> None:
 
 
 def _render_footer() -> None:
-    st.divider()
-    left, right = st.columns([5, 1])
-    with left:
-        st.caption(
-            "**Methodology:** Dixon-Coles Poisson model trained on 49,000+ historical matches "
-            "(1872-present) · Elo strength ratings · Betting market odds (The Odds API) · "
-            "Polymarket prediction market · 50,000 Monte Carlo simulations. "
-            "See the **Methodology** tab for full details."
-        )
-    with right:
-        st.caption("Created by [Sam Hirsch](https://samhirsch.com)")
+    st.markdown(
+        """
+<div style="
+  background: #f0f4f8;
+  border-top: 3px solid #1a6eb5;
+  border-radius: 6px;
+  padding: 14px 20px;
+  margin-top: 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+">
+  <span style="color: #4a4a4a; font-size: 0.82em; flex: 1;">
+    <b>Built with:</b> Dixon-Coles statistical model &nbsp;&middot;&nbsp;
+    49,000+ historical matches (1872-present) &nbsp;&middot;&nbsp;
+    Elo strength ratings &nbsp;&middot;&nbsp;
+    Betting market odds &nbsp;&middot;&nbsp;
+    Polymarket predictions &nbsp;&middot;&nbsp;
+    50,000 Monte Carlo simulations
+    &nbsp;&nbsp;|&nbsp;&nbsp;
+    See the <b>Methodology</b> tab for details
+  </span>
+  <span style="white-space: nowrap; font-size: 0.88em; font-weight: 700; color: #1a6eb5;">
+    Created by&nbsp;<a href="https://samhirsch.com" target="_blank"
+      style="color: #1a6eb5; text-decoration: none;">Sam Hirsch</a>
+  </span>
+</div>
+        """,
+        unsafe_allow_html=True,
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -587,32 +607,61 @@ def _render_model_stats(
 def _render_methodology(manifest: dict[str, Any], meta: dict[str, Any]) -> None:
     st.header("Methodology & Data Provenance")
 
-    st.subheader("Model overview")
+    st.subheader("How the model works")
     st.markdown(
         """
-**Elo ratings** — computed from 49k+ historical international matches (Mart Jurisoo dataset)
-using eloratings.net methodology: K-factors by tournament type (60/50/40/30/20),
-goal-weight G = (goal_diff + 1)^0.5, home advantage 100 Elo pts.
+**Step 1 — Measuring team strength**
 
-**Dixon-Coles Poisson model** — each match draws from an 11x11 joint PMF with
-a low-score correction factor tau(x,y; rho). rho is negative for football (more
-0-0/1-1 than independent Poisson predicts). Both teams' lambdas are derived from
-`lambda = exp(alpha + beta * elo_diff)`, fitted by Poisson MLE on the same dataset.
+Each team gets a single strength number built from four sources, blended together:
 
-**Strength ensemble** — z-score blend of four signals (weights renormalize when a source
-is unavailable): Elo 50%, Betting odds 20%, Polymarket 20%, FIFA 10%. Bookmaker implied
-probabilities are de-vigged via the multiplicative method; Polymarket prices are normalized
-to sum to 1. Provisional teams are shrunk 30% toward the mean; host nations receive an Elo bump.
+- **Elo ratings (50%)** — A running score updated after every international match since 1872.
+  Big tournament wins move it more than friendly wins.
+- **Betting market odds (20%)** — Implied win probabilities from bookmakers like Pinnacle,
+  with the house margin mathematically removed. Sharp money tends to be well-informed.
+- **Polymarket (20%)** — Crowd-sourced prediction market prices. People put real money on
+  outcomes, creating a live consensus independent of the bookmakers.
+- **FIFA rankings (10%)** — FIFA's own monthly ranking of national teams.
 
-**Group stage** — 12 groups of 4, round-robin (6 matches each). Rankings use FIFA
-8-level tiebreakers: points, GD, GF, H2H points, H2H GD, H2H GF, fair-play, lots.
+When a source isn't available its weight is automatically redistributed to the others.
+Host nations (USA, Canada, Mexico) receive a small home-crowd boost. Teams with limited
+match history are nudged toward average to avoid overconfidence.
 
-**Best-third selection** — 8 of the 12 third-place teams qualify based on pts/GD/GF/FP.
-Slot assignments follow a bipartite matching (Hungarian algorithm) over the Annex C
-bracket map, pre-computed for all C(12,8)=495 combinations.
+---
 
-**Knockout simulation** — 90-min Poisson draw (caution factor 0.85), then extra time
-(lambda x 0.333), then penalties (Bernoulli p = 0.5 +/- Elo tilt, capped at 0.1).
+**Step 2 — Predicting match scores**
+
+With team strengths in hand, we predict how many goals each side is likely to score.
+The stronger the team and the bigger the gap, the higher their expected goal tally.
+We use a model called **Dixon-Coles** (a well-known football statistics method) which
+includes a correction for a quirk in the sport: low-scoring draws like 0-0 and 1-1
+happen *more often* than basic probability would suggest, so we adjust for that.
+
+---
+
+**Step 3 — Simulating the tournament 50,000 times**
+
+We run the entire World Cup from first group game to the final, 50,000 times.
+Each simulation draws a realistic scoreline for every match, determines group standings
+(using official FIFA tiebreaker rules), selects the 8 best third-place wildcards, and
+plays out the full knockout bracket. After all 50,000 runs, we count how often each team
+reached each round — those frequencies become the percentages you see in this app.
+
+---
+
+**Step 4 — Tiebreakers & wildcards**
+
+When teams finish a group level on points, we apply the official FIFA rules in order:
+goal difference, goals scored, head-to-head record, and so on down to a coin flip.
+For the 8 wildcard spots, the 12 third-place teams are ranked by the same criteria and
+the best 8 advance. Bracket slot assignments follow FIFA's official Annex C rules.
+
+---
+
+**Step 5 — Knockout extra time and penalties**
+
+If a knockout match is still tied after 90 minutes, we simulate 30 minutes of extra time
+(teams score fewer goals when tired). Still level? We simulate a penalty shootout —
+roughly 50/50 for either side, with a small tilt toward the stronger team.
         """
     )
 
