@@ -207,10 +207,39 @@ def main() -> None:
     # -- Header --
     st.title("FIFA World Cup 2026 — Bracket Predictor")
     c1, c2, c3, c4 = st.columns(4)
-    c1.metric("Projected Champion", top_team)
-    c2.metric("Title Odds", f"{top_prob:.1%}")
-    c3.metric("Simulations Run", f"{n_iter:,}")
-    c4.metric("Last Updated", meta.get("generated_at", "")[:10])
+    c1.metric(
+        "Projected Champion",
+        top_team,
+        help=(
+            "The team with the highest estimated probability of winning the 2026 World Cup, "
+            "based on the simulation results. This is the model's best guess — not a guarantee."
+        ),
+    )
+    c2.metric(
+        "Title Odds",
+        f"{top_prob:.1%}",
+        help=(
+            "Estimated probability that the projected champion wins the tournament outright. "
+            "Even the top favourite rarely exceeds 20-25% — football is unpredictable."
+        ),
+    )
+    c3.metric(
+        "Simulations Run",
+        f"{n_iter:,}",
+        help=(
+            "Number of complete tournament simulations used to calculate these probabilities. "
+            "More simulations produce tighter, more reliable estimates. "
+            "50,000+ is recommended for stable results."
+        ),
+    )
+    c4.metric(
+        "Last Updated",
+        meta.get("generated_at", "")[:10],
+        help=(
+            "Date the simulation was last run. "
+            "Run `python3 -m src.model.montecarlo` to refresh with the latest data."
+        ),
+    )
 
     st.markdown(
         f"**How it works:** We simulated the entire 2026 World Cup **{n_iter:,} times** using a "
@@ -413,7 +442,17 @@ def _render_bracket(team_df: pd.DataFrame, n_iter: int) -> None:
     )
 
     # Heatmap: teams x stages
-    top_n = st.slider("How many teams to show", 10, 48, 24)
+    top_n = st.slider(
+        "How many teams to show",
+        10,
+        48,
+        24,
+        help=(
+            "Teams are ranked by their estimated chance of winning the tournament. "
+            "Top 24 shows the realistic contenders; show all 48 to see every team's odds. "
+            "Numbers in each cell = estimated % chance of reaching that round."
+        ),
+    )
     df = team_df.head(top_n)[["team", *STAGE_ORDER]].set_index("team")
     df.columns = [STAGE_SHORT[s] for s in STAGE_ORDER]
 
@@ -464,7 +503,19 @@ def _render_champion_odds(team_df: pd.DataFrame, n_iter: int) -> None:
         "on which teams are legitimate contenders. Hover over any bar for the exact percentage."
     )
 
-    top_n = st.slider("How many teams to show", 10, 48, 20, key="champ_n")
+    top_n = st.slider(
+        "How many teams to show",
+        10,
+        48,
+        20,
+        key="champ_n",
+        help=(
+            "Teams are sorted by estimated win probability. "
+            "The small horizontal lines on each bar are 95% confidence intervals — "
+            "the wider the line, the less certain the estimate. "
+            "Confidence tightens with more simulations."
+        ),
+    )
     df = team_df.head(top_n).copy()
     df["ci"] = df["champion"].apply(lambda p: ci_half(p, n_iter))
     df["pct"] = df["champion"] * 100
@@ -565,25 +616,40 @@ def _render_model_stats(
         effective_n = 1.0 / hhi if hhi > 0 else 0
         top3_share = float(champ_probs[:3].sum())
         top8_share = float(champ_probs[:8].sum())
-        st.table(
-            pd.DataFrame(
-                {
-                    "Statistic": [
-                        "HHI (market concentration)",
-                        "Effective # of contenders",
-                        "Top-3 combined P(champion)",
-                        "Top-8 combined P(champion)",
-                        "Runtime",
-                    ],
-                    "Value": [
-                        f"{hhi:.4f}",
-                        f"{effective_n:.1f}",
-                        f"{top3_share:.1%}",
-                        f"{top8_share:.1%}",
-                        f"{meta.get('runtime_seconds', 0):.0f}s",
-                    ],
-                }
-            ).set_index("Statistic")
+        ma, mb = st.columns(2)
+        ma.metric(
+            "Effective contenders",
+            f"{effective_n:.1f}",
+            help=(
+                "How many teams are genuinely in contention. "
+                "If one team had 100% odds this would be 1. "
+                "With 48 equal teams it would be 48. "
+                "Derived from the HHI: 1 / sum(p²)."
+            ),
+        )
+        mb.metric(
+            "HHI (concentration)",
+            f"{hhi:.4f}",
+            help=(
+                "Herfindahl-Hirschman Index: sum of squared win probabilities. "
+                "Higher = more concentrated around a few favorites. "
+                "0.02 = perfectly equal field; 1.0 = one team is a certainty."
+            ),
+        )
+        ma.metric(
+            "Top-3 title share",
+            f"{top3_share:.1%}",
+            help="Combined win probability of the three highest-ranked teams.",
+        )
+        mb.metric(
+            "Top-8 title share",
+            f"{top8_share:.1%}",
+            help="Combined win probability of the top eight teams — the realistic contender pool.",
+        )
+        st.metric(
+            "Simulation runtime",
+            f"{meta.get('runtime_seconds', 0):.0f}s",
+            help="Wall-clock time to run the full simulation on the generation machine.",
         )
 
     st.subheader("Champion probability distribution")
@@ -818,6 +884,11 @@ def _render_pickem(
         max_selections=4,
         format_func=lambda t: _lbl(t, "gs"),
         key="pk_gs",
+        help=(
+            "Each team shows its estimated chance of qualifying for the Round of 32. "
+            "Teams are sorted best-to-worst. All 4 of your picks must advance or "
+            "your entry is eliminated."
+        ),
     )
 
     if len(gs_picks) == 4:
@@ -839,7 +910,9 @@ def _render_pickem(
     def _avail(exclude: set[str]) -> list[str]:
         return [t for t in teams_by_r32 if t not in exclude]
 
-    def _safe_select(label_str: str, key: str, opts: list[str], role: str) -> str:
+    def _safe_select(
+        label_str: str, key: str, opts: list[str], role: str, help_text: str = ""
+    ) -> str:
         choices = ["(none)", *opts]
         cur = st.session_state.get(key, "(none)")
         if cur not in choices:
@@ -851,6 +924,7 @@ def _render_pickem(
             index=choices.index(cur),
             format_func=lambda t: "— not yet picked —" if t == "(none)" else _lbl(t, role),
             key=key,
+            help=help_text or None,
         )
         return result or "(none)"
 
@@ -866,30 +940,58 @@ def _render_pickem(
         max_selections=2,
         format_func=lambda t: _lbl(t, "r32"),
         key="pk_r32",
+        help=(
+            "Percentage shown is the team's estimated chance of winning their R32 match "
+            "and advancing to the Round of 16. Both picks must win."
+        ),
     )
     used.update(r32_picks)
 
     # R16 — 1 pick
     st.markdown("##### Round of 16 — Pick 1 team to win their R16 match")
-    r16_pick: str = _safe_select("R16 pick", "pk_r16", _avail(used), "r16")
+    r16_pick: str = _safe_select(
+        "R16 pick",
+        "pk_r16",
+        _avail(used),
+        "r16",
+        "% shown = estimated chance of winning the R16 match and reaching the Quarterfinals.",
+    )
     if r16_pick != "(none)":
         used.add(r16_pick)
 
     # QF — 1 pick
     st.markdown("##### Quarterfinals — Pick 1 team to win their QF match")
-    qf_pick: str = _safe_select("QF pick", "pk_qf", _avail(used), "qf")
+    qf_pick: str = _safe_select(
+        "QF pick",
+        "pk_qf",
+        _avail(used),
+        "qf",
+        "% shown = estimated chance of winning the QF match and reaching the Semifinals.",
+    )
     if qf_pick != "(none)":
         used.add(qf_pick)
 
     # SF — 1 pick
     st.markdown("##### Semifinals — Pick 1 team to win their SF match")
-    sf_pick: str = _safe_select("SF pick", "pk_sf", _avail(used), "sf")
+    sf_pick: str = _safe_select(
+        "SF pick",
+        "pk_sf",
+        _avail(used),
+        "sf",
+        "% shown = estimated chance of winning the SF match and reaching the Final.",
+    )
     if sf_pick != "(none)":
         used.add(sf_pick)
 
     # Championship — 1 pick
     st.markdown("##### Championship — Pick 1 team to win the tournament")
-    champ_pick: str = _safe_select("Championship pick", "pk_champ", _avail(used), "champ")
+    champ_pick: str = _safe_select(
+        "Championship pick",
+        "pk_champ",
+        _avail(used),
+        "champ",
+        "% shown = estimated probability of winning the Final and lifting the trophy.",
+    )
 
     # ── Summary ──────────────────────────────────────────────────────────────
     st.divider()
@@ -945,6 +1047,13 @@ def _render_pickem(
         st.metric(
             f"Estimated survival probability  ({n_made} / 10 picks made)",
             f"{overall:.4%}",
+            help=(
+                "The probability that every single one of your picks succeeds. "
+                "It's calculated by multiplying each pick's individual probability together — "
+                "so even strong picks compound quickly into a small overall number. "
+                "This assumes picks are independent; actual odds differ slightly "
+                "because bracket draw can pit your picks against each other."
+            ),
         )
         st.caption(
             "Survival probability is the product of each pick's P(advance to next stage). "
