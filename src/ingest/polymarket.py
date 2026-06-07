@@ -52,9 +52,7 @@ def fetch_polymarket(*, refresh: bool = False) -> pd.DataFrame | None:
         logger.info("Polymarket disabled in config; skipping.")
         return None
 
-    cache_path = Path(cfg["data"]["cache_dir"]) / pm_cfg.get(
-        "filename", "polymarket_odds.json"
-    )
+    cache_path = Path(cfg["data"]["cache_dir"]) / pm_cfg.get("filename", "polymarket_odds.json")
 
     if not refresh and cache_path.exists():
         logger.info("Loading Polymarket odds from cache: %s", cache_path)
@@ -102,9 +100,7 @@ def _fetch_and_parse(data_cfg: dict[str, Any]) -> pd.DataFrame | None:
     return df
 
 
-def _find_wc_market(
-    timeout: int, max_attempts: int, backoff: float
-) -> dict[str, Any] | None:
+def _find_wc_market(timeout: int, max_attempts: int, backoff: float) -> dict[str, Any] | None:
     """Search Gamma API for the active 2026 WC winner multi-outcome market."""
     for term in _SEARCH_TERMS:
         url = f"{_GAMMA_BASE}/markets"
@@ -125,9 +121,7 @@ def _find_wc_market(
                     if ("world cup" in q or "world-cup" in slug) and any(
                         kw in q for kw in ("winner", "win", "champion")
                     ):
-                        logger.info(
-                            "Found Polymarket WC market: %r", m.get("question")
-                        )
+                        logger.info("Found Polymarket WC market: %r", m.get("question"))
                         return m
                 break  # response received, no match for this term
             except requests.RequestException as exc:

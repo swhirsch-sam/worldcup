@@ -38,26 +38,20 @@ def _bm(outcomes: list[tuple[str, float]]) -> dict:
 
 
 def test_sums_to_one() -> None:
-    raw = _make_odds_response(
-        [_bm([("France", 5.0), ("Argentina", 6.0), ("Brazil", 8.0)])]
-    )
+    raw = _make_odds_response([_bm([("France", 5.0), ("Argentina", 6.0), ("Brazil", 8.0)])])
     df = _parse_and_devige(raw)
     assert abs(df["implied_probability"].sum() - 1.0) < 1e-9
 
 
 def test_correct_teams_returned() -> None:
-    raw = _make_odds_response(
-        [_bm([("France", 5.0), ("Argentina", 6.0), ("Brazil", 8.0)])]
-    )
+    raw = _make_odds_response([_bm([("France", 5.0), ("Argentina", 6.0), ("Brazil", 8.0)])])
     df = _parse_and_devige(raw)
     assert set(df["team"]) == {"France", "Argentina", "Brazil"}
 
 
 def test_higher_odds_lower_probability() -> None:
     # France at 5.0 (shorter odds) should have higher implied prob than Brazil at 8.0
-    raw = _make_odds_response(
-        [_bm([("France", 5.0), ("Brazil", 8.0)])]
-    )
+    raw = _make_odds_response([_bm([("France", 5.0), ("Brazil", 8.0)])])
     df = _parse_and_devige(raw).set_index("team")
     assert df.loc["France", "implied_probability"] > df.loc["Brazil", "implied_probability"]
 

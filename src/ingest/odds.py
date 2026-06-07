@@ -101,8 +101,7 @@ def _parse_and_devige(raw: str) -> pd.DataFrame:
         raise ValueError("No outright outcomes found in Odds API response.")
 
     rows = [
-        {"team": team, "implied_probability": sum(ps) / len(ps)}
-        for team, ps in team_raw.items()
+        {"team": team, "implied_probability": sum(ps) / len(ps)} for team, ps in team_raw.items()
     ]
     df = pd.DataFrame(rows)
 

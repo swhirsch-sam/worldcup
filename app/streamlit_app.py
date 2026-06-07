@@ -136,11 +136,11 @@ def _pick_prob(probs: dict[str, Any], team: str, role: str) -> float:
     is stable even with few simulation iterations.
     """
     stage_map = {
-        "gs": "r32",      # must qualify for R32
-        "r32": "r16",     # must win R32 match → reach R16
-        "r16": "qf",      # must win R16 match → reach QF
-        "qf": "sf",       # must win QF → reach SF
-        "sf": "final",    # must win SF → reach Final
+        "gs": "r32",  # must qualify for R32
+        "r32": "r16",  # must win R32 match → reach R16
+        "r16": "qf",  # must win R16 match → reach QF
+        "qf": "sf",  # must win QF → reach SF
+        "sf": "final",  # must win SF → reach Final
         "champ": "champion",  # must win Final
     }
     return probs.get(team, {}).get(stage_map[role], 0.0)
@@ -358,11 +358,7 @@ def _render_group_stage(probs: dict[str, Any], groups: dict[str, list[str]]) -> 
                         "Qualify %": p.get("r32", 0.0),
                     }
                 )
-            df = (
-                pd.DataFrame(rows)
-                .sort_values("Qualify %", ascending=False)
-                .reset_index(drop=True)
-            )
+            df = pd.DataFrame(rows).sort_values("Qualify %", ascending=False).reset_index(drop=True)
             st.dataframe(
                 df.style.format(
                     {"Finish 1st": "{:.1%}", "Finish 2nd": "{:.1%}", "Qualify %": "{:.1%}"}
