@@ -357,6 +357,32 @@ def render_report(
 
     lines.append(f"## Projected champion: {bracket['champion']}")
     lines.append("")
+
+    # Road to the title: the champion's advance odds in each round they played,
+    # and the compound probability of running this exact projected gauntlet.
+    champ = bracket["champion"]
+    compound = 1.0
+    road: list[str] = []
+    for stage in _KO_STAGES:
+        for rec in bracket["rounds"][stage]:
+            if champ not in (rec["team_a"], rec["team_b"]):
+                continue
+            opp = rec["team_b"] if rec["team_a"] == champ else rec["team_a"]
+            p = rec["odds"]["p_a_advance"] if rec["team_a"] == champ else rec["odds"]["p_b_advance"]
+            compound *= p
+            road.append(f"- {_STAGE_LABELS[stage]}: beat {opp} — {_fmt_pct(p)}")
+            break
+    lines.append(f"**{champ}'s road to the title** (advance odds each round):")
+    lines.append("")
+    lines.extend(road)
+    lines.append("")
+    lines.append(
+        f"Compounding those five results, the probability of {champ} running *this exact* "
+        f"projected gauntlet is **{_fmt_pct(compound)}** — a reminder that even the single "
+        "most-likely path is unlikely in absolute terms, because every round is a fresh coin "
+        "weighted by these odds."
+    )
+    lines.append("")
     lines.append(
         "*Methodology: matchup odds are the model's exact analytical probabilities for "
         "that specific pairing -- P(advance) = P(win in regulation) + P(level after 90) x "

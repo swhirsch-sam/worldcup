@@ -83,4 +83,14 @@ Strength basis: `data/raw/elo_ratings.csv (Elo + host bump approximation)`
 
 ## Projected champion: Spain
 
+**Spain's road to the title** (advance odds each round):
+
+- Round of 32: beat Austria — 84.4%
+- Round of 16: beat Portugal — 71.1%
+- Quarterfinals: beat Türkiye — 78.5%
+- Semifinals: beat France — 61.5%
+- Final: beat Argentina — 53.7%
+
+Compounding those five results, the probability of Spain running *this exact* projected gauntlet is **15.5%** — a reminder that even the single most-likely path is unlikely in absolute terms, because every round is a fresh coin weighted by these odds.
+
 *Methodology: matchup odds are the model's exact analytical probabilities for that specific pairing -- P(advance) = P(win in regulation) + P(level after 90) x [P(win in ET) + P(level after 120) x P(win on penalties)] -- evaluated from the same joint Dixon-Coles scoreline distribution `simulate_match` samples from. They are not empirical counts of how often these two sides happened to meet across simulated tournaments, so they carry no Monte Carlo sampling noise.*
