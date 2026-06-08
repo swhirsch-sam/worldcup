@@ -243,6 +243,26 @@ def project_best_thirds(
 # ---------------------------------------------------------------------------
 # Full projected bracket
 # ---------------------------------------------------------------------------
+def _is_tie(p_a_advance: float, p_b_advance: float) -> bool:
+    """True when the two advance odds are indistinguishable at display precision."""
+    return round(p_a_advance, 3) == round(p_b_advance, 3)
+
+
+def _pick_favorite(team_a: str, team_b: str, p_a_advance: float, p_b_advance: float) -> str:
+    """Deterministic advancer for a matchup.
+
+    For perfectly even pairings (identical model strength) p_a_advance is 0.5 up
+    to floating-point noise, so a bare ``>=`` comparison flips with NumPy's
+    summation order / library version and makes the projected bracket
+    irreproducible. Break ties by team name so the bracket is identical across
+    environments; the report flags these as "Pick'em" rather than implying a
+    real edge.
+    """
+    if _is_tie(p_a_advance, p_b_advance):
+        return min(team_a, team_b)
+    return team_a if p_a_advance > p_b_advance else team_b
+
+
 def build_projected_bracket(
     strength: dict[str, float],
     probs: dict[str, dict[str, float]],
@@ -270,7 +290,7 @@ def build_projected_bracket(
         winners = []
         for team_a, team_b in matchups:
             odds = knockout_odds(team_a, team_b, strength, cfg)
-            favorite = team_a if odds["p_a_advance"] >= odds["p_b_advance"] else team_b
+            favorite = _pick_favorite(team_a, team_b, odds["p_a_advance"], odds["p_b_advance"])
             records.append({"team_a": team_a, "team_b": team_b, "odds": odds, "favorite": favorite})
             winners.append(favorite)
         rounds[stage] = records
@@ -345,12 +365,10 @@ def render_report(
                 f"P(to penalties)={_fmt_pct(odds['p_drawn_after_120'])}, "
                 f"P({a} wins pens)={_fmt_pct(odds['p_a_win_penalties'])}"
             )
-            # Round to display precision before crowning a "favorite" -- a coin-flip
-            # pairing shouldn't read as a pick when the two sides display identically.
+            # A coin-flip pairing shouldn't read as a pick when the two sides
+            # display identically; use the same tie test that chose the advancer.
             favorite_label = (
-                "Pick'em"
-                if round(odds["p_a_advance"], 3) == round(odds["p_b_advance"], 3)
-                else f"**{fav}**"
+                "Pick'em" if _is_tie(odds["p_a_advance"], odds["p_b_advance"]) else f"**{fav}**"
             )
             lines.append(f"| {matchup} | {advance} | {favorite_label} | {draw_path} |")
         lines.append("")

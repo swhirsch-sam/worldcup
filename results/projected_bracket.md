@@ -56,7 +56,7 @@ Strength basis: `data/raw/elo_ratings.csv (Elo + host bump approximation)`
 | **Türkiye** (D) vs **Belgium** (G) | Türkiye 51.6% — 48.4% Belgium | **Türkiye** | P(level after 90)=32.0%, P(to penalties)=18.3%, P(Türkiye wins pens)=50.6% |
 | **Brazil** (C) vs **Germany** (E) | Brazil 58.5% — 41.5% Germany | **Brazil** | P(level after 90)=31.5%, P(to penalties)=17.9%, P(Brazil wins pens)=53.4% |
 | **Mexico** (A) vs **England** (L) | Mexico 46.4% — 53.6% England | **England** | P(level after 90)=31.9%, P(to penalties)=18.3%, P(Mexico wins pens)=48.6% |
-| **Argentina** (J) vs **Iran** (G) | Argentina 81.0% — 19.0% Iran | **Argentina** | P(level after 90)=23.7%, P(to penalties)=12.3%, P(Argentina wins pens)=60.0% |
+| **Argentina** (J) vs **Australia** (D) | Argentina 81.0% — 19.0% Australia | **Argentina** | P(level after 90)=23.7%, P(to penalties)=12.3%, P(Argentina wins pens)=60.0% |
 | **Canada** (B) vs **Colombia** (K) | Canada 39.5% — 60.5% Colombia | **Colombia** | P(level after 90)=31.2%, P(to penalties)=17.7%, P(Canada wins pens)=45.7% |
 
 ## Quarterfinals
