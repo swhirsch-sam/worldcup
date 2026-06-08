@@ -153,8 +153,16 @@ def main() -> None:
 
     st.divider()
 
-    tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs(
-        ["Group Stage", "Best Third", "Bracket", "Champion Odds", "Model Stats", "Methodology"]
+    tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs(
+        [
+            "Group Stage",
+            "Best Third",
+            "Bracket",
+            "Matchup Odds",
+            "Champion Odds",
+            "Model Stats",
+            "Methodology",
+        ]
     )
 
     with tab1:
@@ -164,10 +172,12 @@ def main() -> None:
     with tab3:
         _render_bracket(team_df, n_iter)
     with tab4:
-        _render_champion_odds(team_df, n_iter)
+        _render_matchup_odds(groups)
     with tab5:
-        _render_model_stats(team_df, meta, n_iter)
+        _render_champion_odds(team_df, n_iter)
     with tab6:
+        _render_model_stats(team_df, meta, n_iter)
+    with tab7:
         _render_methodology(manifest, meta)
 
 
@@ -315,6 +325,87 @@ def _render_bracket(team_df: pd.DataFrame, n_iter: int) -> None:
         )
 
 
+def _render_matchup_odds(groups: dict[str, list[str]]) -> None:
+    st.header("Projected Bracket & Head-to-Head Matchup Odds")
+    st.caption(
+        "The Bracket tab shows the odds of *reaching* each round. This tab answers the "
+        "other question — who plays whom in the single most-likely bracket, and the exact "
+        "odds of each *specific* matchup. Odds are computed in closed form from the same "
+        "Dixon-Coles model the simulator samples (regulation → extra time → penalties), so "
+        "they carry no Monte Carlo sampling noise."
+    )
+
+    # --- Interactive head-to-head calculator -------------------------------
+    # Best-effort: needs scipy + pyyaml (present locally / via `make app`, but
+    # not in the slim Streamlit Cloud requirements). Degrades to the static
+    # report below if those imports aren't available, so the deployed app
+    # never crashes on this tab.
+    try:
+        from src.eval.matchup_odds import (
+            _load_config,
+            group_match_odds,
+            knockout_odds,
+            load_strength,
+        )
+
+        cfg = _load_config()
+        strength, source = load_strength(cfg)
+        teams = sorted({t for ts in groups.values() for t in ts if t in strength})
+
+        st.subheader("Head-to-head calculator — pick any two teams")
+        c1, c2 = st.columns(2)
+        a_default = teams.index("Spain") if "Spain" in teams else 0
+        b_default = teams.index("Argentina") if "Argentina" in teams else min(1, len(teams) - 1)
+        team_a = c1.selectbox("Team A", teams, index=a_default)
+        team_b = c2.selectbox("Team B", teams, index=b_default)
+
+        if team_a == team_b:
+            st.info("Pick two different teams.")
+        else:
+            gm = group_match_odds(team_a, team_b, strength, cfg)
+            ko = knockout_odds(team_a, team_b, strength, cfg)
+
+            st.markdown("**Group match** — neutral venue, 90 minutes:")
+            g1, g2, g3 = st.columns(3)
+            g1.metric(f"{team_a} win", f"{gm['p_a_win']:.1%}")
+            g2.metric("Draw", f"{gm['p_draw']:.1%}")
+            g3.metric(f"{team_b} win", f"{gm['p_b_win']:.1%}")
+
+            st.markdown("**Knockout match** — advance, including extra time & penalties:")
+            k1, k2 = st.columns(2)
+            k1.metric(f"{team_a} advances", f"{ko['p_a_advance']:.1%}")
+            k2.metric(f"{team_b} advances", f"{ko['p_b_advance']:.1%}")
+            st.caption(
+                f"P(level after 90) = {ko['p_drawn_after_90']:.1%}  ·  "
+                f"P(reaches penalties) = {ko['p_drawn_after_120']:.1%}  ·  "
+                f"P({team_a} wins the shootout) = {ko['p_a_win_penalties']:.1%}"
+            )
+            st.caption(f"Strength basis: `{source}`")
+        st.divider()
+    except Exception as exc:  # deploy target may lack scipy/yaml; degrade gracefully
+        st.info(
+            "Live head-to-head calculator isn't available in this environment "
+            f"({type(exc).__name__}). The pre-computed projected bracket is shown below."
+        )
+
+    # --- Projected bracket report (committed to the repo; always available) -
+    md_path = _ROOT / "results" / "projected_bracket.md"
+    if md_path.exists():
+        report = md_path.read_text(encoding="utf-8")
+        st.markdown(report)
+        st.download_button(
+            "⬇ Download projected_bracket.md",
+            data=report,
+            file_name="projected_bracket.md",
+            mime="text/markdown",
+        )
+    else:
+        st.info(
+            "No projected bracket found. Run `python3 -m src.eval.matchup_odds` to "
+            "generate `results/projected_bracket.md`."
+        )
+
+
 def _render_champion_odds(team_df: pd.DataFrame, n_iter: int) -> None:
     st.header("Champion Probability")
     st.caption(
@@ -455,8 +546,7 @@ def _render_methodology(manifest: dict[str, Any], meta: dict[str, Any]) -> None:
     st.header("Methodology & Data Provenance")
 
     st.subheader("Model overview")
-    st.markdown(
-        """
+    st.markdown("""
 **Elo ratings** — computed from 49k+ historical international matches (Mart Jurisoo dataset)
 using eloratings.net methodology: K-factors by tournament type (60/50/40/30/20),
 goal-weight G = (goal_diff + 1)^0.5, home advantage 100 Elo pts.
@@ -479,8 +569,7 @@ bracket map, pre-computed for all C(12,8)=495 combinations.
 
 **Knockout simulation** — 90-min Poisson draw (caution factor 0.85), then extra time
 (lambda x 0.333), then penalties (Bernoulli p = 0.5 +/- Elo tilt, capped at 0.1).
-        """
-    )
+        """)
 
     st.subheader("Key fitted values")
     st.code(
