@@ -81,6 +81,18 @@ Strength basis: `data/raw/elo_ratings.csv (Elo + host bump approximation)`
 |---|---|---|---|
 | **Spain** (H) vs **Argentina** (J) | Spain 53.7% — 46.3% Argentina | **Spain** | P(level after 90)=31.9%, P(to penalties)=18.3%, P(Spain wins pens)=51.5% |
 
+## Closest calls (most fragile projections)
+
+The five matchups nearest a coin flip — where the projected favorite is least safe, and an upset would reshuffle the entire bracket downstream.
+
+| Round | Matchup | Advance odds |
+|---|---|---|
+| Round of 32 | Australia vs Iran | Australia 50.0% — 50.0% Iran |
+| Round of 16 | Türkiye vs Belgium | Türkiye 51.6% — 48.4% Belgium |
+| Quarterfinals | Brazil vs England | Brazil 47.7% — 52.3% England |
+| Round of 32 | Netherlands vs Morocco | Netherlands 52.5% — 47.5% Morocco |
+| Round of 32 | Germany vs Norway | Germany 53.2% — 46.8% Norway |
+
 ## Projected champion: Spain
 
 **Spain's road to the title** (advance odds each round):

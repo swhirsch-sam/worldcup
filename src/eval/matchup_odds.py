@@ -355,6 +355,30 @@ def render_report(
             lines.append(f"| {matchup} | {advance} | {favorite_label} | {draw_path} |")
         lines.append("")
 
+    # Closest calls: the matchups across the whole bracket nearest a coin flip --
+    # the games where this projected bracket is most fragile and a single upset
+    # would reroute everything downstream.
+    scored = [
+        (abs(rec["odds"]["p_a_advance"] - 0.5), stage, rec)
+        for stage in _KO_STAGES
+        for rec in bracket["rounds"][stage]
+    ]
+    scored.sort(key=lambda x: x[0])
+    lines.append("## Closest calls (most fragile projections)")
+    lines.append("")
+    lines.append(
+        "The five matchups nearest a coin flip — where the projected favorite is least "
+        "safe, and an upset would reshuffle the entire bracket downstream."
+    )
+    lines.append("")
+    lines.append("| Round | Matchup | Advance odds |")
+    lines.append("|---|---|---|")
+    for _, stage, rec in scored[:5]:
+        a, b, odds = rec["team_a"], rec["team_b"], rec["odds"]
+        odds_str = f"{a} {_fmt_pct(odds['p_a_advance'])} — {_fmt_pct(odds['p_b_advance'])} {b}"
+        lines.append(f"| {_STAGE_LABELS[stage]} | {a} vs {b} | {odds_str} |")
+    lines.append("")
+
     lines.append(f"## Projected champion: {bracket['champion']}")
     lines.append("")
 
