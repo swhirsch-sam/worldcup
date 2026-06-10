@@ -145,12 +145,6 @@ def main() -> None:
     c3.metric("Rho (Dixon-Coles)", f"{meta.get('rho', 0):.4f}")
     c4.metric("Generated", meta.get("generated_at", "")[:10])
 
-    if n_iter < 10_000:
-        st.warning(
-            f"Only {n_iter:,} iterations — run `python3 -m src.model.montecarlo` "
-            "for 50k iterations and reload for tighter confidence intervals."
-        )
-
     st.divider()
 
     tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs(
