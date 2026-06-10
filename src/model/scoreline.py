@@ -25,7 +25,7 @@ MAX_GOALS = 10
 _GRID: NDArray[np.int64] = np.arange(MAX_GOALS + 1)
 # Precomputed log-factorial for a numpy-only Poisson PMF (avoids scipy).
 _LOG_FACTORIAL: NDArray[np.float64] = np.concatenate(
-    ([0.0], np.cumsum(np.log(np.arange(1, MAX_GOALS + 1))))
+    (np.zeros(1), np.cumsum(np.log(np.arange(1, MAX_GOALS + 1))))
 )
 
 
