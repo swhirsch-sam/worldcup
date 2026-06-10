@@ -9,6 +9,8 @@ from __future__ import annotations
 
 import json
 import math
+import sys
+from collections.abc import Callable
 from pathlib import Path
 from typing import Any
 
@@ -23,6 +25,7 @@ import streamlit as st
 
 _ROOT = Path(__file__).resolve().parent.parent
 SIMULATION_SUMMARY = _ROOT / "results" / "simulation_summary.json"
+MATCH_PREDICTIONS = _ROOT / "results" / "match_predictions.json"
 RUN_MANIFEST = _ROOT / "results" / "run_manifest.json"
 GROUPS_JSON = _ROOT / "data" / "groups.json"
 
@@ -49,6 +52,11 @@ STAGE_SHORT: dict[str, str] = {
 }
 
 HOSTS = {"United States", "Canada", "Mexico"}
+
+# Match-card result-bar colors: left team wins / draw / right team wins.
+HOME_COLOR = "#2e7d32"  # green
+DRAW_COLOR = "#9e9e9e"  # grey
+AWAY_COLOR = "#1565c0"  # blue
 
 # ---------------------------------------------------------------------------
 # Page config (must be first Streamlit call)
@@ -91,6 +99,31 @@ def load_groups() -> dict[str, list[str]]:
         return json.load(f)["groups"]
 
 
+@st.cache_data
+def load_match_predictions() -> dict[str, Any] | None:
+    if not MATCH_PREDICTIONS.exists():
+        return None
+    with open(MATCH_PREDICTIONS, encoding="utf-8") as f:
+        return json.load(f)
+
+
+@st.cache_resource
+def load_predictor() -> Callable[..., dict[str, Any]] | None:
+    """Lazily import the numpy-only closed-form predictor for live head-to-head.
+
+    Returns None if the import fails (e.g. ``src`` not importable), so the rest
+    of the page keeps working from the precomputed file.
+    """
+    if str(_ROOT) not in sys.path:
+        sys.path.insert(0, str(_ROOT))
+    try:
+        from src.model.scoreline import predict_outcome
+
+        return predict_outcome
+    except Exception:  # pragma: no cover - defensive import guard
+        return None
+
+
 # ---------------------------------------------------------------------------
 # Derived data helpers
 # ---------------------------------------------------------------------------
@@ -128,62 +161,62 @@ def _cond_prob(probs: dict[str, Any], team: str, from_s: str, to_s: str) -> floa
     return p_to / p_from if p_from > 1e-9 else 0.0
 
 
-def _pick_prob(probs: dict[str, Any], team: str, role: str) -> float:
-    """Joint probability that a pre-tournament pick succeeds.
-
-    For a pick to survive a given round the team must (a) reach that round
-    AND (b) win it.  Using raw P(reach next stage) captures both factors and
-    is stable even with few simulation iterations.
-    """
-    stage_map = {
-        "gs": "r32",  # must qualify for R32
-        "r32": "r16",  # must win R32 match → reach R16
-        "r16": "qf",  # must win R16 match → reach QF
-        "qf": "sf",  # must win QF → reach SF
-        "sf": "final",  # must win SF → reach Final
-        "champ": "champion",  # must win Final
-    }
-    return probs.get(team, {}).get(stage_map[role], 0.0)
+# ---------------------------------------------------------------------------
+# Match-card rendering (Match Predictions tab + head-to-head)
+# ---------------------------------------------------------------------------
 
 
-def _recommend_picks(probs: dict[str, Any]) -> dict[str, Any]:
-    """Greedy survivor picks maximising joint survival probability.
+def _wdl_bar_html(p_home: float, p_draw: float, p_away: float) -> str:
+    """A single stacked horizontal bar showing win/draw/loss probabilities."""
 
-    Uses P(reach next stage) for each role — this is the true probability that
-    a pre-tournament pick survives that round (team must both reach AND win it).
-    Fills most-constrained roles first: champion odds are lowest (~5-20%) so
-    we assign the best available team there before filling Group Stage slots
-    where top teams have 80-95% P(advance).
+    def seg(pct: float, color: str) -> str:
+        text = f"{pct * 100:.0f}%" if pct >= 0.08 else ""
+        return f'<div style="flex:0 0 {pct * 100:.2f}%;background:{color};">{text}</div>'
 
-    Assignment order: Championship -> SF -> QF -> R16 -> R32 (x2) -> GS (x4).
-    """
-    all_teams = list(probs.keys())
-    used: set[str] = set()
+    return (
+        '<div style="display:flex;width:100%;height:24px;border-radius:6px;overflow:hidden;'
+        'font-size:12px;font-weight:600;color:#fff;text-align:center;line-height:24px;">'
+        + seg(p_home, HOME_COLOR)
+        + seg(p_draw, DRAW_COLOR)
+        + seg(p_away, AWAY_COLOR)
+        + "</div>"
+    )
 
-    def _pick(role: str, n: int) -> list[str]:
-        ranked = sorted(
-            (t for t in all_teams if t not in used),
-            key=lambda t: _pick_prob(probs, t, role),
-            reverse=True,
-        )[:n]
-        used.update(ranked)
-        return ranked
 
-    champ_picks = _pick("champ", 1)
-    sf_picks = _pick("sf", 1)
-    qf_picks = _pick("qf", 1)
-    r16_picks = _pick("r16", 1)
-    r32_picks = _pick("r32", 2)
-    gs_picks = _pick("gs", 4)
+def _legend_html() -> str:
+    return (
+        '<div style="font-size:12px;color:#666;margin-bottom:6px;">'
+        f'<span style="color:{HOME_COLOR};font-weight:700;">■</span> left team wins'
+        "&nbsp;&nbsp;&nbsp;"
+        f'<span style="color:{DRAW_COLOR};font-weight:700;">■</span> draw'
+        "&nbsp;&nbsp;&nbsp;"
+        f'<span style="color:{AWAY_COLOR};font-weight:700;">■</span> right team wins</div>'
+    )
 
-    return {
-        "gs": gs_picks,
-        "r32": r32_picks,
-        "r16": r16_picks[0] if r16_picks else "",
-        "qf": qf_picks[0] if qf_picks else "",
-        "sf": sf_picks[0] if sf_picks else "",
-        "champ": champ_picks[0] if champ_picks else "",
-    }
+
+def _render_match_card(
+    home: str, away: str, stats: dict[str, Any], group: str | None = None
+) -> None:
+    """Render one match prediction as a name row + result bar + summary caption."""
+    p_home = float(stats["p_home"])
+    p_draw = float(stats["p_draw"])
+    p_away = float(stats["p_away"])
+
+    # Bold the more-likely-to-win side.
+    home_lbl = f"**{home}**" if p_home >= p_away else home
+    away_lbl = f"**{away}**" if p_away > p_home else away
+    group_tag = f"  —  Group {group}" if group else ""
+    st.markdown(f"{home_lbl} &nbsp;vs&nbsp; {away_lbl}{group_tag}")
+
+    st.markdown(_wdl_bar_html(p_home, p_draw, p_away), unsafe_allow_html=True)
+
+    top = stats["top_scores"][0]
+    st.caption(
+        f"Likely score: {home} {int(top['home'])}-{int(top['away'])} {away}"
+        f" &nbsp;|&nbsp; chances {p_home:.0%} / {p_draw:.0%} / {p_away:.0%}"
+        f" &nbsp;|&nbsp; expected goals {stats['exp_home']:.1f}-{stats['exp_away']:.1f}"
+    )
+    st.write("")
 
 
 # ---------------------------------------------------------------------------
@@ -264,26 +297,26 @@ def main() -> None:
 
     tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs(
         [
+            "Match Predictions",
             "Group Stage",
             "Bracket",
             "Champion Odds",
             "Best Third",
-            "Pick 'Em",
             "Model Stats",
             "Methodology",
         ]
     )
 
     with tab1:
-        _render_group_stage(probs, groups)
+        _render_matches(load_match_predictions())
     with tab2:
-        _render_bracket(team_df, n_iter)
+        _render_group_stage(probs, groups)
     with tab3:
-        _render_champion_odds(team_df, n_iter)
+        _render_bracket(team_df, n_iter)
     with tab4:
-        _render_best_third(team_df, groups, n_iter)
+        _render_champion_odds(team_df, n_iter)
     with tab5:
-        _render_pickem(team_df, probs, groups, n_iter)
+        _render_best_third(team_df, groups, n_iter)
     with tab6:
         _render_model_stats(team_df, meta, n_iter)
     with tab7:
@@ -337,6 +370,78 @@ def _render_footer() -> None:
 # ---------------------------------------------------------------------------
 # Tab renderers
 # ---------------------------------------------------------------------------
+
+
+def _render_matches(match_data: dict[str, Any] | None) -> None:
+    st.header("Match-by-Match Predictions")
+    st.markdown(
+        "For every game, the model gives the **chance of each result** and the "
+        "**most likely score**. World Cup venues are neutral — no home advantage — "
+        "so predictions come down to team strength."
+    )
+
+    if match_data is None:
+        st.info(
+            "Match predictions haven't been generated yet. Run "
+            "`python3 -m src.model.match_predict` (or `make predict`) and reload."
+        )
+        return
+
+    groups: dict[str, list[str]] = match_data["groups"]
+    matches: list[dict[str, Any]] = match_data["group_matches"]
+    strength: dict[str, float] = match_data["team_strength"]
+    params: dict[str, float] = match_data["model_params"]
+
+    # --- Group-stage matches ---
+    st.subheader("Group-stage matches")
+    group_ids = sorted(groups.keys())
+    options = [f"Group {g}" for g in group_ids] + ["All groups"]
+    choice = st.selectbox(
+        "Choose a group",
+        options,
+        index=0,
+        help="All 72 group-stage matchups are fixed by the official draw.",
+    )
+
+    if choice == "All groups":
+        selected = matches
+    else:
+        wanted = choice.split()[-1]
+        selected = [m for m in matches if m["group"] == wanted]
+
+    st.markdown(_legend_html(), unsafe_allow_html=True)
+    show_group = choice == "All groups"
+    for m in selected:
+        _render_match_card(m["home"], m["away"], m, group=m["group"] if show_group else None)
+
+    # --- Head-to-head explorer (covers knockouts / any matchup) ---
+    st.divider()
+    st.subheader("Head-to-head: pick any two teams")
+    st.caption(
+        "Knockout matchups aren't fixed until the groups finish, so try any pairing — "
+        "the model predicts it the same way it predicts group games."
+    )
+
+    teams_by_strength = sorted(strength, key=lambda t: strength[t], reverse=True)
+    col1, col2 = st.columns(2)
+    team_a = col1.selectbox("Team A", teams_by_strength, index=0)
+    team_b = col2.selectbox("Team B", teams_by_strength, index=1)
+
+    if team_a == team_b:
+        st.info("Pick two different teams to see a prediction.")
+        _render_footer()
+        return
+
+    predictor = load_predictor()
+    if predictor is None:
+        st.info("Live head-to-head isn't available in this environment.")
+        _render_footer()
+        return
+
+    stats = predictor(strength[team_a], strength[team_b], **params)
+    st.markdown(_legend_html(), unsafe_allow_html=True)
+    _render_match_card(team_a, team_b, stats)
+    _render_footer()
 
 
 def _render_group_stage(probs: dict[str, Any], groups: dict[str, list[str]]) -> None:
@@ -757,312 +862,6 @@ roughly 50/50 for either side, with a small tilt toward the stronger team.
                     st.markdown(f"  - {lib}: {ver}")
     else:
         st.info("Run manifest not found. Run `python3 -m src.model.montecarlo` to generate it.")
-    _render_footer()
-
-
-def _render_pickem(
-    team_df: pd.DataFrame,
-    probs: dict[str, Any],
-    groups: dict[str, list[str]],
-    n_iter: int,
-) -> None:
-    st.header("Pick 'Em — Survivor Contest")
-
-    hdr, reset_col = st.columns([6, 1])
-    with hdr:
-        st.caption(
-            "**Phase 1 — Group Stage:** Pick 4 teams to advance to the R32 (all 4 must survive). "
-            "**Phase 2 — Knockout:** R32 (2 picks) → R16 → QF → SF → Championship (1 pick each). "
-            "All picks in a round must win to advance. "
-            "Each team usable **once** in the entire contest."
-        )
-    with reset_col:
-        if st.button("↺ Reset", use_container_width=True):
-            for k in ("pk_gs", "pk_r32", "pk_r16", "pk_qf", "pk_sf", "pk_champ"):
-                st.session_state.pop(k, None)
-            st.rerun()
-
-    team_to_group = {t: g for g, ts in groups.items() for t in ts}
-    teams_by_r32 = team_df.sort_values("r32", ascending=False)["team"].tolist()
-
-    # ── Model Recommendations ─────────────────────────────────────────────────
-    rec = _recommend_picks(probs)
-
-    with st.expander("💡 Model Recommendations", expanded=True):
-        st.markdown(
-            "The model picks the team with the **highest P(survive that round)** "
-            "for each role — the joint probability of both reaching and winning it. "
-            "Most-constrained roles are filled first "
-            "(Championship → SF → QF → R16 → R32 → Group Stage). "
-            "Each team is used at most once."
-        )
-
-        # Build recommendation table
-        rec_rows: list[dict[str, Any]] = []
-        for t in rec["gs"]:
-            rec_rows.append(
-                {
-                    "Round": "Group Stage",
-                    "Team": t,
-                    "Grp": team_to_group.get(t, "?"),
-                    "P(survive)": probs[t].get("r32", 0.0),
-                    "Rationale": "Highest P(advance to R32)",
-                }
-            )
-        for t in rec["r32"]:
-            rec_rows.append(
-                {
-                    "Round": "R32",
-                    "Team": t,
-                    "Grp": team_to_group.get(t, "?"),
-                    "P(survive)": _pick_prob(probs, t, "r32"),
-                    "Rationale": "Highest P(reach R16)",
-                }
-            )
-        for pick, rnd, role, rationale in [
-            (rec["r16"], "R16", "r16", "Highest P(reach QF)"),
-            (rec["qf"], "QF", "qf", "Highest P(reach SF)"),
-            (rec["sf"], "SF", "sf", "Highest P(reach Final)"),
-            (rec["champ"], "Championship", "champ", "Highest P(win title)"),
-        ]:
-            if pick:
-                rec_rows.append(
-                    {
-                        "Round": rnd,
-                        "Team": pick,
-                        "Grp": team_to_group.get(pick, "?"),
-                        "P(survive)": _pick_prob(probs, pick, role),
-                        "Rationale": rationale,
-                    }
-                )
-
-        rec_df = pd.DataFrame(rec_rows)
-        overall_rec = math.prod(r["P(survive)"] for r in rec_rows)
-        st.dataframe(
-            rec_df.style.format({"P(survive)": "{:.1%}"}),
-            hide_index=True,
-            use_container_width=True,
-        )
-        st.metric("Recommended entry survival probability", f"{overall_rec:.4%}")
-
-        if st.button("Apply recommendations to my picks", type="primary"):
-            st.session_state["pk_gs"] = rec["gs"]
-            st.session_state["pk_r32"] = rec["r32"]
-            st.session_state["pk_r16"] = rec["r16"] or "(none)"
-            st.session_state["pk_qf"] = rec["qf"] or "(none)"
-            st.session_state["pk_sf"] = rec["sf"] or "(none)"
-            st.session_state["pk_champ"] = rec["champ"] or "(none)"
-            st.rerun()
-
-    def _lbl(team: str, role: str) -> str:
-        g = team_to_group.get(team, "?")
-        p = _pick_prob(probs, team, role)
-        return f"{team} [{g}]  ·  {p:.1%}"
-
-    # Initialise session state on first visit
-    for k, v in [
-        ("pk_gs", []),
-        ("pk_r32", []),
-        ("pk_r16", "(none)"),
-        ("pk_qf", "(none)"),
-        ("pk_sf", "(none)"),
-        ("pk_champ", "(none)"),
-    ]:
-        if k not in st.session_state:
-            st.session_state[k] = v
-
-    # ── Phase 1: Group Stage ─────────────────────────────────────────────────
-    st.subheader("Phase 1 — Group Stage")
-    st.markdown(
-        "Pick **4 teams** you believe will advance to the Round of 32. "
-        "All 4 must advance or you are eliminated. "
-        "Probability shown = P(qualify for R32)."
-    )
-
-    gs_picks: list[str] = st.multiselect(
-        "Group Stage picks (choose exactly 4)",
-        options=teams_by_r32,
-        max_selections=4,
-        format_func=lambda t: _lbl(t, "gs"),
-        key="pk_gs",
-        help=(
-            "Each team shows its estimated chance of qualifying for the Round of 32. "
-            "Teams are sorted best-to-worst. All 4 of your picks must advance or "
-            "your entry is eliminated."
-        ),
-    )
-
-    if len(gs_picks) == 4:
-        gs_prob = math.prod(probs[t].get("r32", 0.0) for t in gs_picks)
-        st.success(f"P(all 4 advance to R32) = **{gs_prob:.3%}**")
-    else:
-        rem = 4 - len(gs_picks)
-        st.info(f"Select {rem} more team{'s' if rem > 1 else ''} to complete Phase 1.")
-
-    # ── Phase 2: Knockout Stage ──────────────────────────────────────────────
-    st.divider()
-    st.subheader("Phase 2 — Knockout Stage")
-    st.markdown(
-        "Teams used in the Group Stage are excluded. Probability = P(win that specific match)."
-    )
-
-    used: set[str] = set(gs_picks)
-
-    def _avail(exclude: set[str]) -> list[str]:
-        return [t for t in teams_by_r32 if t not in exclude]
-
-    def _safe_select(
-        label_str: str, key: str, opts: list[str], role: str, help_text: str = ""
-    ) -> str:
-        choices = ["(none)", *opts]
-        cur = st.session_state.get(key, "(none)")
-        if cur not in choices:
-            cur = "(none)"
-            st.session_state[key] = "(none)"
-        result = st.selectbox(
-            label_str,
-            options=choices,
-            index=choices.index(cur),
-            format_func=lambda t: "— not yet picked —" if t == "(none)" else _lbl(t, role),
-            key=key,
-            help=help_text or None,
-        )
-        return result or "(none)"
-
-    # R32 — 2 picks
-    st.markdown("##### Round of 32 — Pick 2 teams to win their R32 match")
-    r32_opts = _avail(used)
-    prev_r32 = [t for t in st.session_state.get("pk_r32", []) if t in r32_opts]
-    if prev_r32 != st.session_state.get("pk_r32", []):
-        st.session_state["pk_r32"] = prev_r32
-    r32_picks: list[str] = st.multiselect(
-        "R32 picks (choose exactly 2)",
-        options=r32_opts,
-        max_selections=2,
-        format_func=lambda t: _lbl(t, "r32"),
-        key="pk_r32",
-        help=(
-            "Percentage shown is the team's estimated chance of winning their R32 match "
-            "and advancing to the Round of 16. Both picks must win."
-        ),
-    )
-    used.update(r32_picks)
-
-    # R16 — 1 pick
-    st.markdown("##### Round of 16 — Pick 1 team to win their R16 match")
-    r16_pick: str = _safe_select(
-        "R16 pick",
-        "pk_r16",
-        _avail(used),
-        "r16",
-        "% shown = estimated chance of winning the R16 match and reaching the Quarterfinals.",
-    )
-    if r16_pick != "(none)":
-        used.add(r16_pick)
-
-    # QF — 1 pick
-    st.markdown("##### Quarterfinals — Pick 1 team to win their QF match")
-    qf_pick: str = _safe_select(
-        "QF pick",
-        "pk_qf",
-        _avail(used),
-        "qf",
-        "% shown = estimated chance of winning the QF match and reaching the Semifinals.",
-    )
-    if qf_pick != "(none)":
-        used.add(qf_pick)
-
-    # SF — 1 pick
-    st.markdown("##### Semifinals — Pick 1 team to win their SF match")
-    sf_pick: str = _safe_select(
-        "SF pick",
-        "pk_sf",
-        _avail(used),
-        "sf",
-        "% shown = estimated chance of winning the SF match and reaching the Final.",
-    )
-    if sf_pick != "(none)":
-        used.add(sf_pick)
-
-    # Championship — 1 pick
-    st.markdown("##### Championship — Pick 1 team to win the tournament")
-    champ_pick: str = _safe_select(
-        "Championship pick",
-        "pk_champ",
-        _avail(used),
-        "champ",
-        "% shown = estimated probability of winning the Final and lifting the trophy.",
-    )
-
-    # ── Summary ──────────────────────────────────────────────────────────────
-    st.divider()
-    st.subheader("Your Picks Summary")
-
-    rows: list[dict[str, Any]] = []
-    for t in gs_picks:
-        rows.append(
-            {
-                "Round": "Group Stage",
-                "Team": t,
-                "Grp": team_to_group.get(t, "?"),
-                "P(survive)": probs.get(t, {}).get("r32", 0.0),
-                "Must": "Advance to R32",
-            }
-        )
-    for t in r32_picks:
-        rows.append(
-            {
-                "Round": "R32",
-                "Team": t,
-                "Grp": team_to_group.get(t, "?"),
-                "P(survive)": _pick_prob(probs, t, "r32"),
-                "Must": "Win R32 match",
-            }
-        )
-    for pick, rnd, role, must in [
-        (r16_pick, "R16", "r16", "Win R16 match"),
-        (qf_pick, "QF", "qf", "Win QF match"),
-        (sf_pick, "SF", "sf", "Win SF match"),
-        (champ_pick, "Championship", "champ", "Win the Final"),
-    ]:
-        if pick and pick != "(none)":
-            rows.append(
-                {
-                    "Round": rnd,
-                    "Team": pick,
-                    "Grp": team_to_group.get(pick, "?"),
-                    "P(survive)": _pick_prob(probs, pick, role),
-                    "Must": must,
-                }
-            )
-
-    if rows:
-        sdf = pd.DataFrame(rows)
-        st.dataframe(
-            sdf.style.format({"P(survive)": "{:.1%}"}),
-            hide_index=True,
-            use_container_width=True,
-        )
-        overall = math.prod(r["P(survive)"] for r in rows)
-        n_made = len(rows)
-        st.metric(
-            f"Estimated survival probability  ({n_made} / 10 picks made)",
-            f"{overall:.4%}",
-            help=(
-                "The probability that every single one of your picks succeeds. "
-                "It's calculated by multiplying each pick's individual probability together — "
-                "so even strong picks compound quickly into a small overall number. "
-                "This assumes picks are independent; actual odds differ slightly "
-                "because bracket draw can pit your picks against each other."
-            ),
-        )
-        st.caption(
-            "Survival probability is the product of each pick's P(advance to next stage). "
-            "Assumes picks are independent — actual probability differs slightly due to "
-            "bracket correlations."
-        )
-    else:
-        st.info("Make your picks above to see your summary here.")
     _render_footer()
 
 
