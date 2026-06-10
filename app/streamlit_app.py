@@ -780,7 +780,8 @@ def _render_methodology(manifest: dict[str, Any], meta: dict[str, Any]) -> None:
     st.header("Methodology & Data Provenance")
 
     st.subheader("How the model works")
-    st.markdown("""
+    st.markdown(
+        """
 **Step 1 — Measuring team strength**
 
 Each team gets a single strength number built from four sources, blended together:
@@ -833,7 +834,8 @@ the best 8 advance. Bracket slot assignments follow FIFA's official Annex C rule
 If a knockout match is still tied after 90 minutes, we simulate 30 minutes of extra time
 (teams score fewer goals when tired). Still level? We simulate a penalty shootout —
 roughly 50/50 for either side, with a small tilt toward the stronger team.
-        """)
+        """
+    )
 
     st.subheader("Key fitted values")
     st.code(
