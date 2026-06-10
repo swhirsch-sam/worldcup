@@ -15,6 +15,7 @@ help:
 	@echo "  strength         Build data/processed/strength.csv (ingest + ensemble)"
 	@echo "  fit              Fit the goals model on historical data"
 	@echo "  simulate         Run the 50k Monte Carlo simulation"
+	@echo "  predict          Precompute per-match predictions for the app"
 	@echo "  backtest         Run backtests for 2018 and 2022"
 	@echo "  convergence      Run convergence analysis and save plot"
 	@echo "  sensitivity      Run sensitivity analysis and save tornado plot"
@@ -70,6 +71,10 @@ fit:
 simulate:
 	$(PYTHON) -m src.model.montecarlo
 
+.PHONY: predict
+predict:
+	$(PYTHON) -m src.model.match_predict
+
 .PHONY: backtest
 backtest:
 	$(PYTHON) -m src.eval.backtest
@@ -84,7 +89,7 @@ sensitivity:
 
 # Full pipeline (excluding app)
 .PHONY: all
-all: ingest fit simulate backtest convergence sensitivity
+all: ingest fit simulate predict backtest convergence sensitivity
 
 # ---------------------------------------------------------------------------
 # App
@@ -118,6 +123,7 @@ ci: lint typecheck test
 .PHONY: clean
 clean:
 	rm -rf results/simulation_summary.json results/run_manifest.json \
+	       results/match_predictions.json \
 	       results/convergence.png results/sensitivity_tornado.png \
 	       results/calibration.png
 	find . -type d -name __pycache__ -exec rm -rf {} + 2>/dev/null || true

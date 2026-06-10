@@ -133,6 +133,7 @@ output:
   results_dir: results
   simulation_summary: results/simulation_summary.json
   run_manifest: results/run_manifest.json
+  match_predictions: results/match_predictions.json
   convergence_plot: results/convergence.png
   sensitivity_plot: results/sensitivity_tornado.png
   calibration_plot: results/calibration.png
