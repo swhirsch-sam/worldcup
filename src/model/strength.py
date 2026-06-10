@@ -1,4 +1,4 @@
-"""Team strength computation: weighted ensemble of Elo, FIFA, and market signals.
+"""Team strength computation: weighted ensemble of Elo, FIFA, market, and Polymarket signals.
 
 Each signal is z-score normalized against the 48 WC teams, then blended with
 config weights, then re-expressed on the Elo scale (mean~1500, std~Elo std).
@@ -31,6 +31,7 @@ def build_strength_table(
     elo_df: pd.DataFrame,
     fifa_df: pd.DataFrame | None,
     odds_df: pd.DataFrame | None,
+    polymarket_df: pd.DataFrame | None = None,
     *,
     cfg: dict[str, Any] | None = None,
     group_stage: bool = True,
@@ -40,7 +41,8 @@ def build_strength_table(
     Args:
         elo_df: Validated Elo DataFrame (team, elo_rating, match_count, provisional).
         fifa_df: Validated FIFA DataFrame or None (team, fifa_points, fifa_rank).
-        odds_df: Validated market odds DataFrame or None (team, implied_probability).
+        odds_df: Validated bookmaker odds DataFrame or None (team, implied_probability).
+        polymarket_df: Validated Polymarket DataFrame or None (team, implied_probability).
         cfg: Parsed config dict; loaded from disk if None.
         group_stage: Whether host bump applies (True = group stage, False = KO).
 
@@ -73,13 +75,31 @@ def build_strength_table(
         df = df.merge(fifa_df[["team", "fifa_points"]], on="team", how="left")
         available.add("fifa")
     else:
-        fallback_log.append("FIFA rankings unavailable; Elo-only ensemble used.")
+        fallback_log.append("FIFA rankings unavailable; weight redistributed.")
 
     if odds_df is not None:
-        df = df.merge(odds_df[["team", "implied_probability"]], on="team", how="left")
+        df = df.merge(
+            odds_df[["team", "implied_probability"]].rename(
+                columns={"implied_probability": "odds_prob"}
+            ),
+            on="team",
+            how="left",
+        )
         available.add("market")
     else:
-        fallback_log.append("Market odds unavailable; Elo-only ensemble used.")
+        fallback_log.append("Betting market odds unavailable; weight redistributed.")
+
+    if polymarket_df is not None:
+        df = df.merge(
+            polymarket_df[["team", "implied_probability"]].rename(
+                columns={"implied_probability": "polymarket_prob"}
+            ),
+            on="team",
+            how="left",
+        )
+        available.add("polymarket")
+    else:
+        fallback_log.append("Polymarket odds unavailable; weight redistributed.")
 
     if fallback_log:
         for msg in fallback_log:
@@ -108,12 +128,19 @@ def build_strength_table(
             fstd = 1.0
         blended_z = blended_z + active_weights["fifa"] * (fifa_vals - fmean) / fstd
 
-    if "market" in active_weights and "implied_probability" in df.columns:
-        mkt_vals = df["implied_probability"].fillna(df["implied_probability"].mean())
+    if "market" in active_weights and "odds_prob" in df.columns:
+        mkt_vals = df["odds_prob"].fillna(df["odds_prob"].mean())
         mmean, mstd = float(mkt_vals.mean()), float(mkt_vals.std())
         if mstd < 1e-6:
             mstd = 1.0
         blended_z = blended_z + active_weights["market"] * (mkt_vals - mmean) / mstd
+
+    if "polymarket" in active_weights and "polymarket_prob" in df.columns:
+        pm_vals = df["polymarket_prob"].fillna(df["polymarket_prob"].mean())
+        pmean, pstd = float(pm_vals.mean()), float(pm_vals.std())
+        if pstd < 1e-6:
+            pstd = 1.0
+        blended_z = blended_z + active_weights["polymarket"] * (pm_vals - pmean) / pstd
 
     # Re-express on Elo scale: mean = global_mean, std = Elo std
     df["strength"] = global_mean + blended_z * elo_std
@@ -167,6 +194,7 @@ def build_and_save(*, refresh: bool = False) -> pd.DataFrame:
     from src.ingest.elo import fetch_elo
     from src.ingest.fifa import fetch_fifa
     from src.ingest.odds import fetch_odds
+    from src.ingest.polymarket import fetch_polymarket
 
     cfg = _load_config()
     processed_dir = Path(cfg["data"]["processed_dir"])
@@ -176,9 +204,10 @@ def build_and_save(*, refresh: bool = False) -> pd.DataFrame:
     elo_df = fetch_elo(refresh=refresh)
     fifa_df = fetch_fifa(refresh=refresh)
     odds_df = fetch_odds(refresh=refresh)
+    polymarket_df = fetch_polymarket(refresh=refresh)
 
     strength_df, fallbacks = build_strength_table(
-        elo_df, fifa_df, odds_df, cfg=cfg, group_stage=True
+        elo_df, fifa_df, odds_df, polymarket_df, cfg=cfg, group_stage=True
     )
 
     strength_df.to_csv(out_path, index=False)
