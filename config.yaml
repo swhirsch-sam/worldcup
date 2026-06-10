@@ -1,5 +1,5 @@
 simulation:
-  iterations: 50000
+  iterations: 1000
   seed: 42
   fast_mode: false
   fast_mode_iterations: 1000
