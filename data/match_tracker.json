@@ -1,0 +1,1163 @@
+{
+  "meta": {
+    "stage": "group",
+    "season": "2026",
+    "updated": "2026-06-11",
+    "note": "Real group matchups (official draw). Matchday ordering is canonical; fill official kickoff dates in the 'date' field as desired.",
+    "n_matches": 72
+  },
+  "matches": [
+    {
+      "id": "A-MD1-01",
+      "group": "A",
+      "matchday": 1,
+      "date": "2026-06-11",
+      "home": "Mexico",
+      "away": "South Korea",
+      "model": {
+        "home": 0.5585,
+        "draw": 0.2554,
+        "away": 0.1861,
+        "pick": "home"
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "A-MD1-23",
+      "group": "A",
+      "matchday": 1,
+      "date": "2026-06-11",
+      "home": "South Africa",
+      "away": "Czechia",
+      "model": {
+        "home": 0.2066,
+        "draw": 0.2646,
+        "away": 0.5289,
+        "pick": "away"
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "B-MD1-01",
+      "group": "B",
+      "matchday": 1,
+      "date": "",
+      "home": "Canada",
+      "away": "Switzerland",
+      "model": {
+        "home": 0.3722,
+        "draw": 0.2912,
+        "away": 0.3365,
+        "pick": "home"
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "B-MD1-23",
+      "group": "B",
+      "matchday": 1,
+      "date": "",
+      "home": "Qatar",
+      "away": "Bosnia and Herzegovina",
+      "model": {
+        "home": 0.2738,
+        "draw": 0.2843,
+        "away": 0.442,
+        "pick": "away"
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "C-MD1-01",
+      "group": "C",
+      "matchday": 1,
+      "date": "",
+      "home": "Brazil",
+      "away": "Morocco",
+      "model": {
+        "home": 0.4453,
+        "draw": 0.2837,
+        "away": 0.271,
+        "pick": "home"
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "C-MD1-23",
+      "group": "C",
+      "matchday": 1,
+      "date": "",
+      "home": "Haiti",
+      "away": "Scotland",
+      "model": {
+        "home": 0.2302,
+        "draw": 0.2731,
+        "away": 0.4967,
+        "pick": "away"
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "D-MD1-01",
+      "group": "D",
+      "matchday": 1,
+      "date": "",
+      "home": "United States",
+      "away": "Paraguay",
+      "model": {
+        "home": 0.3449,
+        "draw": 0.2915,
+        "away": 0.3636,
+        "pick": "away"
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "D-MD1-23",
+      "group": "D",
+      "matchday": 1,
+      "date": "",
+      "home": "Australia",
+      "away": "Türkiye",
+      "model": {
+        "home": 0.2902,
+        "draw": 0.287,
+        "away": 0.4228,
+        "pick": "away"
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "E-MD1-01",
+      "group": "E",
+      "matchday": 1,
+      "date": "",
+      "home": "Germany",
+      "away": "Curaçao",
+      "model": {
+        "home": 0.8048,
+        "draw": 0.1396,
+        "away": 0.0556,
+        "pick": "home"
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "E-MD1-23",
+      "group": "E",
+      "matchday": 1,
+      "date": "",
+      "home": "Côte d'Ivoire",
+      "away": "Ecuador",
+      "model": {
+        "home": 0.1595,
+        "draw": 0.2409,
+        "away": 0.5996,
+        "pick": "away"
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "F-MD1-01",
+      "group": "F",
+      "matchday": 1,
+      "date": "",
+      "home": "Netherlands",
+      "away": "Japan",
+      "model": {
+        "home": 0.3671,
+        "draw": 0.2914,
+        "away": 0.3415,
+        "pick": "home"
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "F-MD1-23",
+      "group": "F",
+      "matchday": 1,
+      "date": "",
+      "home": "Tunisia",
+      "away": "Sweden",
+      "model": {
+        "home": 0.326,
+        "draw": 0.2907,
+        "away": 0.3833,
+        "pick": "away"
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "G-MD1-01",
+      "group": "G",
+      "matchday": 1,
+      "date": "",
+      "home": "Belgium",
+      "away": "Egypt",
+      "model": {
+        "home": 0.5131,
+        "draw": 0.269,
+        "away": 0.218,
+        "pick": "home"
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "G-MD1-23",
+      "group": "G",
+      "matchday": 1,
+      "date": "",
+      "home": "Iran",
+      "away": "New Zealand",
+      "model": {
+        "home": 0.5567,
+        "draw": 0.256,
+        "away": 0.1873,
+        "pick": "home"
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "H-MD1-01",
+      "group": "H",
+      "matchday": 1,
+      "date": "",
+      "home": "Spain",
+      "away": "Cabo Verde",
+      "model": {
+        "home": 0.9009,
+        "draw": 0.077,
+        "away": 0.0221,
+        "pick": "home"
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "H-MD1-23",
+      "group": "H",
+      "matchday": 1,
+      "date": "",
+      "home": "Saudi Arabia",
+      "away": "Uruguay",
+      "model": {
+        "home": 0.1081,
+        "draw": 0.2019,
+        "away": 0.69,
+        "pick": "away"
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "I-MD1-01",
+      "group": "I",
+      "matchday": 1,
+      "date": "",
+      "home": "France",
+      "away": "Senegal",
+      "model": {
+        "home": 0.5937,
+        "draw": 0.2431,
+        "away": 0.1632,
+        "pick": "home"
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "I-MD1-23",
+      "group": "I",
+      "matchday": 1,
+      "date": "",
+      "home": "Norway",
+      "away": "Iraq",
+      "model": {
+        "home": 0.6131,
+        "draw": 0.2357,
+        "away": 0.1512,
+        "pick": "home"
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "J-MD1-01",
+      "group": "J",
+      "matchday": 1,
+      "date": "",
+      "home": "Argentina",
+      "away": "Algeria",
+      "model": {
+        "home": 0.7167,
+        "draw": 0.1886,
+        "away": 0.0946,
+        "pick": "home"
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "J-MD1-23",
+      "group": "J",
+      "matchday": 1,
+      "date": "",
+      "home": "Austria",
+      "away": "Jordan",
+      "model": {
+        "home": 0.4813,
+        "draw": 0.2767,
+        "away": 0.242,
+        "pick": "home"
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "K-MD1-01",
+      "group": "K",
+      "matchday": 1,
+      "date": "",
+      "home": "Portugal",
+      "away": "Uzbekistan",
+      "model": {
+        "home": 0.6017,
+        "draw": 0.2401,
+        "away": 0.1582,
+        "pick": "home"
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "K-MD1-23",
+      "group": "K",
+      "matchday": 1,
+      "date": "",
+      "home": "Colombia",
+      "away": "DR Congo",
+      "model": {
+        "home": 0.6869,
+        "draw": 0.2034,
+        "away": 0.1097,
+        "pick": "home"
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "L-MD1-01",
+      "group": "L",
+      "matchday": 1,
+      "date": "",
+      "home": "England",
+      "away": "Croatia",
+      "model": {
+        "home": 0.4889,
+        "draw": 0.275,
+        "away": 0.2361,
+        "pick": "home"
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "L-MD1-23",
+      "group": "L",
+      "matchday": 1,
+      "date": "",
+      "home": "Ghana",
+      "away": "Panama",
+      "model": {
+        "home": 0.1426,
+        "draw": 0.2298,
+        "away": 0.6275,
+        "pick": "away"
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "A-MD2-02",
+      "group": "A",
+      "matchday": 2,
+      "date": "",
+      "home": "Mexico",
+      "away": "South Africa",
+      "model": {
+        "home": 0.804,
+        "draw": 0.1401,
+        "away": 0.0559,
+        "pick": "home"
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "A-MD2-13",
+      "group": "A",
+      "matchday": 2,
+      "date": "",
+      "home": "South Korea",
+      "away": "Czechia",
+      "model": {
+        "home": 0.4441,
+        "draw": 0.2839,
+        "away": 0.272,
+        "pick": "home"
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "B-MD2-02",
+      "group": "B",
+      "matchday": 2,
+      "date": "",
+      "home": "Canada",
+      "away": "Qatar",
+      "model": {
+        "home": 0.8054,
+        "draw": 0.1393,
+        "away": 0.0553,
+        "pick": "home"
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "B-MD2-13",
+      "group": "B",
+      "matchday": 2,
+      "date": "",
+      "home": "Switzerland",
+      "away": "Bosnia and Herzegovina",
+      "model": {
+        "home": 0.7146,
+        "draw": 0.1897,
+        "away": 0.0957,
+        "pick": "home"
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "C-MD2-02",
+      "group": "C",
+      "matchday": 2,
+      "date": "",
+      "home": "Brazil",
+      "away": "Haiti",
+      "model": {
+        "home": 0.7622,
+        "draw": 0.1643,
+        "away": 0.0734,
+        "pick": "home"
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "C-MD2-13",
+      "group": "C",
+      "matchday": 2,
+      "date": "",
+      "home": "Morocco",
+      "away": "Scotland",
+      "model": {
+        "home": 0.536,
+        "draw": 0.2625,
+        "away": 0.2015,
+        "pick": "home"
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "D-MD2-02",
+      "group": "D",
+      "matchday": 2,
+      "date": "",
+      "home": "United States",
+      "away": "Australia",
+      "model": {
+        "home": 0.362,
+        "draw": 0.2915,
+        "away": 0.3465,
+        "pick": "home"
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "D-MD2-13",
+      "group": "D",
+      "matchday": 2,
+      "date": "",
+      "home": "Paraguay",
+      "away": "Türkiye",
+      "model": {
+        "home": 0.3061,
+        "draw": 0.289,
+        "away": 0.4049,
+        "pick": "away"
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "E-MD2-02",
+      "group": "E",
+      "matchday": 2,
+      "date": "",
+      "home": "Germany",
+      "away": "Côte d'Ivoire",
+      "model": {
+        "home": 0.5667,
+        "draw": 0.2527,
+        "away": 0.1806,
+        "pick": "home"
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "E-MD2-13",
+      "group": "E",
+      "matchday": 2,
+      "date": "",
+      "home": "Curaçao",
+      "away": "Ecuador",
+      "model": {
+        "home": 0.0464,
+        "draw": 0.125,
+        "away": 0.8286,
+        "pick": "away"
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "F-MD2-02",
+      "group": "F",
+      "matchday": 2,
+      "date": "",
+      "home": "Netherlands",
+      "away": "Tunisia",
+      "model": {
+        "home": 0.6592,
+        "draw": 0.2162,
+        "away": 0.1246,
+        "pick": "home"
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "F-MD2-13",
+      "group": "F",
+      "matchday": 2,
+      "date": "",
+      "home": "Japan",
+      "away": "Sweden",
+      "model": {
+        "home": 0.6161,
+        "draw": 0.2345,
+        "away": 0.1495,
+        "pick": "home"
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "G-MD2-02",
+      "group": "G",
+      "matchday": 2,
+      "date": "",
+      "home": "Belgium",
+      "away": "Iran",
+      "model": {
+        "home": 0.4082,
+        "draw": 0.2887,
+        "away": 0.3031,
+        "pick": "home"
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "G-MD2-13",
+      "group": "G",
+      "matchday": 2,
+      "date": "",
+      "home": "Egypt",
+      "away": "New Zealand",
+      "model": {
+        "home": 0.4508,
+        "draw": 0.2828,
+        "away": 0.2664,
+        "pick": "home"
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "H-MD2-02",
+      "group": "H",
+      "matchday": 2,
+      "date": "",
+      "home": "Spain",
+      "away": "Saudi Arabia",
+      "model": {
+        "home": 0.8987,
+        "draw": 0.0785,
+        "away": 0.0228,
+        "pick": "home"
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "H-MD2-13",
+      "group": "H",
+      "matchday": 2,
+      "date": "",
+      "home": "Cabo Verde",
+      "away": "Uruguay",
+      "model": {
+        "home": 0.106,
+        "draw": 0.1999,
+        "away": 0.6941,
+        "pick": "away"
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "I-MD2-02",
+      "group": "I",
+      "matchday": 2,
+      "date": "",
+      "home": "France",
+      "away": "Norway",
+      "model": {
+        "home": 0.5327,
+        "draw": 0.2635,
+        "away": 0.2038,
+        "pick": "home"
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "I-MD2-13",
+      "group": "I",
+      "matchday": 2,
+      "date": "",
+      "home": "Senegal",
+      "away": "Iraq",
+      "model": {
+        "home": 0.5525,
+        "draw": 0.2574,
+        "away": 0.1901,
+        "pick": "home"
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "J-MD2-02",
+      "group": "J",
+      "matchday": 2,
+      "date": "",
+      "home": "Argentina",
+      "away": "Austria",
+      "model": {
+        "home": 0.699,
+        "draw": 0.1975,
+        "away": 0.1035,
+        "pick": "home"
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "J-MD2-13",
+      "group": "J",
+      "matchday": 2,
+      "date": "",
+      "home": "Algeria",
+      "away": "Jordan",
+      "model": {
+        "home": 0.4616,
+        "draw": 0.2808,
+        "away": 0.2576,
+        "pick": "home"
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "K-MD2-02",
+      "group": "K",
+      "matchday": 2,
+      "date": "",
+      "home": "Portugal",
+      "away": "Colombia",
+      "model": {
+        "home": 0.3336,
+        "draw": 0.2911,
+        "away": 0.3753,
+        "pick": "away"
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "K-MD2-13",
+      "group": "K",
+      "matchday": 2,
+      "date": "",
+      "home": "Uzbekistan",
+      "away": "DR Congo",
+      "model": {
+        "home": 0.4176,
+        "draw": 0.2877,
+        "away": 0.2947,
+        "pick": "home"
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "L-MD2-02",
+      "group": "L",
+      "matchday": 2,
+      "date": "",
+      "home": "England",
+      "away": "Ghana",
+      "model": {
+        "home": 0.8494,
+        "draw": 0.1118,
+        "away": 0.0388,
+        "pick": "home"
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "L-MD2-13",
+      "group": "L",
+      "matchday": 2,
+      "date": "",
+      "home": "Croatia",
+      "away": "Panama",
+      "model": {
+        "home": 0.479,
+        "draw": 0.2772,
+        "away": 0.2437,
+        "pick": "home"
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "A-MD3-03",
+      "group": "A",
+      "matchday": 3,
+      "date": "",
+      "home": "Mexico",
+      "away": "Czechia",
+      "model": {
+        "home": 0.6504,
+        "draw": 0.2201,
+        "away": 0.1295,
+        "pick": "home"
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "A-MD3-12",
+      "group": "A",
+      "matchday": 3,
+      "date": "",
+      "home": "South Korea",
+      "away": "South Africa",
+      "model": {
+        "home": 0.6219,
+        "draw": 0.2322,
+        "away": 0.146,
+        "pick": "home"
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "B-MD3-03",
+      "group": "B",
+      "matchday": 3,
+      "date": "",
+      "home": "Canada",
+      "away": "Bosnia and Herzegovina",
+      "model": {
+        "home": 0.7316,
+        "draw": 0.181,
+        "away": 0.0875,
+        "pick": "home"
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "B-MD3-12",
+      "group": "B",
+      "matchday": 3,
+      "date": "",
+      "home": "Switzerland",
+      "away": "Qatar",
+      "model": {
+        "home": 0.7908,
+        "draw": 0.148,
+        "away": 0.0612,
+        "pick": "home"
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "C-MD3-03",
+      "group": "C",
+      "matchday": 3,
+      "date": "",
+      "home": "Brazil",
+      "away": "Scotland",
+      "model": {
+        "home": 0.63,
+        "draw": 0.2288,
+        "away": 0.1412,
+        "pick": "home"
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "C-MD3-12",
+      "group": "C",
+      "matchday": 3,
+      "date": "",
+      "home": "Morocco",
+      "away": "Haiti",
+      "model": {
+        "home": 0.679,
+        "draw": 0.2072,
+        "away": 0.1139,
+        "pick": "home"
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "D-MD3-03",
+      "group": "D",
+      "matchday": 3,
+      "date": "",
+      "home": "United States",
+      "away": "Türkiye",
+      "model": {
+        "home": 0.2973,
+        "draw": 0.288,
+        "away": 0.4147,
+        "pick": "away"
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "D-MD3-12",
+      "group": "D",
+      "matchday": 3,
+      "date": "",
+      "home": "Paraguay",
+      "away": "Australia",
+      "model": {
+        "home": 0.3715,
+        "draw": 0.2913,
+        "away": 0.3373,
+        "pick": "home"
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "E-MD3-03",
+      "group": "E",
+      "matchday": 3,
+      "date": "",
+      "home": "Germany",
+      "away": "Ecuador",
+      "model": {
+        "home": 0.3241,
+        "draw": 0.2906,
+        "away": 0.3853,
+        "pick": "away"
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "E-MD3-12",
+      "group": "E",
+      "matchday": 3,
+      "date": "",
+      "home": "Curaçao",
+      "away": "Côte d'Ivoire",
+      "model": {
+        "home": 0.1502,
+        "draw": 0.235,
+        "away": 0.6149,
+        "pick": "away"
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "F-MD3-03",
+      "group": "F",
+      "matchday": 3,
+      "date": "",
+      "home": "Netherlands",
+      "away": "Sweden",
+      "model": {
+        "home": 0.6295,
+        "draw": 0.229,
+        "away": 0.1415,
+        "pick": "home"
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "F-MD3-12",
+      "group": "F",
+      "matchday": 3,
+      "date": "",
+      "home": "Japan",
+      "away": "Tunisia",
+      "model": {
+        "home": 0.646,
+        "draw": 0.222,
+        "away": 0.1319,
+        "pick": "home"
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "G-MD3-03",
+      "group": "G",
+      "matchday": 3,
+      "date": "",
+      "home": "Belgium",
+      "away": "New Zealand",
+      "model": {
+        "home": 0.6131,
+        "draw": 0.2357,
+        "away": 0.1512,
+        "pick": "home"
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "G-MD3-12",
+      "group": "G",
+      "matchday": 3,
+      "date": "",
+      "home": "Egypt",
+      "away": "Iran",
+      "model": {
+        "home": 0.262,
+        "draw": 0.2818,
+        "away": 0.4561,
+        "pick": "away"
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "H-MD3-03",
+      "group": "H",
+      "matchday": 3,
+      "date": "",
+      "home": "Spain",
+      "away": "Uruguay",
+      "model": {
+        "home": 0.6368,
+        "draw": 0.226,
+        "away": 0.1372,
+        "pick": "home"
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "H-MD3-12",
+      "group": "H",
+      "matchday": 3,
+      "date": "",
+      "home": "Cabo Verde",
+      "away": "Saudi Arabia",
+      "model": {
+        "home": 0.35,
+        "draw": 0.2915,
+        "away": 0.3584,
+        "pick": "away"
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "I-MD3-03",
+      "group": "I",
+      "matchday": 3,
+      "date": "",
+      "home": "France",
+      "away": "Iraq",
+      "model": {
+        "home": 0.7773,
+        "draw": 0.1558,
+        "away": 0.0669,
+        "pick": "home"
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "I-MD3-12",
+      "group": "I",
+      "matchday": 3,
+      "date": "",
+      "home": "Senegal",
+      "away": "Norway",
+      "model": {
+        "home": 0.2995,
+        "draw": 0.2883,
+        "away": 0.4123,
+        "pick": "away"
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "J-MD3-03",
+      "group": "J",
+      "matchday": 3,
+      "date": "",
+      "home": "Argentina",
+      "away": "Jordan",
+      "model": {
+        "home": 0.8075,
+        "draw": 0.138,
+        "away": 0.0545,
+        "pick": "home"
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "J-MD3-12",
+      "group": "J",
+      "matchday": 3,
+      "date": "",
+      "home": "Algeria",
+      "away": "Austria",
+      "model": {
+        "home": 0.3361,
+        "draw": 0.2912,
+        "away": 0.3727,
+        "pick": "away"
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "K-MD3-03",
+      "group": "K",
+      "matchday": 3,
+      "date": "",
+      "home": "Portugal",
+      "away": "DR Congo",
+      "model": {
+        "home": 0.6659,
+        "draw": 0.2132,
+        "away": 0.1209,
+        "pick": "home"
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "K-MD3-12",
+      "group": "K",
+      "matchday": 3,
+      "date": "",
+      "home": "Uzbekistan",
+      "away": "Colombia",
+      "model": {
+        "home": 0.1449,
+        "draw": 0.2314,
+        "away": 0.6237,
+        "pick": "away"
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "L-MD3-03",
+      "group": "L",
+      "matchday": 3,
+      "date": "",
+      "home": "England",
+      "away": "Panama",
+      "model": {
+        "home": 0.6173,
+        "draw": 0.234,
+        "away": 0.1487,
+        "pick": "home"
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "L-MD3-12",
+      "group": "L",
+      "matchday": 3,
+      "date": "",
+      "home": "Croatia",
+      "away": "Ghana",
+      "model": {
+        "home": 0.7454,
+        "draw": 0.1735,
+        "away": 0.081,
+        "pick": "home"
+      },
+      "my_pick": null,
+      "actual": null
+    }
+  ]
+}
