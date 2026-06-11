@@ -352,16 +352,10 @@ def main() -> None:
     )
 
     st.markdown(
-        f"**How it works:** We simulated the entire 2026 World Cup **{n_iter:,} times** using a "
-        "statistical model trained on **49,000+ historical international matches** (1872-present). "
-        "Each match outcome is determined by team strength learned from decades of real results — "
-        "stronger teams win more often, but upsets still happen. After all those simulations, we "
-        "count how often each team reached each round. Those frequencies become the percentages "
-        "you see throughout this app. For the technical details, see the "
-        "**Model Stats** and **Methodology** tabs.\n\n"
-        "**Data sources:** Historical match results (49k+ games, 1872-present) · "
-        "Elo strength ratings · FIFA rankings · Polymarket predictions · "
-        "WC 2026 official bracket format"
+        f"We ran **{n_iter:,} full World Cup simulations** using a model built from **49,000+ "
+        "historical matches**, Elo ratings, betting market odds, Polymarket prices, and FIFA "
+        "rankings. The percentages show how often each team reached each round. See the "
+        "**Methodology** tab for details."
     )
 
     st.divider()
