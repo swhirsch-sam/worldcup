@@ -88,8 +88,10 @@ def _inject_theme() -> None:
         """
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
-:root{--wc-navy:#0B1F3A;--wc-blue:#1D6FB8;--wc-gold:#F0A500;--wc-line:#E5EAF1;}
-html, body, [class*="css"]{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;}
+:root{--wc-navy:#0B1F3A;--wc-blue:#1D6FB8;
+--wc-gold:#F0A500;--wc-line:#E5EAF1;}
+html, body, [class*="css"]{font-family:'Inter',-apple-system,BlinkMacSystemFont,
+'Segoe UI',sans-serif;}
 .stApp{background:linear-gradient(180deg,#FBFCFE 0%,#F2F6FB 100%);}
 .block-container{padding-top:1.6rem;}
 .wc-hero{background:linear-gradient(120deg,#0B1F3A 0%,#14346B 52%,#1D6FB8 100%);
@@ -367,20 +369,19 @@ def main() -> None:
 
     tabs = st.tabs(
         [
-            "📝 My Picks",
+            "Model Picks (Group Stage)",
             "🗳️ My Bracket",
             "Match Predictions",
             "Group Stage",
-            "Bracket",
+            "Advancement",
             "Champion Odds",
-            "Best Third",
             "Model Stats",
             "Methodology",
         ]
     )
 
     with tabs[0]:
-        _render_my_picks()
+        _render_model_picks()
     with tabs[1]:
         _render_my_bracket()
     with tabs[2]:
@@ -388,14 +389,12 @@ def main() -> None:
     with tabs[3]:
         _render_group_stage(probs, groups)
     with tabs[4]:
-        _render_bracket(team_df, n_iter)
+        _render_advancement(team_df)
     with tabs[5]:
         _render_champion_odds(team_df, n_iter)
     with tabs[6]:
-        _render_best_third(team_df, groups, n_iter)
-    with tabs[7]:
         _render_model_stats(team_df, meta, n_iter)
-    with tabs[8]:
+    with tabs[7]:
         _render_methodology(manifest, meta)
 
 
@@ -448,13 +447,9 @@ def _render_footer() -> None:
 # ---------------------------------------------------------------------------
 
 
-def _render_my_picks() -> None:
-    """Personal, read-only group-stage tracker: my picks vs. the model vs. reality."""
-    st.header("📝 My Picks — Group-Stage Tracker")
-    st.markdown(
-        "My call on every group match, the model's call, and what actually happened — "
-        "with a running tally of who's more right."
-    )
+def _render_model_picks() -> None:
+    """Read-only group-stage tracker: the model's pick vs. the actual result."""
+    st.header("Model Picks — Group Stage")
 
     base = _load_tracker()
     matches: list[dict[str, Any]] = base.get("matches", [])
@@ -463,22 +458,14 @@ def _render_my_picks() -> None:
         return
 
     decided = [m for m in matches if m.get("actual")]
-    my_played = [m for m in decided if m.get("my_pick")]
-    my_hits = sum(1 for m in my_played if m["my_pick"] == m["actual"])
-    mod_hits = sum(1 for m in decided if m["model_pick"] == m["actual"])
     n_dec = len(decided)
-    my_acc = my_hits / len(my_played) if my_played else 0.0
+    mod_hits = sum(1 for m in decided if m["model_pick"] == m["actual"])
     mod_acc = mod_hits / n_dec if n_dec else 0.0
 
-    c1, c2, c3, c4 = st.columns(4)
+    c1, c2, c3 = st.columns(3)
     c1.metric("Results in", f"{n_dec}/{len(matches)}")
-    c2.metric("My record", f"{my_hits}/{len(my_played)}", f"{my_acc:.0%}" if my_played else None)
-    c3.metric("Model record", f"{mod_hits}/{n_dec}", f"{mod_acc:.0%}" if n_dec else None)
-    c4.metric(
-        "Me vs. model",
-        f"{(my_acc - mod_acc) * 100:+.0f} pts" if (my_played and n_dec) else "—",
-        help="My hit-rate minus the model's, over matches that have a result.",
-    )
+    c2.metric("Model correct", f"{mod_hits}/{n_dec}" if n_dec else "—")
+    c3.metric("Model accuracy", f"{mod_acc:.0%}" if n_dec else "—")
     st.progress(n_dec / len(matches), text=f"{n_dec} of {len(matches)} group matches played")
     st.divider()
 
@@ -492,11 +479,9 @@ def _render_my_picks() -> None:
             "MD": m["matchday"],
             "Grp": m["group"],
             "Match": f"{m['home']} v {m['away']}",
-            "My pick": m.get("my_pick") or "—",
             "Model pick": m["model_pick"],
             "Result": m.get("actual") or "—",
-            "Me": _hit(m.get("my_pick"), m.get("actual")),
-            "Model": _hit(m["model_pick"], m.get("actual")),
+            "✓": _hit(m["model_pick"], m.get("actual")),
         }
         for m in matches
     )
@@ -508,13 +493,8 @@ def _render_my_picks() -> None:
         column_config={
             "MD": st.column_config.NumberColumn("MD", width="small"),
             "Grp": st.column_config.TextColumn("Grp", width="small"),
-            "Me": st.column_config.TextColumn("Me", width="small"),
-            "Model": st.column_config.TextColumn("Model", width="small"),
+            "✓": st.column_config.TextColumn("✓", width="small"),
         },
-    )
-    st.caption(
-        "Picks and results live in `data/match_tracker.json` "
-        "(`my_pick` / `actual` = a country name or `Draw`). Tell me a result and I'll log it."
     )
     _render_footer()
 
@@ -522,10 +502,6 @@ def _render_my_picks() -> None:
 def _render_my_bracket() -> None:
     """Read-only knockout bracket: my projection vs. the model vs. actual."""
     st.header("🗳️ My Bracket — Knockout Projection")
-    st.markdown(
-        "My projected path through the knockout rounds against the model's, with actual "
-        "winners filled in as ties are played. Seeded from the model — tell me which calls to flip."
-    )
 
     b = _load_bracket()
     if not b or not b.get("rounds"):
@@ -588,11 +564,6 @@ def _render_my_bracket() -> None:
 
 def _render_matches(match_data: dict[str, Any] | None) -> None:
     st.header("Match-by-Match Predictions")
-    st.markdown(
-        "For every game, the model gives the **chance of each result** and the "
-        "**most likely score**. World Cup venues are neutral — no home advantage — "
-        "so predictions come down to team strength."
-    )
 
     if match_data is None:
         st.info(
@@ -603,8 +574,6 @@ def _render_matches(match_data: dict[str, Any] | None) -> None:
 
     groups: dict[str, list[str]] = match_data["groups"]
     matches: list[dict[str, Any]] = match_data["group_matches"]
-    strength: dict[str, float] = match_data["team_strength"]
-    params: dict[str, float] = match_data["model_params"]
 
     # --- Group-stage matches ---
     st.subheader("Group-stage matches")
@@ -627,45 +596,11 @@ def _render_matches(match_data: dict[str, Any] | None) -> None:
     show_group = choice == "All groups"
     for m in selected:
         _render_match_card(m["home"], m["away"], m, group=m["group"] if show_group else None)
-
-    # --- Head-to-head explorer (covers knockouts / any matchup) ---
-    st.divider()
-    st.subheader("Head-to-head: pick any two teams")
-    st.caption(
-        "Knockout matchups aren't fixed until the groups finish, so try any pairing — "
-        "the model predicts it the same way it predicts group games."
-    )
-
-    teams_by_strength = sorted(strength, key=lambda t: strength[t], reverse=True)
-    col1, col2 = st.columns(2)
-    team_a = col1.selectbox("Team A", teams_by_strength, index=0)
-    team_b = col2.selectbox("Team B", teams_by_strength, index=1)
-
-    if team_a == team_b:
-        st.info("Pick two different teams to see a prediction.")
-        _render_footer()
-        return
-
-    predictor = load_predictor()
-    if predictor is None:
-        st.info("Live head-to-head isn't available in this environment.")
-        _render_footer()
-        return
-
-    stats = predictor(strength[team_a], strength[team_b], **params)
-    st.markdown(_legend_html(), unsafe_allow_html=True)
-    _render_match_card(team_a, team_b, stats)
     _render_footer()
 
 
 def _render_group_stage(probs: dict[str, Any], groups: dict[str, list[str]]) -> None:
     st.header("Group Stage — Who Advances?")
-    st.markdown(
-        "The **top 2 teams** in each group automatically qualify for the knockout round. "
-        "The best 8 third-place teams also advance as wildcards (see the **Best Third** tab). "
-        "Percentages show each team's estimated chance of finishing in that position. "
-        "United States, Canada, and Mexico receive a home-field strength boost as tournament hosts."
-    )
 
     cols = st.columns(3)
     for idx, (group_id, teams) in enumerate(sorted(groups.items())):
@@ -693,196 +628,63 @@ def _render_group_stage(probs: dict[str, Any], groups: dict[str, list[str]]) -> 
     _render_footer()
 
 
-def _render_best_third(
-    team_df: pd.DataFrame,
-    groups: dict[str, list[str]],
-    n_iter: int,
-) -> None:
-    st.header("The Wildcard Spots — Best Third-Place Teams")
-    st.markdown(
-        "This World Cup has **48 teams split into 12 groups of 4**. Only the top 2 from each "
-        "group automatically advance — but **8 of the 12 third-place finishers** also qualify "
-        "based on their combined points, goal difference, and goals scored across all groups. "
-        "Gold bars show the teams most likely to grab one of those 8 wildcard spots."
-    )
+def _render_advancement(team_df: pd.DataFrame) -> None:
+    st.header("Advancement Probabilities")
 
-    keep_cols = ["team", "group", "group_first", "group_second", "third_qualify", "r32"]
-    third_df = team_df[keep_cols].copy()
-    third_df = third_df.sort_values("third_qualify", ascending=False).reset_index(drop=True)
-    third_df["rank"] = range(1, len(third_df) + 1)
-
-    # Only show teams with meaningful best-third probability
-    plot_df = third_df[third_df["third_qualify"] > 0.001].head(20)
-
-    fig = go.Figure(
-        go.Bar(
-            x=plot_df["third_qualify"] * 100,
-            y=plot_df["team"] + " (" + plot_df["group"] + ")",
-            orientation="h",
-            marker_color=["#f0a500" if i < 8 else "#adb5bd" for i in range(len(plot_df))],
-            text=[f"{v:.1f}%" for v in plot_df["third_qualify"] * 100],
-            textposition="outside",
-        )
-    )
-    fig.update_layout(
-        title="Estimated chance of qualifying as a best third-place team — gold = likely top 8",
-        xaxis_title="Estimated probability (%)",
-        height=max(400, len(plot_df) * 28),
-        margin={"l": 220, "r": 80, "t": 50, "b": 40},
-        yaxis={"autorange": "reversed"},
-    )
-    st.plotly_chart(fig, use_container_width=True)
-
-    with st.expander("Full best-third table"):
-        show_df = third_df[third_df["third_qualify"] > 0.001][
-            ["team", "group", "group_first", "group_second", "third_qualify", "r32"]
-        ]
-        st.dataframe(
-            show_df.style.format(
-                {
-                    "group_first": "{:.1%}",
-                    "group_second": "{:.1%}",
-                    "third_qualify": "{:.1%}",
-                    "r32": "{:.1%}",
-                }
-            ),
-            hide_index=True,
-            use_container_width=True,
-        )
-    _render_footer()
-
-
-def _render_bracket(team_df: pd.DataFrame, n_iter: int) -> None:
-    st.header("How Far Will Each Team Go?")
-    st.markdown(
-        "Each number shows a team's estimated chance of **reaching** that round. "
-        "Darker color = higher probability. Columns go left to right: "
-        "R32 → Round of 16 → Quarterfinals → Semifinals → Final → Champion. "
-        "Use the slider to compare more or fewer teams."
-    )
-
-    # Heatmap: teams x stages
-    top_n = st.slider(
-        "How many teams to show",
-        10,
-        48,
-        24,
-        help=(
-            "Teams are ranked by their estimated chance of winning the tournament. "
-            "Top 24 shows the realistic contenders; show all 48 to see every team's odds. "
-            "Numbers in each cell = estimated % chance of reaching that round."
+    cols: dict[str, str] = {
+        "group": "Group",
+        "r32": "R32",
+        "r16": "R16",
+        "qf": "QF",
+        "sf": "SF",
+        "final": "Final",
+        "champion": "Champion",
+    }
+    show = team_df[["team", *cols.keys()]].rename(columns={"team": "Team", **cols})
+    pct_cols = [v for v in cols.values() if v != "Group"]
+    st.dataframe(
+        show.style.format(dict.fromkeys(pct_cols, "{:.1%}")).background_gradient(
+            subset=pct_cols, cmap="YlGn"
         ),
+        hide_index=True,
+        use_container_width=True,
+        height=600,
     )
-    df = team_df.head(top_n)[["team", *STAGE_ORDER]].set_index("team")
-    df.columns = [STAGE_SHORT[s] for s in STAGE_ORDER]
-
-    fig = px.imshow(
-        df.values * 100,
-        x=list(df.columns),
-        y=list(df.index),
-        color_continuous_scale="YlOrRd",
-        labels={"color": "%"},
-        text_auto=".0f",
-        aspect="auto",
-    )
-    fig.update_layout(
-        title=f"Estimated chance of reaching each round (%) — top {top_n} teams",
-        height=max(400, top_n * 22 + 100),
-        coloraxis_colorbar_title="%",
-        xaxis_side="top",
-    )
-    st.plotly_chart(fig, use_container_width=True)
-
-    with st.expander("Full advancement table"):
-        display_cols: dict[str, str] = {
-            "group": "Group",
-            "r32": "R32",
-            "r16": "R16",
-            "qf": "QF",
-            "sf": "SF",
-            "final": "Final",
-            "champion": "Champion",
-        }
-        show = team_df[["team", *display_cols.keys()]].rename(
-            columns={"team": "Team", **display_cols}
-        )
-        fmt = {v: "{:.1%}" for v in display_cols.values() if v != "Group"}
-        st.dataframe(
-            show.style.format(fmt).background_gradient(subset=["Champion"], cmap="YlGn"),
-            hide_index=True,
-            use_container_width=True,
-        )
     _render_footer()
 
 
 def _render_champion_odds(team_df: pd.DataFrame, n_iter: int) -> None:
     st.header("Who Wins the World Cup?")
-    st.markdown(
-        "Each bar shows a team's estimated chance of **winning the tournament outright**. "
-        "Football is unpredictable, but decades of match data give the model a strong signal "
-        "on which teams are legitimate contenders. Hover over any bar for the exact percentage."
-    )
 
-    top_n = st.slider(
-        "How many teams to show",
-        10,
-        48,
-        20,
-        key="champ_n",
-        help=(
-            "Teams are sorted by estimated win probability. "
-            "The small horizontal lines on each bar are 95% confidence intervals — "
-            "the wider the line, the less certain the estimate. "
-            "Confidence tightens with more simulations."
-        ),
-    )
-    df = team_df.head(top_n).copy()
-    df["ci"] = df["champion"].apply(lambda p: ci_half(p, n_iter))
-    df["pct"] = df["champion"] * 100
-    df["ci_pct"] = df["ci"] * 100
-    df["label"] = df["champion"].apply(lambda p: f"{p:.1%}")
-    df = df.sort_values("champion", ascending=True)
+    top_n = st.slider("How many teams to show", 5, 48, 15, key="champ_n")
+    chart_df = team_df.head(top_n).sort_values("champion", ascending=True)
 
     fig = go.Figure(
         go.Bar(
-            x=df["pct"],
-            y=df["team"],
+            x=chart_df["champion"] * 100,
+            y=chart_df["team"],
             orientation="h",
-            error_x={"array": df["ci_pct"], "color": "rgba(0,0,0,0.4)", "thickness": 1.5},
-            marker_color=df["champion"].apply(
-                lambda p: f"rgba(240, 165, 0, {0.4 + 0.6 * p / df['champion'].max()})"
-            ),
-            text=df["label"],
+            marker_color="#1D6FB8",
+            text=[f"{p:.1%}" for p in chart_df["champion"]],
             textposition="outside",
         )
     )
     fig.update_layout(
-        xaxis_title="Estimated win probability (%)",
-        height=max(400, top_n * 28 + 80),
-        margin={"l": 200, "r": 80, "t": 40, "b": 40},
+        xaxis_title="Chance of winning (%)",
+        height=max(360, top_n * 26 + 80),
+        margin={"l": 160, "r": 60, "t": 30, "b": 40},
     )
     st.plotly_chart(fig, use_container_width=True)
 
-    # Group-level champion totals
-    st.subheader("Win probability by group")
-    group_champ = (
-        team_df.groupby("group")["champion"]
-        .sum()
-        .reset_index()
-        .sort_values("champion", ascending=False)
+    table = team_df[["team", "champion"]].sort_values("champion", ascending=False)
+    st.dataframe(
+        table.rename(columns={"team": "Team", "champion": "Win %"}).style.format(
+            {"Win %": "{:.1%}"}
+        ),
+        hide_index=True,
+        use_container_width=True,
+        height=400,
     )
-    fig2 = px.bar(
-        group_champ,
-        x="group",
-        y="champion",
-        text=group_champ["champion"].apply(lambda p: f"{p:.1%}"),
-        labels={"champion": "P(Champion)", "group": "Group"},
-        color="champion",
-        color_continuous_scale="YlOrRd",
-    )
-    fig2.update_traces(textposition="outside")
-    fig2.update_layout(coloraxis_showscale=False, height=350)
-    st.plotly_chart(fig2, use_container_width=True)
     _render_footer()
 
 
