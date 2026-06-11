@@ -17,6 +17,7 @@ from typing import Any
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
+import plotly.io as pio
 import streamlit as st
 
 # ---------------------------------------------------------------------------
@@ -67,6 +68,56 @@ st.set_page_config(
     page_icon="⚽",
     layout="wide",
 )
+
+# Clean, consistent styling for every Plotly chart in the app (cosmetic only).
+pio.templates.default = "plotly_white"
+try:
+    _tpl = pio.templates["plotly_white"].layout
+    _tpl.font.family = "Inter, -apple-system, 'Segoe UI', sans-serif"
+    _tpl.paper_bgcolor = "rgba(0,0,0,0)"
+    _tpl.colorway = ["#1D6FB8", "#F0A500", "#0E9F6E", "#C0392B", "#6C5CE7", "#16A085"]
+except Exception:  # pragma: no cover - styling must never break the app
+    pass
+
+
+def _inject_theme() -> None:
+    """Inject web fonts, a navy/gold palette, and component styling for polish."""
+    st.markdown(
+        """
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+:root{--wc-navy:#0B1F3A;--wc-blue:#1D6FB8;--wc-gold:#F0A500;--wc-line:#E5EAF1;}
+html, body, [class*="css"]{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;}
+.stApp{background:linear-gradient(180deg,#FBFCFE 0%,#F2F6FB 100%);}
+.block-container{padding-top:1.6rem;}
+.wc-hero{background:linear-gradient(120deg,#0B1F3A 0%,#14346B 52%,#1D6FB8 100%);
+  border-radius:18px;padding:30px 34px;margin-bottom:24px;
+  box-shadow:0 12px 32px rgba(11,31,58,.28);position:relative;overflow:hidden;}
+.wc-hero:after{content:"\\26BD";position:absolute;right:26px;top:50%;transform:translateY(-50%);
+  font-size:128px;opacity:.10;line-height:1;}
+.wc-hero h1{color:#fff;font-weight:800;font-size:2.15rem;margin:0;letter-spacing:-.5px;}
+.wc-hero h1 span{color:#FFC94D;}
+.wc-hero p{color:#CBD9EC;margin:.45rem 0 0;font-size:1.03rem;}
+[data-testid="stMetric"]{background:#fff;border:1px solid var(--wc-line);border-radius:14px;
+  padding:16px 18px;box-shadow:0 1px 3px rgba(16,24,40,.06);
+  transition:transform .15s ease,box-shadow .15s ease;}
+[data-testid="stMetric"]:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(16,24,40,.10);}
+[data-testid="stMetricLabel"] p{font-weight:600;color:#5A6B85;font-size:.80rem;
+  text-transform:uppercase;letter-spacing:.045em;}
+[data-testid="stMetricValue"]{color:var(--wc-navy);font-weight:800;}
+h2,h3{color:var(--wc-navy);font-weight:700;letter-spacing:-.3px;}
+.stTabs [data-baseweb="tab-list"]{gap:6px;border-bottom:none;flex-wrap:wrap;}
+.stTabs [data-baseweb="tab-highlight"],.stTabs [data-baseweb="tab-border"]{display:none;}
+.stTabs [data-baseweb="tab"]{background:#EAF1F8;border-radius:10px;padding:8px 16px;
+  font-weight:600;color:#33455F;border:1px solid transparent;}
+.stTabs [aria-selected="true"]{background:var(--wc-blue);color:#fff;
+  box-shadow:0 4px 12px rgba(29,111,184,.30);}
+[data-testid="stExpander"]{border:1px solid var(--wc-line);border-radius:12px;}
+[data-testid="stDataFrame"]{border-radius:12px;overflow:hidden;border:1px solid var(--wc-line);}
+</style>
+        """,
+        unsafe_allow_html=True,
+    )
 
 # ---------------------------------------------------------------------------
 # Data loading
@@ -225,6 +276,7 @@ def _render_match_card(
 
 
 def main() -> None:
+    _inject_theme()
     results = load_results()
     manifest = load_manifest()
     groups = load_groups()
@@ -238,7 +290,14 @@ def main() -> None:
     top_prob = team_df.iloc[0]["champion"]
 
     # -- Header --
-    st.title("FIFA World Cup 2026 — Bracket Predictor")
+    st.markdown(
+        f'<div class="wc-hero">'
+        f"<h1>FIFA World Cup <span>2026</span> &mdash; Bracket Predictor</h1>"
+        f"<p>Probabilistic forecasts from <b>{n_iter:,}</b> full-tournament "
+        f"Monte&nbsp;Carlo simulations &middot; updated {meta.get('generated_at', '')[:10]}</p>"
+        f"</div>",
+        unsafe_allow_html=True,
+    )
     c1, c2, c3, c4 = st.columns(4)
     c1.metric(
         "Projected Champion",
