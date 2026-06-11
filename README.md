@@ -10,7 +10,7 @@ per-team probabilities for reaching every round — each with a 95% confidence i
 pip install -r requirements.txt
 make ingest      # fetch and cache Elo / FIFA / odds
 make fit         # fit goals model on historical data
-make simulate    # run 50k Monte Carlo → results/simulation_summary.json
+make simulate    # run 1k Monte Carlo → results/simulation_summary.json
 make predict     # precompute per-match predictions → results/match_predictions.json
 make app         # launch Streamlit report
 ```
@@ -47,7 +47,7 @@ Key parameters:
 
 | Key | Default | Description |
 |---|---|---|
-| `simulation.iterations` | 50000 | Monte Carlo iterations |
+| `simulation.iterations` | 1000 | Monte Carlo iterations |
 | `simulation.seed` | 42 | RNG seed (reproducibility) |
 | `ensemble.weights.elo` | 0.60 | Elo weight in strength ensemble |
 | `host.elo_bump` | 75.0 | Host team Elo bonus (group stage) |
