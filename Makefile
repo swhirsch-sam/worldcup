@@ -14,7 +14,7 @@ help:
 	@echo "  ingest           Fetch and cache all data sources"
 	@echo "  strength         Build data/processed/strength.csv (ingest + ensemble)"
 	@echo "  fit              Fit the goals model on historical data"
-	@echo "  simulate         Run the 50k Monte Carlo simulation"
+	@echo "  simulate         Run the 1k Monte Carlo simulation"
 	@echo "  predict          Precompute per-match predictions for the app"
 	@echo "  backtest         Run backtests for 2018 and 2022"
 	@echo "  convergence      Run convergence analysis and save plot"

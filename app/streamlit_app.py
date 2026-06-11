@@ -261,8 +261,7 @@ def main() -> None:
         f"{n_iter:,}",
         help=(
             "Number of complete tournament simulations used to calculate these probabilities. "
-            "More simulations produce tighter, more reliable estimates. "
-            "50,000+ is recommended for stable results."
+            "More simulations produce tighter, more reliable estimates."
         ),
     )
     c4.metric(
@@ -286,12 +285,6 @@ def main() -> None:
         "Elo strength ratings · FIFA rankings · Polymarket predictions · "
         "WC 2026 official bracket format"
     )
-
-    if n_iter < 10_000:
-        st.warning(
-            f"Only {n_iter:,} simulations run — probabilities will sharpen with more. "
-            "Run `python3 -m src.model.montecarlo` for 50k iterations."
-        )
 
     st.divider()
 
@@ -810,12 +803,12 @@ happen *more often* than basic probability would suggest, so we adjust for that.
 
 ---
 
-**Step 3 — Simulating the tournament 50,000 times**
+**Step 3 — Simulating the tournament 1,000 times**
 
-We run the entire World Cup from first group game to the final, 50,000 times.
+We run the entire World Cup from first group game to the final, 1,000 times.
 Each simulation draws a realistic scoreline for every match, determines group standings
 (using official FIFA tiebreaker rules), selects the 8 best third-place wildcards, and
-plays out the full knockout bracket. After all 50,000 runs, we count how often each team
+plays out the full knockout bracket. After all 1,000 runs, we count how often each team
 reached each round — those frequencies become the percentages you see in this app.
 
 ---
