@@ -15,7 +15,6 @@ from pathlib import Path
 from typing import Any
 
 import pandas as pd
-import plotly.express as px
 import plotly.graph_objects as go
 import plotly.io as pio
 import streamlit as st
@@ -694,18 +693,8 @@ def _render_model_stats(
     n_iter: int,
 ) -> None:
     st.header("Model & Simulation Statistics")
-    st.markdown(
-        "For the technically curious — here's what's powering the numbers throughout this app. "
-        "The model is a **Dixon-Coles Poisson regression** fitted on 49k+ historical matches. "
-        "It learns how Elo rating differences translate into expected goals, then applies a "
-        "low-score correction (rho) since scorelines like 0-0 and 1-1 happen more often in "
-        "football than a naive Poisson model would predict. "
-        "See the **Methodology** tab for a full walkthrough."
-    )
-    st.divider()
 
     col1, col2 = st.columns(2)
-
     with col1:
         st.subheader("Model parameters")
         st.table(
@@ -730,126 +719,41 @@ def _render_model_stats(
                 }
             ).set_index("Parameter")
         )
-
     with col2:
-        st.subheader("Champion distribution")
+        st.subheader("Title-race concentration")
         champ_probs = team_df["champion"].sort_values(ascending=False).values
         hhi = float((champ_probs**2).sum())
         effective_n = 1.0 / hhi if hhi > 0 else 0
-        top3_share = float(champ_probs[:3].sum())
-        top8_share = float(champ_probs[:8].sum())
         ma, mb = st.columns(2)
         ma.metric(
             "Effective contenders",
             f"{effective_n:.1f}",
-            help=(
-                "How many teams are genuinely in contention. "
-                "If one team had 100% odds this would be 1. "
-                "With 48 equal teams it would be 48. "
-                "Derived from the HHI: 1 / sum(p²)."
-            ),
-        )
-        mb.metric(
-            "HHI (concentration)",
-            f"{hhi:.4f}",
-            help=(
-                "Herfindahl-Hirschman Index: sum of squared win probabilities. "
-                "Higher = more concentrated around a few favorites. "
-                "0.02 = perfectly equal field; 1.0 = one team is a certainty."
-            ),
-        )
-        ma.metric(
-            "Top-3 title share",
-            f"{top3_share:.1%}",
-            help="Combined win probability of the three highest-ranked teams.",
+            help="Teams genuinely in contention, from 1 / sum(p²).",
         )
         mb.metric(
             "Top-8 title share",
-            f"{top8_share:.1%}",
-            help="Combined win probability of the top eight teams — the realistic contender pool.",
+            f"{float(champ_probs[:8].sum()):.1%}",
+            help="Combined win probability of the top eight teams.",
         )
-        st.metric(
-            "Simulation runtime",
-            f"{meta.get('runtime_seconds', 0):.0f}s",
-            help="Wall-clock time to run the full simulation on the generation machine.",
-        )
-
-    st.subheader("Champion probability distribution")
-    fig = px.histogram(
-        team_df,
-        x="champion",
-        nbins=30,
-        labels={"champion": "P(Champion)"},
-        title="Distribution of champion probabilities across 48 teams",
-    )
-    fig.update_layout(height=300)
-    st.plotly_chart(fig, use_container_width=True)
-
-    st.info(
-        "Formal backtesting against 2018 and 2022 World Cup results will be "
-        "added in Phase 7 (calibration & eval suite)."
-    )
     _render_footer()
 
 
 def _render_methodology(manifest: dict[str, Any], meta: dict[str, Any]) -> None:
     st.header("Methodology & Data Provenance")
 
-    st.subheader("How the model works")
     st.markdown(
         """
-**Step 1 — Measuring team strength**
+**How it works**
 
-Each team gets a single strength number built from four sources, blended together:
-
-- **Elo ratings (50%)** — A running score updated after every international match since 1872.
-  Big tournament wins move it more than friendly wins.
-- **Betting market odds (20%)** — Implied win probabilities from bookmakers like Pinnacle,
-  with the house margin mathematically removed. Sharp money tends to be well-informed.
-- **Polymarket (20%)** — Crowd-sourced prediction market prices. People put real money on
-  outcomes, creating a live consensus independent of the bookmakers.
-- **FIFA rankings (10%)** — FIFA's own monthly ranking of national teams.
-
-When a source isn't available its weight is automatically redistributed to the others.
-Host nations (USA, Canada, Mexico) receive a small home-crowd boost. Teams with limited
-match history are nudged toward average to avoid overconfidence.
-
----
-
-**Step 2 — Predicting match scores**
-
-With team strengths in hand, we predict how many goals each side is likely to score.
-The stronger the team and the bigger the gap, the higher their expected goal tally.
-We use a model called **Dixon-Coles** (a well-known football statistics method) which
-includes a correction for a quirk in the sport: low-scoring draws like 0-0 and 1-1
-happen *more often* than basic probability would suggest, so we adjust for that.
-
----
-
-**Step 3 — Simulating the tournament 1,000 times**
-
-We run the entire World Cup from first group game to the final, 1,000 times.
-Each simulation draws a realistic scoreline for every match, determines group standings
-(using official FIFA tiebreaker rules), selects the 8 best third-place wildcards, and
-plays out the full knockout bracket. After all 1,000 runs, we count how often each team
-reached each round — those frequencies become the percentages you see in this app.
-
----
-
-**Step 4 — Tiebreakers & wildcards**
-
-When teams finish a group level on points, we apply the official FIFA rules in order:
-goal difference, goals scored, head-to-head record, and so on down to a coin flip.
-For the 8 wildcard spots, the 12 third-place teams are ranked by the same criteria and
-the best 8 advance. Bracket slot assignments follow FIFA's official Annex C rules.
-
----
-
-**Step 5 — Knockout extra time and penalties**
-
-If a knockout match is still tied after 90 minutes, we simulate 30 minutes of extra time
-(teams score fewer goals when tired). Still level? We simulate a penalty shootout —
-roughly 50/50 for either side, with a small tilt toward the stronger team.
+1. **Team strength** — one rating per team, blended from **Elo (50%)**, **betting-market
+   odds (20%)**, **Polymarket (20%)**, and **FIFA rankings (10%)**; an unavailable source has
+   its weight redistributed. Hosts (USA / Canada / Mexico) get a small boost.
+2. **Match scores** — a **Dixon-Coles Poisson** model turns strength gaps into expected goals,
+   with a low-score correction (rho) for the extra 0-0 and 1-1 draws football produces.
+3. **Simulation** — the full tournament is played **1,000 times** (group stage through the
+   final), counting how often each team reaches each round.
+4. **Rules** — official FIFA tiebreakers, the 8 best third-place wildcards, FIFA Annex C
+   bracket slotting, and extra time / penalty shootouts when knockout ties are level.
         """
     )
 
@@ -863,21 +767,12 @@ roughly 50/50 for either side, with a small tilt toward the stronger team.
 
     if manifest:
         st.subheader("Run manifest")
-        col1, col2 = st.columns(2)
-        with col1:
-            st.markdown(f"**Git commit:** `{manifest.get('git_commit_sha', 'n/a')[:12]}`")
-            st.markdown(f"**Config hash:** `{manifest.get('config_hash', 'n/a')}`")
-            st.markdown(f"**RNG seed:** {manifest.get('rng_seed', 'n/a')}")
-            st.markdown(f"**Iterations:** {manifest.get('n_iterations', 'n/a'):,}")
-        with col2:
-            st.markdown(f"**Timestamp (UTC):** {manifest.get('timestamp_utc', 'n/a')}")
-            libs = manifest.get("library_versions", {})
-            if libs:
-                st.markdown("**Library versions:**")
-                for lib, ver in libs.items():
-                    st.markdown(f"  - {lib}: {ver}")
-    else:
-        st.info("Run manifest not found. Run `python3 -m src.model.montecarlo` to generate it.")
+        st.markdown(
+            f"**Commit** `{manifest.get('git_commit_sha', 'n/a')[:12]}` &middot; "
+            f"**Seed** {manifest.get('rng_seed', 'n/a')} &middot; "
+            f"**Iterations** {manifest.get('n_iterations', 'n/a'):,} &middot; "
+            f"**UTC** {manifest.get('timestamp_utc', 'n/a')}"
+        )
     _render_footer()
 
 
