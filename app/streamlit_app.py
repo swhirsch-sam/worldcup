@@ -30,6 +30,7 @@ MATCH_PREDICTIONS = _ROOT / "results" / "match_predictions.json"
 RUN_MANIFEST = _ROOT / "results" / "run_manifest.json"
 GROUPS_JSON = _ROOT / "data" / "groups.json"
 MATCH_TRACKER = _ROOT / "data" / "match_tracker.json"
+MY_BRACKET = _ROOT / "data" / "my_bracket.json"
 
 # ---------------------------------------------------------------------------
 # Constants
@@ -164,6 +165,14 @@ def _load_tracker() -> dict[str, Any]:
     if not MATCH_TRACKER.exists():
         return {"meta": {}, "matches": []}
     with open(MATCH_TRACKER, encoding="utf-8") as f:
+        return json.load(f)
+
+
+def _load_bracket() -> dict[str, Any]:
+    """Personal knockout bracket projection. Uncached so commits show up."""
+    if not MY_BRACKET.exists():
+        return {}
+    with open(MY_BRACKET, encoding="utf-8") as f:
         return json.load(f)
 
 
@@ -359,6 +368,7 @@ def main() -> None:
     tabs = st.tabs(
         [
             "📝 My Picks",
+            "🗳️ My Bracket",
             "Match Predictions",
             "Group Stage",
             "Bracket",
@@ -372,18 +382,20 @@ def main() -> None:
     with tabs[0]:
         _render_my_picks()
     with tabs[1]:
-        _render_matches(load_match_predictions())
+        _render_my_bracket()
     with tabs[2]:
-        _render_group_stage(probs, groups)
+        _render_matches(load_match_predictions())
     with tabs[3]:
-        _render_bracket(team_df, n_iter)
+        _render_group_stage(probs, groups)
     with tabs[4]:
-        _render_champion_odds(team_df, n_iter)
+        _render_bracket(team_df, n_iter)
     with tabs[5]:
-        _render_best_third(team_df, groups, n_iter)
+        _render_champion_odds(team_df, n_iter)
     with tabs[6]:
-        _render_model_stats(team_df, meta, n_iter)
+        _render_best_third(team_df, groups, n_iter)
     with tabs[7]:
+        _render_model_stats(team_df, meta, n_iter)
+    with tabs[8]:
         _render_methodology(manifest, meta)
 
 
@@ -504,6 +516,73 @@ def _render_my_picks() -> None:
         "Picks and results live in `data/match_tracker.json` "
         "(`my_pick` / `actual` = a country name or `Draw`). Tell me a result and I'll log it."
     )
+    _render_footer()
+
+
+def _render_my_bracket() -> None:
+    """Read-only knockout bracket: my projection vs. the model vs. actual."""
+    st.header("🗳️ My Bracket — Knockout Projection")
+    st.markdown(
+        "My projected path through the knockout rounds against the model's, with actual "
+        "winners filled in as ties are played. Seeded from the model — tell me which calls to flip."
+    )
+
+    b = _load_bracket()
+    if not b or not b.get("rounds"):
+        st.info("No bracket yet — `data/my_bracket.json` is missing.")
+        return
+
+    champ = b.get("champion", {})
+    c1, c2, c3 = st.columns(3)
+    c1.metric("My champion", champ.get("mine") or "—")
+    c2.metric("Model champion", champ.get("model") or "—")
+    c3.metric("Actual champion", champ.get("actual") or "TBD")
+
+    all_m = [m for r in b["rounds"].values() for m in r]
+    deviations = sum(1 for m in all_m if m.get("mine") and m.get("mine") != m.get("model"))
+    decided = [m for m in all_m if m.get("actual")]
+    my_hits = sum(1 for m in decided if m.get("mine") == m["actual"])
+    mod_hits = sum(1 for m in decided if m.get("model") == m["actual"])
+    d1, d2, d3 = st.columns(3)
+    d1.metric("Ties played", f"{len(decided)}/{len(all_m)}")
+    d2.metric("My calls right", f"{my_hits}/{len(decided)}" if decided else "—")
+    d3.metric("Model calls right", f"{mod_hits}/{len(decided)}" if decided else "—")
+    if deviations:
+        st.caption(f"You've flipped **{deviations}** call(s) from the model (marked ⚡).")
+    st.divider()
+
+    labels = {
+        "Final": "🏆 Final",
+        "SF": "Semifinals",
+        "QF": "Quarterfinals",
+        "R16": "Round of 16",
+        "R32": "Round of 32",
+    }
+    for rk in ["Final", "SF", "QF", "R16", "R32"]:
+        matches = b["rounds"].get(rk, [])
+        if not matches:
+            continue
+        st.subheader(labels.get(rk, rk))
+        rows = []
+        for m in matches:
+            mine, model, actual = m.get("mine"), m.get("model"), m.get("actual")
+            mark = "" if not actual else ("✅" if mine == actual else "❌")
+            flip = " ⚡" if (mine and model and mine != model) else ""
+            rows.append(
+                {
+                    "Match": f"{m['team_a']} v {m['team_b']}",
+                    "My pick": (mine or "—") + flip,
+                    "Model pick": model or "—",
+                    "Actual": actual or "—",
+                    "✓": mark,
+                }
+            )
+        st.dataframe(
+            pd.DataFrame(rows),
+            hide_index=True,
+            use_container_width=True,
+            column_config={"✓": st.column_config.TextColumn("✓", width="small")},
+        )
     _render_footer()
 
 
