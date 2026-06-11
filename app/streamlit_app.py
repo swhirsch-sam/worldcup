@@ -437,118 +437,72 @@ def _render_footer() -> None:
 
 
 def _render_my_picks() -> None:
-    """Personal group-stage prediction tracker (state saved to the repo)."""
+    """Personal, read-only group-stage tracker: my picks vs. the model vs. reality."""
     st.header("📝 My Picks — Group-Stage Tracker")
     st.markdown(
-        "Call every group match, then mark the actual result once it's played. "
-        "Your running accuracy — and how you stack up against the model — updates live. "
-        "When you're done, **download** the file and commit it to "
-        "`data/match_tracker.json` (or send it to me) so your picks persist."
+        "My call on every group match, the model's call, and what actually happened — "
+        "with a running tally of who's more right."
     )
 
     base = _load_tracker()
-    matches: list[dict[str, Any]] = [dict(m) for m in base.get("matches", [])]
+    matches: list[dict[str, Any]] = base.get("matches", [])
     if not matches:
         st.info("No tracker data yet — `data/match_tracker.json` is missing.")
         return
 
-    label_to_enc = {"Home": "home", "Draw": "draw", "Away": "away", "—": None}
-    enc_to_label = {"home": "Home", "draw": "Draw", "away": "Away", None: "—", "": "—"}
-    opts = ["—", "Home", "Draw", "Away"]
+    decided = [m for m in matches if m.get("actual")]
+    my_played = [m for m in decided if m.get("my_pick")]
+    my_hits = sum(1 for m in my_played if m["my_pick"] == m["actual"])
+    mod_hits = sum(1 for m in decided if m["model_pick"] == m["actual"])
+    n_dec = len(decided)
+    my_acc = my_hits / len(my_played) if my_played else 0.0
+    mod_acc = mod_hits / n_dec if n_dec else 0.0
 
-    with st.expander("📂 Load a previously downloaded picks file"):
-        up = st.file_uploader("Restore from a saved match_tracker.json", type=["json"])
-        if up is not None:
-            try:
-                by_id = {m["id"]: m for m in json.load(up).get("matches", [])}
-                for m in matches:
-                    if m["id"] in by_id:
-                        m["my_pick"] = by_id[m["id"]].get("my_pick")
-                        m["actual"] = by_id[m["id"]].get("actual")
-                st.success("Loaded your saved picks into the table below.")
-            except Exception as exc:  # noqa: BLE001
-                st.error(f"Couldn't read that file: {exc}")
+    c1, c2, c3, c4 = st.columns(4)
+    c1.metric("Results in", f"{n_dec}/{len(matches)}")
+    c2.metric("My record", f"{my_hits}/{len(my_played)}", f"{my_acc:.0%}" if my_played else None)
+    c3.metric("Model record", f"{mod_hits}/{n_dec}", f"{mod_acc:.0%}" if n_dec else None)
+    c4.metric(
+        "Me vs. model",
+        f"{(my_acc - mod_acc) * 100:+.0f} pts" if (my_played and n_dec) else "—",
+        help="My hit-rate minus the model's, over matches that have a result.",
+    )
+    st.progress(n_dec / len(matches), text=f"{n_dec} of {len(matches)} group matches played")
+    st.divider()
 
-    score_box = st.container()
+    def _hit(pick: str | None, actual: str | None) -> str:
+        if not pick or not actual:
+            return ""
+        return "✅" if pick == actual else "❌"
 
     df = pd.DataFrame(
         {
             "MD": m["matchday"],
             "Grp": m["group"],
             "Match": f"{m['home']} v {m['away']}",
-            "Model": enc_to_label.get(m["model"]["pick"], "—"),
-            "My pick": enc_to_label.get(m.get("my_pick"), "—"),
-            "Result": enc_to_label.get(m.get("actual"), "—"),
-            "_id": m["id"],
+            "My pick": m.get("my_pick") or "—",
+            "Model pick": m["model_pick"],
+            "Result": m.get("actual") or "—",
+            "Me": _hit(m.get("my_pick"), m.get("actual")),
+            "Model": _hit(m["model_pick"], m.get("actual")),
         }
         for m in matches
     )
-
-    edited = st.data_editor(
+    st.dataframe(
         df,
-        key="picks_editor",
         hide_index=True,
         use_container_width=True,
         height=560,
         column_config={
-            "MD": st.column_config.NumberColumn("MD", width="small", disabled=True),
-            "Grp": st.column_config.TextColumn("Grp", width="small", disabled=True),
-            "Match": st.column_config.TextColumn("Match", width="medium", disabled=True),
-            "Model": st.column_config.TextColumn("Model", width="small", disabled=True),
-            "My pick": st.column_config.SelectboxColumn("My pick", options=opts, width="small"),
-            "Result": st.column_config.SelectboxColumn("Result", options=opts, width="small"),
-            "_id": None,
+            "MD": st.column_config.NumberColumn("MD", width="small"),
+            "Grp": st.column_config.TextColumn("Grp", width="small"),
+            "Me": st.column_config.TextColumn("Me", width="small"),
+            "Model": st.column_config.TextColumn("Model", width="small"),
         },
     )
-
-    # --- live scoreboard (rendered above the table via the reserved container) ---
-    my = edited["My pick"].map(label_to_enc)
-    act = edited["Result"].map(label_to_enc)
-    mod = edited["Model"].map(label_to_enc)
-    decided = act.notna()
-    n_decided = int(decided.sum())
-    my_eval = decided & my.notna()
-    n_my_played = int(my_eval.sum())
-    my_hits = int(((my == act) & my_eval).sum())
-    mod_hits = int(((mod == act) & decided).sum())
-    my_acc = my_hits / n_my_played if n_my_played else 0.0
-    mod_acc = mod_hits / n_decided if n_decided else 0.0
-
-    with score_box:
-        c1, c2, c3, c4 = st.columns(4)
-        c1.metric("Results in", f"{n_decided}/72")
-        c2.metric("Your record", f"{my_hits}/{n_my_played}", f"{my_acc:.0%}" if n_my_played else None)
-        c3.metric("Model record", f"{mod_hits}/{n_decided}", f"{mod_acc:.0%}" if n_decided else None)
-        edge = (my_acc - mod_acc) * 100
-        c4.metric(
-            "You vs. model",
-            f"{edge:+.0f} pts" if (n_my_played and n_decided) else "—",
-            help="Your hit-rate minus the model's, over matches that have a result.",
-        )
-        st.progress(n_decided / 72, text=f"{n_decided} of 72 group matches recorded")
-
-    # --- export back to the repo file format ---
-    by_id = {m["id"]: m for m in matches}
-    out = []
-    for _, r in edited.iterrows():
-        m = dict(by_id[r["_id"]])
-        m["my_pick"] = label_to_enc.get(r["My pick"])
-        m["actual"] = label_to_enc.get(r["Result"])
-        out.append(m)
-    export = {
-        "meta": {**base.get("meta", {}), "updated": pd.Timestamp.utcnow().strftime("%Y-%m-%d")},
-        "matches": out,
-    }
-    st.download_button(
-        "⬇️ Download my picks (match_tracker.json)",
-        data=json.dumps(export, indent=2, ensure_ascii=False),
-        file_name="match_tracker.json",
-        mime="application/json",
-        type="primary",
-    )
     st.caption(
-        "Persist by committing this file to `data/match_tracker.json` "
-        "(on GitHub, or send it to me and I'll commit it)."
+        "Picks and results live in `data/match_tracker.json` "
+        "(`my_pick` / `actual` = a country name or `Draw`). Tell me a result and I'll log it."
     )
     _render_footer()
 

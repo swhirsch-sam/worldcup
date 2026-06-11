@@ -3,7 +3,7 @@
     "stage": "group",
     "season": "2026",
     "updated": "2026-06-11",
-    "note": "Real group matchups (official draw). Matchday ordering is canonical; fill official kickoff dates in the 'date' field as desired.",
+    "note": "Personal tracker. Set my_pick and actual to a country name or 'Draw' (null = not played/unset).",
     "n_matches": 72
   },
   "matches": [
@@ -14,11 +14,11 @@
       "date": "2026-06-11",
       "home": "Mexico",
       "away": "South Korea",
-      "model": {
-        "home": 0.5585,
-        "draw": 0.2554,
-        "away": 0.1861,
-        "pick": "home"
+      "model_pick": "Mexico",
+      "model_probs": {
+        "Mexico": 0.5585,
+        "Draw": 0.2554,
+        "South Korea": 0.1861
       },
       "my_pick": null,
       "actual": null
@@ -30,11 +30,11 @@
       "date": "2026-06-11",
       "home": "South Africa",
       "away": "Czechia",
-      "model": {
-        "home": 0.2066,
-        "draw": 0.2646,
-        "away": 0.5289,
-        "pick": "away"
+      "model_pick": "Czechia",
+      "model_probs": {
+        "South Africa": 0.2066,
+        "Draw": 0.2646,
+        "Czechia": 0.5289
       },
       "my_pick": null,
       "actual": null
@@ -46,11 +46,11 @@
       "date": "",
       "home": "Canada",
       "away": "Switzerland",
-      "model": {
-        "home": 0.3722,
-        "draw": 0.2912,
-        "away": 0.3365,
-        "pick": "home"
+      "model_pick": "Canada",
+      "model_probs": {
+        "Canada": 0.3722,
+        "Draw": 0.2912,
+        "Switzerland": 0.3365
       },
       "my_pick": null,
       "actual": null
@@ -62,11 +62,11 @@
       "date": "",
       "home": "Qatar",
       "away": "Bosnia and Herzegovina",
-      "model": {
-        "home": 0.2738,
-        "draw": 0.2843,
-        "away": 0.442,
-        "pick": "away"
+      "model_pick": "Bosnia and Herzegovina",
+      "model_probs": {
+        "Qatar": 0.2738,
+        "Draw": 0.2843,
+        "Bosnia and Herzegovina": 0.442
       },
       "my_pick": null,
       "actual": null
@@ -78,11 +78,11 @@
       "date": "",
       "home": "Brazil",
       "away": "Morocco",
-      "model": {
-        "home": 0.4453,
-        "draw": 0.2837,
-        "away": 0.271,
-        "pick": "home"
+      "model_pick": "Brazil",
+      "model_probs": {
+        "Brazil": 0.4453,
+        "Draw": 0.2837,
+        "Morocco": 0.271
       },
       "my_pick": null,
       "actual": null
@@ -94,11 +94,11 @@
       "date": "",
       "home": "Haiti",
       "away": "Scotland",
-      "model": {
-        "home": 0.2302,
-        "draw": 0.2731,
-        "away": 0.4967,
-        "pick": "away"
+      "model_pick": "Scotland",
+      "model_probs": {
+        "Haiti": 0.2302,
+        "Draw": 0.2731,
+        "Scotland": 0.4967
       },
       "my_pick": null,
       "actual": null
@@ -110,11 +110,11 @@
       "date": "",
       "home": "United States",
       "away": "Paraguay",
-      "model": {
-        "home": 0.3449,
-        "draw": 0.2915,
-        "away": 0.3636,
-        "pick": "away"
+      "model_pick": "Paraguay",
+      "model_probs": {
+        "United States": 0.3449,
+        "Draw": 0.2915,
+        "Paraguay": 0.3636
       },
       "my_pick": null,
       "actual": null
@@ -126,11 +126,11 @@
       "date": "",
       "home": "Australia",
       "away": "Türkiye",
-      "model": {
-        "home": 0.2902,
-        "draw": 0.287,
-        "away": 0.4228,
-        "pick": "away"
+      "model_pick": "Türkiye",
+      "model_probs": {
+        "Australia": 0.2902,
+        "Draw": 0.287,
+        "Türkiye": 0.4228
       },
       "my_pick": null,
       "actual": null
@@ -142,11 +142,11 @@
       "date": "",
       "home": "Germany",
       "away": "Curaçao",
-      "model": {
-        "home": 0.8048,
-        "draw": 0.1396,
-        "away": 0.0556,
-        "pick": "home"
+      "model_pick": "Germany",
+      "model_probs": {
+        "Germany": 0.8048,
+        "Draw": 0.1396,
+        "Curaçao": 0.0556
       },
       "my_pick": null,
       "actual": null
@@ -158,11 +158,11 @@
       "date": "",
       "home": "Côte d'Ivoire",
       "away": "Ecuador",
-      "model": {
-        "home": 0.1595,
-        "draw": 0.2409,
-        "away": 0.5996,
-        "pick": "away"
+      "model_pick": "Ecuador",
+      "model_probs": {
+        "Côte d'Ivoire": 0.1595,
+        "Draw": 0.2409,
+        "Ecuador": 0.5996
       },
       "my_pick": null,
       "actual": null
@@ -174,11 +174,11 @@
       "date": "",
       "home": "Netherlands",
       "away": "Japan",
-      "model": {
-        "home": 0.3671,
-        "draw": 0.2914,
-        "away": 0.3415,
-        "pick": "home"
+      "model_pick": "Netherlands",
+      "model_probs": {
+        "Netherlands": 0.3671,
+        "Draw": 0.2914,
+        "Japan": 0.3415
       },
       "my_pick": null,
       "actual": null
@@ -190,11 +190,11 @@
       "date": "",
       "home": "Tunisia",
       "away": "Sweden",
-      "model": {
-        "home": 0.326,
-        "draw": 0.2907,
-        "away": 0.3833,
-        "pick": "away"
+      "model_pick": "Sweden",
+      "model_probs": {
+        "Tunisia": 0.326,
+        "Draw": 0.2907,
+        "Sweden": 0.3833
       },
       "my_pick": null,
       "actual": null
@@ -206,11 +206,11 @@
       "date": "",
       "home": "Belgium",
       "away": "Egypt",
-      "model": {
-        "home": 0.5131,
-        "draw": 0.269,
-        "away": 0.218,
-        "pick": "home"
+      "model_pick": "Belgium",
+      "model_probs": {
+        "Belgium": 0.5131,
+        "Draw": 0.269,
+        "Egypt": 0.218
       },
       "my_pick": null,
       "actual": null
@@ -222,11 +222,11 @@
       "date": "",
       "home": "Iran",
       "away": "New Zealand",
-      "model": {
-        "home": 0.5567,
-        "draw": 0.256,
-        "away": 0.1873,
-        "pick": "home"
+      "model_pick": "Iran",
+      "model_probs": {
+        "Iran": 0.5567,
+        "Draw": 0.256,
+        "New Zealand": 0.1873
       },
       "my_pick": null,
       "actual": null
@@ -238,11 +238,11 @@
       "date": "",
       "home": "Spain",
       "away": "Cabo Verde",
-      "model": {
-        "home": 0.9009,
-        "draw": 0.077,
-        "away": 0.0221,
-        "pick": "home"
+      "model_pick": "Spain",
+      "model_probs": {
+        "Spain": 0.9009,
+        "Draw": 0.077,
+        "Cabo Verde": 0.0221
       },
       "my_pick": null,
       "actual": null
@@ -254,11 +254,11 @@
       "date": "",
       "home": "Saudi Arabia",
       "away": "Uruguay",
-      "model": {
-        "home": 0.1081,
-        "draw": 0.2019,
-        "away": 0.69,
-        "pick": "away"
+      "model_pick": "Uruguay",
+      "model_probs": {
+        "Saudi Arabia": 0.1081,
+        "Draw": 0.2019,
+        "Uruguay": 0.69
       },
       "my_pick": null,
       "actual": null
@@ -270,11 +270,11 @@
       "date": "",
       "home": "France",
       "away": "Senegal",
-      "model": {
-        "home": 0.5937,
-        "draw": 0.2431,
-        "away": 0.1632,
-        "pick": "home"
+      "model_pick": "France",
+      "model_probs": {
+        "France": 0.5937,
+        "Draw": 0.2431,
+        "Senegal": 0.1632
       },
       "my_pick": null,
       "actual": null
@@ -286,11 +286,11 @@
       "date": "",
       "home": "Norway",
       "away": "Iraq",
-      "model": {
-        "home": 0.6131,
-        "draw": 0.2357,
-        "away": 0.1512,
-        "pick": "home"
+      "model_pick": "Norway",
+      "model_probs": {
+        "Norway": 0.6131,
+        "Draw": 0.2357,
+        "Iraq": 0.1512
       },
       "my_pick": null,
       "actual": null
@@ -302,11 +302,11 @@
       "date": "",
       "home": "Argentina",
       "away": "Algeria",
-      "model": {
-        "home": 0.7167,
-        "draw": 0.1886,
-        "away": 0.0946,
-        "pick": "home"
+      "model_pick": "Argentina",
+      "model_probs": {
+        "Argentina": 0.7167,
+        "Draw": 0.1886,
+        "Algeria": 0.0946
       },
       "my_pick": null,
       "actual": null
@@ -318,11 +318,11 @@
       "date": "",
       "home": "Austria",
       "away": "Jordan",
-      "model": {
-        "home": 0.4813,
-        "draw": 0.2767,
-        "away": 0.242,
-        "pick": "home"
+      "model_pick": "Austria",
+      "model_probs": {
+        "Austria": 0.4813,
+        "Draw": 0.2767,
+        "Jordan": 0.242
       },
       "my_pick": null,
       "actual": null
@@ -334,11 +334,11 @@
       "date": "",
       "home": "Portugal",
       "away": "Uzbekistan",
-      "model": {
-        "home": 0.6017,
-        "draw": 0.2401,
-        "away": 0.1582,
-        "pick": "home"
+      "model_pick": "Portugal",
+      "model_probs": {
+        "Portugal": 0.6017,
+        "Draw": 0.2401,
+        "Uzbekistan": 0.1582
       },
       "my_pick": null,
       "actual": null
@@ -350,11 +350,11 @@
       "date": "",
       "home": "Colombia",
       "away": "DR Congo",
-      "model": {
-        "home": 0.6869,
-        "draw": 0.2034,
-        "away": 0.1097,
-        "pick": "home"
+      "model_pick": "Colombia",
+      "model_probs": {
+        "Colombia": 0.6869,
+        "Draw": 0.2034,
+        "DR Congo": 0.1097
       },
       "my_pick": null,
       "actual": null
@@ -366,11 +366,11 @@
       "date": "",
       "home": "England",
       "away": "Croatia",
-      "model": {
-        "home": 0.4889,
-        "draw": 0.275,
-        "away": 0.2361,
-        "pick": "home"
+      "model_pick": "England",
+      "model_probs": {
+        "England": 0.4889,
+        "Draw": 0.275,
+        "Croatia": 0.2361
       },
       "my_pick": null,
       "actual": null
@@ -382,11 +382,11 @@
       "date": "",
       "home": "Ghana",
       "away": "Panama",
-      "model": {
-        "home": 0.1426,
-        "draw": 0.2298,
-        "away": 0.6275,
-        "pick": "away"
+      "model_pick": "Panama",
+      "model_probs": {
+        "Ghana": 0.1426,
+        "Draw": 0.2298,
+        "Panama": 0.6275
       },
       "my_pick": null,
       "actual": null
@@ -398,11 +398,11 @@
       "date": "",
       "home": "Mexico",
       "away": "South Africa",
-      "model": {
-        "home": 0.804,
-        "draw": 0.1401,
-        "away": 0.0559,
-        "pick": "home"
+      "model_pick": "Mexico",
+      "model_probs": {
+        "Mexico": 0.804,
+        "Draw": 0.1401,
+        "South Africa": 0.0559
       },
       "my_pick": null,
       "actual": null
@@ -414,11 +414,11 @@
       "date": "",
       "home": "South Korea",
       "away": "Czechia",
-      "model": {
-        "home": 0.4441,
-        "draw": 0.2839,
-        "away": 0.272,
-        "pick": "home"
+      "model_pick": "South Korea",
+      "model_probs": {
+        "South Korea": 0.4441,
+        "Draw": 0.2839,
+        "Czechia": 0.272
       },
       "my_pick": null,
       "actual": null
@@ -430,11 +430,11 @@
       "date": "",
       "home": "Canada",
       "away": "Qatar",
-      "model": {
-        "home": 0.8054,
-        "draw": 0.1393,
-        "away": 0.0553,
-        "pick": "home"
+      "model_pick": "Canada",
+      "model_probs": {
+        "Canada": 0.8054,
+        "Draw": 0.1393,
+        "Qatar": 0.0553
       },
       "my_pick": null,
       "actual": null
@@ -446,11 +446,11 @@
       "date": "",
       "home": "Switzerland",
       "away": "Bosnia and Herzegovina",
-      "model": {
-        "home": 0.7146,
-        "draw": 0.1897,
-        "away": 0.0957,
-        "pick": "home"
+      "model_pick": "Switzerland",
+      "model_probs": {
+        "Switzerland": 0.7146,
+        "Draw": 0.1897,
+        "Bosnia and Herzegovina": 0.0957
       },
       "my_pick": null,
       "actual": null
@@ -462,11 +462,11 @@
       "date": "",
       "home": "Brazil",
       "away": "Haiti",
-      "model": {
-        "home": 0.7622,
-        "draw": 0.1643,
-        "away": 0.0734,
-        "pick": "home"
+      "model_pick": "Brazil",
+      "model_probs": {
+        "Brazil": 0.7622,
+        "Draw": 0.1643,
+        "Haiti": 0.0734
       },
       "my_pick": null,
       "actual": null
@@ -478,11 +478,11 @@
       "date": "",
       "home": "Morocco",
       "away": "Scotland",
-      "model": {
-        "home": 0.536,
-        "draw": 0.2625,
-        "away": 0.2015,
-        "pick": "home"
+      "model_pick": "Morocco",
+      "model_probs": {
+        "Morocco": 0.536,
+        "Draw": 0.2625,
+        "Scotland": 0.2015
       },
       "my_pick": null,
       "actual": null
@@ -494,11 +494,11 @@
       "date": "",
       "home": "United States",
       "away": "Australia",
-      "model": {
-        "home": 0.362,
-        "draw": 0.2915,
-        "away": 0.3465,
-        "pick": "home"
+      "model_pick": "United States",
+      "model_probs": {
+        "United States": 0.362,
+        "Draw": 0.2915,
+        "Australia": 0.3465
       },
       "my_pick": null,
       "actual": null
@@ -510,11 +510,11 @@
       "date": "",
       "home": "Paraguay",
       "away": "Türkiye",
-      "model": {
-        "home": 0.3061,
-        "draw": 0.289,
-        "away": 0.4049,
-        "pick": "away"
+      "model_pick": "Türkiye",
+      "model_probs": {
+        "Paraguay": 0.3061,
+        "Draw": 0.289,
+        "Türkiye": 0.4049
       },
       "my_pick": null,
       "actual": null
@@ -526,11 +526,11 @@
       "date": "",
       "home": "Germany",
       "away": "Côte d'Ivoire",
-      "model": {
-        "home": 0.5667,
-        "draw": 0.2527,
-        "away": 0.1806,
-        "pick": "home"
+      "model_pick": "Germany",
+      "model_probs": {
+        "Germany": 0.5667,
+        "Draw": 0.2527,
+        "Côte d'Ivoire": 0.1806
       },
       "my_pick": null,
       "actual": null
@@ -542,11 +542,11 @@
       "date": "",
       "home": "Curaçao",
       "away": "Ecuador",
-      "model": {
-        "home": 0.0464,
-        "draw": 0.125,
-        "away": 0.8286,
-        "pick": "away"
+      "model_pick": "Ecuador",
+      "model_probs": {
+        "Curaçao": 0.0464,
+        "Draw": 0.125,
+        "Ecuador": 0.8286
       },
       "my_pick": null,
       "actual": null
@@ -558,11 +558,11 @@
       "date": "",
       "home": "Netherlands",
       "away": "Tunisia",
-      "model": {
-        "home": 0.6592,
-        "draw": 0.2162,
-        "away": 0.1246,
-        "pick": "home"
+      "model_pick": "Netherlands",
+      "model_probs": {
+        "Netherlands": 0.6592,
+        "Draw": 0.2162,
+        "Tunisia": 0.1246
       },
       "my_pick": null,
       "actual": null
@@ -574,11 +574,11 @@
       "date": "",
       "home": "Japan",
       "away": "Sweden",
-      "model": {
-        "home": 0.6161,
-        "draw": 0.2345,
-        "away": 0.1495,
-        "pick": "home"
+      "model_pick": "Japan",
+      "model_probs": {
+        "Japan": 0.6161,
+        "Draw": 0.2345,
+        "Sweden": 0.1495
       },
       "my_pick": null,
       "actual": null
@@ -590,11 +590,11 @@
       "date": "",
       "home": "Belgium",
       "away": "Iran",
-      "model": {
-        "home": 0.4082,
-        "draw": 0.2887,
-        "away": 0.3031,
-        "pick": "home"
+      "model_pick": "Belgium",
+      "model_probs": {
+        "Belgium": 0.4082,
+        "Draw": 0.2887,
+        "Iran": 0.3031
       },
       "my_pick": null,
       "actual": null
@@ -606,11 +606,11 @@
       "date": "",
       "home": "Egypt",
       "away": "New Zealand",
-      "model": {
-        "home": 0.4508,
-        "draw": 0.2828,
-        "away": 0.2664,
-        "pick": "home"
+      "model_pick": "Egypt",
+      "model_probs": {
+        "Egypt": 0.4508,
+        "Draw": 0.2828,
+        "New Zealand": 0.2664
       },
       "my_pick": null,
       "actual": null
@@ -622,11 +622,11 @@
       "date": "",
       "home": "Spain",
       "away": "Saudi Arabia",
-      "model": {
-        "home": 0.8987,
-        "draw": 0.0785,
-        "away": 0.0228,
-        "pick": "home"
+      "model_pick": "Spain",
+      "model_probs": {
+        "Spain": 0.8987,
+        "Draw": 0.0785,
+        "Saudi Arabia": 0.0228
       },
       "my_pick": null,
       "actual": null
@@ -638,11 +638,11 @@
       "date": "",
       "home": "Cabo Verde",
       "away": "Uruguay",
-      "model": {
-        "home": 0.106,
-        "draw": 0.1999,
-        "away": 0.6941,
-        "pick": "away"
+      "model_pick": "Uruguay",
+      "model_probs": {
+        "Cabo Verde": 0.106,
+        "Draw": 0.1999,
+        "Uruguay": 0.6941
       },
       "my_pick": null,
       "actual": null
@@ -654,11 +654,11 @@
       "date": "",
       "home": "France",
       "away": "Norway",
-      "model": {
-        "home": 0.5327,
-        "draw": 0.2635,
-        "away": 0.2038,
-        "pick": "home"
+      "model_pick": "France",
+      "model_probs": {
+        "France": 0.5327,
+        "Draw": 0.2635,
+        "Norway": 0.2038
       },
       "my_pick": null,
       "actual": null
@@ -670,11 +670,11 @@
       "date": "",
       "home": "Senegal",
       "away": "Iraq",
-      "model": {
-        "home": 0.5525,
-        "draw": 0.2574,
-        "away": 0.1901,
-        "pick": "home"
+      "model_pick": "Senegal",
+      "model_probs": {
+        "Senegal": 0.5525,
+        "Draw": 0.2574,
+        "Iraq": 0.1901
       },
       "my_pick": null,
       "actual": null
@@ -686,11 +686,11 @@
       "date": "",
       "home": "Argentina",
       "away": "Austria",
-      "model": {
-        "home": 0.699,
-        "draw": 0.1975,
-        "away": 0.1035,
-        "pick": "home"
+      "model_pick": "Argentina",
+      "model_probs": {
+        "Argentina": 0.699,
+        "Draw": 0.1975,
+        "Austria": 0.1035
       },
       "my_pick": null,
       "actual": null
@@ -702,11 +702,11 @@
       "date": "",
       "home": "Algeria",
       "away": "Jordan",
-      "model": {
-        "home": 0.4616,
-        "draw": 0.2808,
-        "away": 0.2576,
-        "pick": "home"
+      "model_pick": "Algeria",
+      "model_probs": {
+        "Algeria": 0.4616,
+        "Draw": 0.2808,
+        "Jordan": 0.2576
       },
       "my_pick": null,
       "actual": null
@@ -718,11 +718,11 @@
       "date": "",
       "home": "Portugal",
       "away": "Colombia",
-      "model": {
-        "home": 0.3336,
-        "draw": 0.2911,
-        "away": 0.3753,
-        "pick": "away"
+      "model_pick": "Colombia",
+      "model_probs": {
+        "Portugal": 0.3336,
+        "Draw": 0.2911,
+        "Colombia": 0.3753
       },
       "my_pick": null,
       "actual": null
@@ -734,11 +734,11 @@
       "date": "",
       "home": "Uzbekistan",
       "away": "DR Congo",
-      "model": {
-        "home": 0.4176,
-        "draw": 0.2877,
-        "away": 0.2947,
-        "pick": "home"
+      "model_pick": "Uzbekistan",
+      "model_probs": {
+        "Uzbekistan": 0.4176,
+        "Draw": 0.2877,
+        "DR Congo": 0.2947
       },
       "my_pick": null,
       "actual": null
@@ -750,11 +750,11 @@
       "date": "",
       "home": "England",
       "away": "Ghana",
-      "model": {
-        "home": 0.8494,
-        "draw": 0.1118,
-        "away": 0.0388,
-        "pick": "home"
+      "model_pick": "England",
+      "model_probs": {
+        "England": 0.8494,
+        "Draw": 0.1118,
+        "Ghana": 0.0388
       },
       "my_pick": null,
       "actual": null
@@ -766,11 +766,11 @@
       "date": "",
       "home": "Croatia",
       "away": "Panama",
-      "model": {
-        "home": 0.479,
-        "draw": 0.2772,
-        "away": 0.2437,
-        "pick": "home"
+      "model_pick": "Croatia",
+      "model_probs": {
+        "Croatia": 0.479,
+        "Draw": 0.2772,
+        "Panama": 0.2437
       },
       "my_pick": null,
       "actual": null
@@ -782,11 +782,11 @@
       "date": "",
       "home": "Mexico",
       "away": "Czechia",
-      "model": {
-        "home": 0.6504,
-        "draw": 0.2201,
-        "away": 0.1295,
-        "pick": "home"
+      "model_pick": "Mexico",
+      "model_probs": {
+        "Mexico": 0.6504,
+        "Draw": 0.2201,
+        "Czechia": 0.1295
       },
       "my_pick": null,
       "actual": null
@@ -798,11 +798,11 @@
       "date": "",
       "home": "South Korea",
       "away": "South Africa",
-      "model": {
-        "home": 0.6219,
-        "draw": 0.2322,
-        "away": 0.146,
-        "pick": "home"
+      "model_pick": "South Korea",
+      "model_probs": {
+        "South Korea": 0.6219,
+        "Draw": 0.2322,
+        "South Africa": 0.146
       },
       "my_pick": null,
       "actual": null
@@ -814,11 +814,11 @@
       "date": "",
       "home": "Canada",
       "away": "Bosnia and Herzegovina",
-      "model": {
-        "home": 0.7316,
-        "draw": 0.181,
-        "away": 0.0875,
-        "pick": "home"
+      "model_pick": "Canada",
+      "model_probs": {
+        "Canada": 0.7316,
+        "Draw": 0.181,
+        "Bosnia and Herzegovina": 0.0875
       },
       "my_pick": null,
       "actual": null
@@ -830,11 +830,11 @@
       "date": "",
       "home": "Switzerland",
       "away": "Qatar",
-      "model": {
-        "home": 0.7908,
-        "draw": 0.148,
-        "away": 0.0612,
-        "pick": "home"
+      "model_pick": "Switzerland",
+      "model_probs": {
+        "Switzerland": 0.7908,
+        "Draw": 0.148,
+        "Qatar": 0.0612
       },
       "my_pick": null,
       "actual": null
@@ -846,11 +846,11 @@
       "date": "",
       "home": "Brazil",
       "away": "Scotland",
-      "model": {
-        "home": 0.63,
-        "draw": 0.2288,
-        "away": 0.1412,
-        "pick": "home"
+      "model_pick": "Brazil",
+      "model_probs": {
+        "Brazil": 0.63,
+        "Draw": 0.2288,
+        "Scotland": 0.1412
       },
       "my_pick": null,
       "actual": null
@@ -862,11 +862,11 @@
       "date": "",
       "home": "Morocco",
       "away": "Haiti",
-      "model": {
-        "home": 0.679,
-        "draw": 0.2072,
-        "away": 0.1139,
-        "pick": "home"
+      "model_pick": "Morocco",
+      "model_probs": {
+        "Morocco": 0.679,
+        "Draw": 0.2072,
+        "Haiti": 0.1139
       },
       "my_pick": null,
       "actual": null
@@ -878,11 +878,11 @@
       "date": "",
       "home": "United States",
       "away": "Türkiye",
-      "model": {
-        "home": 0.2973,
-        "draw": 0.288,
-        "away": 0.4147,
-        "pick": "away"
+      "model_pick": "Türkiye",
+      "model_probs": {
+        "United States": 0.2973,
+        "Draw": 0.288,
+        "Türkiye": 0.4147
       },
       "my_pick": null,
       "actual": null
@@ -894,11 +894,11 @@
       "date": "",
       "home": "Paraguay",
       "away": "Australia",
-      "model": {
-        "home": 0.3715,
-        "draw": 0.2913,
-        "away": 0.3373,
-        "pick": "home"
+      "model_pick": "Paraguay",
+      "model_probs": {
+        "Paraguay": 0.3715,
+        "Draw": 0.2913,
+        "Australia": 0.3373
       },
       "my_pick": null,
       "actual": null
@@ -910,11 +910,11 @@
       "date": "",
       "home": "Germany",
       "away": "Ecuador",
-      "model": {
-        "home": 0.3241,
-        "draw": 0.2906,
-        "away": 0.3853,
-        "pick": "away"
+      "model_pick": "Ecuador",
+      "model_probs": {
+        "Germany": 0.3241,
+        "Draw": 0.2906,
+        "Ecuador": 0.3853
       },
       "my_pick": null,
       "actual": null
@@ -926,11 +926,11 @@
       "date": "",
       "home": "Curaçao",
       "away": "Côte d'Ivoire",
-      "model": {
-        "home": 0.1502,
-        "draw": 0.235,
-        "away": 0.6149,
-        "pick": "away"
+      "model_pick": "Côte d'Ivoire",
+      "model_probs": {
+        "Curaçao": 0.1502,
+        "Draw": 0.235,
+        "Côte d'Ivoire": 0.6149
       },
       "my_pick": null,
       "actual": null
@@ -942,11 +942,11 @@
       "date": "",
       "home": "Netherlands",
       "away": "Sweden",
-      "model": {
-        "home": 0.6295,
-        "draw": 0.229,
-        "away": 0.1415,
-        "pick": "home"
+      "model_pick": "Netherlands",
+      "model_probs": {
+        "Netherlands": 0.6295,
+        "Draw": 0.229,
+        "Sweden": 0.1415
       },
       "my_pick": null,
       "actual": null
@@ -958,11 +958,11 @@
       "date": "",
       "home": "Japan",
       "away": "Tunisia",
-      "model": {
-        "home": 0.646,
-        "draw": 0.222,
-        "away": 0.1319,
-        "pick": "home"
+      "model_pick": "Japan",
+      "model_probs": {
+        "Japan": 0.646,
+        "Draw": 0.222,
+        "Tunisia": 0.1319
       },
       "my_pick": null,
       "actual": null
@@ -974,11 +974,11 @@
       "date": "",
       "home": "Belgium",
       "away": "New Zealand",
-      "model": {
-        "home": 0.6131,
-        "draw": 0.2357,
-        "away": 0.1512,
-        "pick": "home"
+      "model_pick": "Belgium",
+      "model_probs": {
+        "Belgium": 0.6131,
+        "Draw": 0.2357,
+        "New Zealand": 0.1512
       },
       "my_pick": null,
       "actual": null
@@ -990,11 +990,11 @@
       "date": "",
       "home": "Egypt",
       "away": "Iran",
-      "model": {
-        "home": 0.262,
-        "draw": 0.2818,
-        "away": 0.4561,
-        "pick": "away"
+      "model_pick": "Iran",
+      "model_probs": {
+        "Egypt": 0.262,
+        "Draw": 0.2818,
+        "Iran": 0.4561
       },
       "my_pick": null,
       "actual": null
@@ -1006,11 +1006,11 @@
       "date": "",
       "home": "Spain",
       "away": "Uruguay",
-      "model": {
-        "home": 0.6368,
-        "draw": 0.226,
-        "away": 0.1372,
-        "pick": "home"
+      "model_pick": "Spain",
+      "model_probs": {
+        "Spain": 0.6368,
+        "Draw": 0.226,
+        "Uruguay": 0.1372
       },
       "my_pick": null,
       "actual": null
@@ -1022,11 +1022,11 @@
       "date": "",
       "home": "Cabo Verde",
       "away": "Saudi Arabia",
-      "model": {
-        "home": 0.35,
-        "draw": 0.2915,
-        "away": 0.3584,
-        "pick": "away"
+      "model_pick": "Saudi Arabia",
+      "model_probs": {
+        "Cabo Verde": 0.35,
+        "Draw": 0.2915,
+        "Saudi Arabia": 0.3584
       },
       "my_pick": null,
       "actual": null
@@ -1038,11 +1038,11 @@
       "date": "",
       "home": "France",
       "away": "Iraq",
-      "model": {
-        "home": 0.7773,
-        "draw": 0.1558,
-        "away": 0.0669,
-        "pick": "home"
+      "model_pick": "France",
+      "model_probs": {
+        "France": 0.7773,
+        "Draw": 0.1558,
+        "Iraq": 0.0669
       },
       "my_pick": null,
       "actual": null
@@ -1054,11 +1054,11 @@
       "date": "",
       "home": "Senegal",
       "away": "Norway",
-      "model": {
-        "home": 0.2995,
-        "draw": 0.2883,
-        "away": 0.4123,
-        "pick": "away"
+      "model_pick": "Norway",
+      "model_probs": {
+        "Senegal": 0.2995,
+        "Draw": 0.2883,
+        "Norway": 0.4123
       },
       "my_pick": null,
       "actual": null
@@ -1070,11 +1070,11 @@
       "date": "",
       "home": "Argentina",
       "away": "Jordan",
-      "model": {
-        "home": 0.8075,
-        "draw": 0.138,
-        "away": 0.0545,
-        "pick": "home"
+      "model_pick": "Argentina",
+      "model_probs": {
+        "Argentina": 0.8075,
+        "Draw": 0.138,
+        "Jordan": 0.0545
       },
       "my_pick": null,
       "actual": null
@@ -1086,11 +1086,11 @@
       "date": "",
       "home": "Algeria",
       "away": "Austria",
-      "model": {
-        "home": 0.3361,
-        "draw": 0.2912,
-        "away": 0.3727,
-        "pick": "away"
+      "model_pick": "Austria",
+      "model_probs": {
+        "Algeria": 0.3361,
+        "Draw": 0.2912,
+        "Austria": 0.3727
       },
       "my_pick": null,
       "actual": null
@@ -1102,11 +1102,11 @@
       "date": "",
       "home": "Portugal",
       "away": "DR Congo",
-      "model": {
-        "home": 0.6659,
-        "draw": 0.2132,
-        "away": 0.1209,
-        "pick": "home"
+      "model_pick": "Portugal",
+      "model_probs": {
+        "Portugal": 0.6659,
+        "Draw": 0.2132,
+        "DR Congo": 0.1209
       },
       "my_pick": null,
       "actual": null
@@ -1118,11 +1118,11 @@
       "date": "",
       "home": "Uzbekistan",
       "away": "Colombia",
-      "model": {
-        "home": 0.1449,
-        "draw": 0.2314,
-        "away": 0.6237,
-        "pick": "away"
+      "model_pick": "Colombia",
+      "model_probs": {
+        "Uzbekistan": 0.1449,
+        "Draw": 0.2314,
+        "Colombia": 0.6237
       },
       "my_pick": null,
       "actual": null
@@ -1134,11 +1134,11 @@
       "date": "",
       "home": "England",
       "away": "Panama",
-      "model": {
-        "home": 0.6173,
-        "draw": 0.234,
-        "away": 0.1487,
-        "pick": "home"
+      "model_pick": "England",
+      "model_probs": {
+        "England": 0.6173,
+        "Draw": 0.234,
+        "Panama": 0.1487
       },
       "my_pick": null,
       "actual": null
@@ -1150,11 +1150,11 @@
       "date": "",
       "home": "Croatia",
       "away": "Ghana",
-      "model": {
-        "home": 0.7454,
-        "draw": 0.1735,
-        "away": 0.081,
-        "pick": "home"
+      "model_pick": "Croatia",
+      "model_probs": {
+        "Croatia": 0.7454,
+        "Draw": 0.1735,
+        "Ghana": 0.081
       },
       "my_pick": null,
       "actual": null
