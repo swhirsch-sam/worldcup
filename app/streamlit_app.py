@@ -67,7 +67,6 @@ AWAY_COLOR = "#1565c0"  # blue
 
 st.set_page_config(
     page_title="WC 2026 Predictor",
-    page_icon="⚽",
     layout="wide",
 )
 
@@ -97,8 +96,6 @@ html, body, [class*="css"]{font-family:'Inter',-apple-system,BlinkMacSystemFont,
 .wc-hero{background:linear-gradient(120deg,#0B1F3A 0%,#14346B 52%,#1D6FB8 100%);
   border-radius:18px;padding:30px 34px;margin-bottom:24px;
   box-shadow:0 12px 32px rgba(11,31,58,.28);position:relative;overflow:hidden;}
-.wc-hero:after{content:"\\26BD";position:absolute;right:26px;top:50%;transform:translateY(-50%);
-  font-size:128px;opacity:.10;line-height:1;}
 .wc-hero h1{color:#fff;font-weight:800;font-size:2.15rem;margin:0;letter-spacing:-.5px;}
 .wc-hero h1 span{color:#FFC94D;}
 .wc-hero p{color:#CBD9EC;margin:.45rem 0 0;font-size:1.03rem;}
@@ -122,6 +119,7 @@ h2,h3{color:var(--wc-navy);font-weight:700;letter-spacing:-.3px;}
         """,
         unsafe_allow_html=True,
     )
+
 
 # ---------------------------------------------------------------------------
 # Data loading
@@ -201,6 +199,8 @@ def load_actual_results() -> dict[str, Any]:
         return {"group_stage": [], "knockout": {}, "_metadata": {}}
     with open(ACTUAL_RESULTS_JSON) as f:
         return json.load(f)
+
+
 # ---------------------------------------------------------------------------
 # Derived data helpers
 # ---------------------------------------------------------------------------
@@ -236,6 +236,51 @@ def _cond_prob(probs: dict[str, Any], team: str, from_s: str, to_s: str) -> floa
     p_from = probs.get(team, {}).get(from_s, 0.0)
     p_to = probs.get(team, {}).get(to_s, 0.0)
     return p_to / p_from if p_from > 1e-9 else 0.0
+
+
+def _enrich_picks() -> list[dict[str, Any]]:
+    """Join the model's group-stage picks with actual results.
+
+    Returns one dict per tracked match with the winner, a printable result
+    string, and a "Yes"/"No"/"" correctness flag. Shared by the headline KPI
+    and the Model Picks tab so both always agree.
+    """
+    matches: list[dict[str, Any]] = _load_tracker().get("matches", [])
+    actual_by_pair: dict[frozenset[str], dict[str, Any]] = {
+        frozenset({m["home"], m["away"]}): m for m in load_actual_results().get("group_stage", [])
+    }
+
+    enriched: list[dict[str, Any]] = []
+    for m in matches:
+        actual = actual_by_pair.get(frozenset({m["home"], m["away"]}))
+        if actual:
+            hg, ag = actual["home_goals"], actual["away_goals"]
+            ah, aa = actual["home"], actual["away"]
+            if hg > ag:
+                winner: str | None = ah
+                result_str = f"{ah} {hg}-{ag}"
+            elif ag > hg:
+                winner = aa
+                result_str = f"{aa} {ag}-{hg}"
+            else:
+                winner = "Draw"
+                result_str = f"Draw {hg}-{ag}"
+            hit = "Yes" if m["model_pick"] == winner else "No"
+        else:
+            winner = None
+            result_str = "—"
+            hit = ""
+        enriched.append({**m, "_winner": winner, "_result_str": result_str, "_hit": hit})
+    return enriched
+
+
+def _pick_accuracy(enriched: list[dict[str, Any]]) -> tuple[int, int, int, float]:
+    """(decided, total, model_hits, accuracy) for enriched group-stage picks."""
+    decided = [e for e in enriched if e["_winner"] is not None]
+    n_dec = len(decided)
+    hits = sum(1 for e in decided if e["_hit"] == "Yes")
+    accuracy = hits / n_dec if n_dec else 0.0
+    return n_dec, len(enriched), hits, accuracy
 
 
 # ---------------------------------------------------------------------------
@@ -296,8 +341,6 @@ def _render_match_card(
     st.write("")
 
 
-
-
 # ---------------------------------------------------------------------------
 # Main
 # ---------------------------------------------------------------------------
@@ -316,6 +359,8 @@ def main() -> None:
     team_df = build_team_df(probs, groups)
     top_team = team_df.iloc[0]["team"]
     top_prob = team_df.iloc[0]["champion"]
+
+    pick_n_dec, _pick_total, pick_hits, pick_acc = _pick_accuracy(_enrich_picks())
 
     # -- Header --
     st.markdown(
@@ -344,11 +389,14 @@ def main() -> None:
         ),
     )
     c3.metric(
-        "Simulations Run",
-        f"{n_iter:,}",
+        "Model Accuracy",
+        f"{pick_acc:.0%}" if pick_n_dec else "—",
         help=(
-            "Number of complete tournament simulations used to calculate these probabilities. "
-            "More simulations produce tighter, more reliable estimates."
+            f"Share of completed group-stage matches the model called correctly "
+            f"({pick_hits}/{pick_n_dec} so far). See the Model Picks tab for the full breakdown."
+            if pick_n_dec
+            else "Share of completed group-stage matches the model called correctly. "
+            "No results are in yet."
         ),
     )
     c4.metric(
@@ -361,7 +409,7 @@ def main() -> None:
     )
 
     st.markdown(
-        f"We ran **{n_iter:,} full World Cup simulations** using a model built from **49,000+ "
+        f"I ran **{n_iter:,} full World Cup simulations** using a model built from **49,000+ "
         "historical matches**, Elo ratings, betting market odds, Polymarket prices, and FIFA "
         "rankings. The percentages show how often each team reached each round. See the "
         "**Methodology** tab for details."
@@ -372,11 +420,10 @@ def main() -> None:
     tabs = st.tabs(
         [
             "Model Picks (Group Stage)",
-            "🗳️ My Bracket",
+            "My Bracket",
             "Match Predictions",
             "Group Stage",
-            "Advancement",
-            "Champion Odds",
+            "Advancement & Title Odds",
             "Model Stats",
             "Methodology",
         ]
@@ -391,12 +438,10 @@ def main() -> None:
     with tabs[3]:
         _render_group_stage(probs, groups)
     with tabs[4]:
-        _render_advancement(team_df)
+        _render_advancement_and_odds(team_df, n_iter)
     with tabs[5]:
-        _render_champion_odds(team_df, n_iter)
-    with tabs[6]:
         _render_model_stats(team_df, meta, n_iter)
-    with tabs[7]:
+    with tabs[6]:
         _render_methodology(manifest, meta)
 
 
@@ -453,52 +498,20 @@ def _render_model_picks() -> None:
     """Read-only group-stage tracker: the model's pick vs. the actual result."""
     st.header("Model Picks — Group Stage")
 
-    base = _load_tracker()
-    matches: list[dict[str, Any]] = base.get("matches", [])
-    if not matches:
+    enriched = _enrich_picks()
+    if not enriched:
         st.info("No tracker data yet — `data/match_tracker.json` is missing.")
         return
 
-    # Build frozenset lookup from actual_results.json so pairing order doesn't matter.
-    actual_data = load_actual_results()
-    actual_by_pair: dict[frozenset, dict[str, Any]] = {
-        frozenset({m["home"], m["away"]}): m
-        for m in actual_data.get("group_stage", [])
-    }
-
-    enriched: list[dict[str, Any]] = []
-    for m in matches:
-        pair = frozenset({m["home"], m["away"]})
-        actual = actual_by_pair.get(pair)
-        if actual:
-            hg, ag = actual["home_goals"], actual["away_goals"]
-            ah, aa = actual["home"], actual["away"]
-            if hg > ag:
-                winner: str | None = ah
-                result_str = f"{ah} {hg}-{ag}"
-            elif ag > hg:
-                winner = aa
-                result_str = f"{aa} {ag}-{hg}"
-            else:
-                winner = "Draw"
-                result_str = f"Draw {hg}-{ag}"
-            hit = "✅" if m["model_pick"] == winner else "❌"
-        else:
-            winner = None
-            result_str = "—"
-            hit = ""
-        enriched.append({**m, "_winner": winner, "_result_str": result_str, "_hit": hit})
-
-    decided = [e for e in enriched if e["_winner"] is not None]
-    n_dec = len(decided)
-    mod_hits = sum(1 for e in decided if e["_hit"] == "✅")
-    mod_acc = mod_hits / n_dec if n_dec else 0.0
+    n_dec, n_total, mod_hits, mod_acc = _pick_accuracy(enriched)
 
     c1, c2, c3 = st.columns(3)
-    c1.metric("Results in", f"{n_dec}/{len(matches)}")
+    c1.metric("Results in", f"{n_dec}/{n_total}")
     c2.metric("Model correct", f"{mod_hits}/{n_dec}" if n_dec else "—")
     c3.metric("Model accuracy", f"{mod_acc:.0%}" if n_dec else "—")
-    st.progress(n_dec / len(matches), text=f"{n_dec} of {len(matches)} group matches played")
+    st.progress(
+        n_dec / n_total if n_total else 0.0, text=f"{n_dec} of {n_total} group matches played"
+    )
     st.divider()
 
     df = pd.DataFrame(
@@ -508,7 +521,7 @@ def _render_model_picks() -> None:
             "Match": f"{e['home']} v {e['away']}",
             "Model pick": e["model_pick"],
             "Result": e["_result_str"],
-            "✓": e["_hit"],
+            "Correct": e["_hit"],
         }
         for e in enriched
     )
@@ -520,7 +533,7 @@ def _render_model_picks() -> None:
         column_config={
             "MD": st.column_config.NumberColumn("MD", width="small"),
             "Grp": st.column_config.TextColumn("Grp", width="small"),
-            "✓": st.column_config.TextColumn("✓", width="small"),
+            "Correct": st.column_config.TextColumn("Correct", width="small"),
         },
     )
     _render_footer()
@@ -528,7 +541,7 @@ def _render_model_picks() -> None:
 
 def _render_my_bracket() -> None:
     """Read-only knockout bracket: my projection vs. the model vs. actual."""
-    st.header("🗳️ My Bracket — Knockout Projection")
+    st.header("My Bracket — Knockout Projection")
 
     b = _load_bracket()
     if not b or not b.get("rounds"):
@@ -551,11 +564,11 @@ def _render_my_bracket() -> None:
     d2.metric("My calls right", f"{my_hits}/{len(decided)}" if decided else "—")
     d3.metric("Model calls right", f"{mod_hits}/{len(decided)}" if decided else "—")
     if deviations:
-        st.caption(f"You've flipped **{deviations}** call(s) from the model (marked ⚡).")
+        st.caption(f"You've flipped **{deviations}** call(s) from the model (marked *).")
     st.divider()
 
     labels = {
-        "Final": "🏆 Final",
+        "Final": "Final",
         "SF": "Semifinals",
         "QF": "Quarterfinals",
         "R16": "Round of 16",
@@ -569,22 +582,22 @@ def _render_my_bracket() -> None:
         rows = []
         for m in matches:
             mine, model, actual = m.get("mine"), m.get("model"), m.get("actual")
-            mark = "" if not actual else ("✅" if mine == actual else "❌")
-            flip = " ⚡" if (mine and model and mine != model) else ""
+            mark = "" if not actual else ("Yes" if mine == actual else "No")
+            flip = " *" if (mine and model and mine != model) else ""
             rows.append(
                 {
                     "Match": f"{m['team_a']} v {m['team_b']}",
                     "My pick": (mine or "—") + flip,
                     "Model pick": model or "—",
                     "Actual": actual or "—",
-                    "✓": mark,
+                    "Correct": mark,
                 }
             )
         st.dataframe(
             pd.DataFrame(rows),
             hide_index=True,
             use_container_width=True,
-            column_config={"✓": st.column_config.TextColumn("✓", width="small")},
+            column_config={"Correct": st.column_config.TextColumn("Correct", width="small")},
         )
     _render_footer()
 
@@ -655,9 +668,32 @@ def _render_group_stage(probs: dict[str, Any], groups: dict[str, list[str]]) -> 
     _render_footer()
 
 
-def _render_advancement(team_df: pd.DataFrame) -> None:
-    st.header("Advancement Probabilities")
+def _render_advancement_and_odds(team_df: pd.DataFrame, n_iter: int) -> None:
+    st.header("Advancement & Title Odds")
 
+    # --- Title odds: champion chances for the top teams ---
+    st.subheader("Who wins the World Cup?")
+    top_n = st.slider("How many teams to show", 5, 48, 15, key="champ_n")
+    chart_df = team_df.head(top_n).sort_values("champion", ascending=True)
+    fig = go.Figure(
+        go.Bar(
+            x=chart_df["champion"] * 100,
+            y=chart_df["team"],
+            orientation="h",
+            marker_color="#1D6FB8",
+            text=[f"{p:.1%}" for p in chart_df["champion"]],
+            textposition="outside",
+        )
+    )
+    fig.update_layout(
+        xaxis_title="Chance of winning (%)",
+        height=max(360, top_n * 26 + 80),
+        margin={"l": 160, "r": 60, "t": 30, "b": 40},
+    )
+    st.plotly_chart(fig, use_container_width=True)
+
+    # --- Full round-by-round advancement table (Champion column included) ---
+    st.subheader("Round-by-round probabilities")
     cols: dict[str, str] = {
         "group": "Group",
         "r32": "R32",
@@ -676,41 +712,6 @@ def _render_advancement(team_df: pd.DataFrame) -> None:
         hide_index=True,
         use_container_width=True,
         height=600,
-    )
-    _render_footer()
-
-
-def _render_champion_odds(team_df: pd.DataFrame, n_iter: int) -> None:
-    st.header("Who Wins the World Cup?")
-
-    top_n = st.slider("How many teams to show", 5, 48, 15, key="champ_n")
-    chart_df = team_df.head(top_n).sort_values("champion", ascending=True)
-
-    fig = go.Figure(
-        go.Bar(
-            x=chart_df["champion"] * 100,
-            y=chart_df["team"],
-            orientation="h",
-            marker_color="#1D6FB8",
-            text=[f"{p:.1%}" for p in chart_df["champion"]],
-            textposition="outside",
-        )
-    )
-    fig.update_layout(
-        xaxis_title="Chance of winning (%)",
-        height=max(360, top_n * 26 + 80),
-        margin={"l": 160, "r": 60, "t": 30, "b": 40},
-    )
-    st.plotly_chart(fig, use_container_width=True)
-
-    table = team_df[["team", "champion"]].sort_values("champion", ascending=False)
-    st.dataframe(
-        table.rename(columns={"team": "Team", "champion": "Win %"}).style.format(
-            {"Win %": "{:.1%}"}
-        ),
-        hide_index=True,
-        use_container_width=True,
-        height=400,
     )
     _render_footer()
 
