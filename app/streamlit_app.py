@@ -67,6 +67,7 @@ AWAY_COLOR = "#1565c0"  # blue
 
 st.set_page_config(
     page_title="WC 2026 Predictor",
+    page_icon="⚽",
     layout="wide",
 )
 
