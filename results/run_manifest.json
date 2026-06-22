@@ -3,7 +3,7 @@
   "rng_seed": 42,
   "config_hash": "42e22ee39267c199",
   "n_iterations": 1000,
-  "timestamp_utc": "2026-06-10T19:34:49Z",
+  "timestamp_utc": "2026-06-22T19:34:49Z",
   "model": {
     "type": "dixon_coles",
     "rho": -0.060918682601896486,
