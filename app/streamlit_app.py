@@ -194,8 +194,8 @@ def load_predictor() -> Callable[..., dict[str, Any]] | None:
         return None
 
 
-@st.cache_data
 def load_actual_results() -> dict[str, Any]:
+    """Uncached so a freshly committed results file shows up immediately."""
     if not ACTUAL_RESULTS_JSON.exists():
         return {"group_stage": [], "knockout": {}, "_metadata": {}}
     with open(ACTUAL_RESULTS_JSON) as f:
