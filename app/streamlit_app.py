@@ -25,6 +25,7 @@ _ROOT = Path(__file__).resolve().parent.parent
 SIMULATION_SUMMARY = _ROOT / "results" / "simulation_summary.json"
 RUN_MANIFEST = _ROOT / "results" / "run_manifest.json"
 GROUPS_JSON = _ROOT / "data" / "groups.json"
+RESULTS_JSON = _ROOT / "data" / "results.json"
 
 # ---------------------------------------------------------------------------
 # Constants
@@ -91,6 +92,15 @@ def load_groups() -> dict[str, list[str]]:
         return json.load(f)["groups"]
 
 
+@st.cache_data
+def load_match_results() -> list[dict[str, Any]]:
+    if not RESULTS_JSON.exists():
+        return []
+    with open(RESULTS_JSON) as f:
+        data = json.load(f)
+    return data.get("matches", [])
+
+
 # ---------------------------------------------------------------------------
 # Derived data helpers
 # ---------------------------------------------------------------------------
@@ -121,6 +131,59 @@ def ci_half(p: float, n: int) -> float:
     return 1.96 * math.sqrt(max(p * (1.0 - p) / max(n, 1), 0.0))
 
 
+def compute_group_standings(matches: list[dict[str, Any]], group: str) -> pd.DataFrame:
+    """Compute current standings for a group from actual results."""
+    group_matches = [m for m in matches if m["group"] == group]
+
+    teams: dict[str, dict[str, int]] = {}
+    for m in group_matches:
+        for t in (m["home_team"], m["away_team"]):
+            if t not in teams:
+                teams[t] = {"P": 0, "W": 0, "D": 0, "L": 0, "GF": 0, "GA": 0, "RC": 0}
+
+    for m in group_matches:
+        ht, at = m["home_team"], m["away_team"]
+        hs, as_ = m["home_score"], m["away_score"]
+        teams[ht]["P"] += 1
+        teams[at]["P"] += 1
+        teams[ht]["GF"] += hs
+        teams[ht]["GA"] += as_
+        teams[at]["GF"] += as_
+        teams[at]["GA"] += hs
+        teams[ht]["RC"] += m.get("home_red_cards", 0)
+        teams[at]["RC"] += m.get("away_red_cards", 0)
+        if hs > as_:
+            teams[ht]["W"] += 1
+            teams[at]["L"] += 1
+        elif hs == as_:
+            teams[ht]["D"] += 1
+            teams[at]["D"] += 1
+        else:
+            teams[at]["W"] += 1
+            teams[ht]["L"] += 1
+
+    rows = []
+    for team, r in teams.items():
+        pts = r["W"] * 3 + r["D"]
+        gd = r["GF"] - r["GA"]
+        rows.append({
+            "Team": team,
+            "P": r["P"],
+            "W": r["W"],
+            "D": r["D"],
+            "L": r["L"],
+            "GF": r["GF"],
+            "GA": r["GA"],
+            "GD": gd,
+            "Pts": pts,
+        })
+
+    df = pd.DataFrame(rows)
+    df = df.sort_values(["Pts", "GD", "GF"], ascending=False).reset_index(drop=True)
+    df.index = df.index + 1
+    return df
+
+
 # ---------------------------------------------------------------------------
 # Main
 # ---------------------------------------------------------------------------
@@ -147,10 +210,14 @@ def main() -> None:
 
     st.divider()
 
-    tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs(
-        ["Group Stage", "Best Third", "Bracket", "Champion Odds", "Model Stats", "Methodology"]
+    tab0, tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs(
+        ["Results & Standings", "Group Stage", "Best Third", "Bracket", "Champion Odds", "Model Stats", "Methodology"]
     )
 
+    match_results = load_match_results()
+
+    with tab0:
+        _render_results_standings(match_results, groups)
     with tab1:
         _render_group_stage(probs, groups)
     with tab2:
@@ -168,6 +235,77 @@ def main() -> None:
 # ---------------------------------------------------------------------------
 # Tab renderers
 # ---------------------------------------------------------------------------
+
+
+def _render_results_standings(
+    matches: list[dict[str, Any]],
+    groups: dict[str, list[str]],
+) -> None:
+    st.header("Group Stage Results & Standings")
+
+    if not matches:
+        st.info("No match results found. Add results to `data/results.json`.")
+        return
+
+    total_played = len(matches)
+    total_group_matches = len(groups) * 6
+    st.caption(
+        f"{total_played} of {total_group_matches} group stage matches played · "
+        f"Last updated: {max(m['date'] for m in matches)}"
+    )
+
+    group_ids = sorted(groups.keys())
+    selected = st.radio(
+        "Select group",
+        group_ids,
+        horizontal=True,
+        label_visibility="collapsed",
+    )
+
+    col_standings, col_results = st.columns([1, 1], gap="large")
+
+    with col_standings:
+        st.subheader(f"Group {selected} Standings")
+        df = compute_group_standings(matches, selected)
+
+        # Colour rows: top 2 advance automatically, 3rd may qualify as best third
+        def row_style(row: pd.Series) -> list[str]:
+            pos = int(row.name)
+            if pos == 1:
+                return ["background-color: #1a6b3c; color: white"] * len(row)
+            if pos == 2:
+                return ["background-color: #2e8b57; color: white"] * len(row)
+            if pos == 3:
+                return ["background-color: #856404; color: white"] * len(row)
+            return [""] * len(row)
+
+        styled = df.style.apply(row_style, axis=1).format({"GD": "{:+d}"})
+        st.dataframe(styled, use_container_width=True)
+        st.caption("🟢 1st/2nd advance · 🟡 3rd — best-third contender")
+
+    with col_results:
+        st.subheader(f"Group {selected} Results")
+        group_matches = [m for m in matches if m["group"] == selected]
+        if not group_matches:
+            st.info("No results yet for this group.")
+        else:
+            for m in group_matches:
+                date_str = m["date"][5:]  # MM-DD
+                hs, as_ = m["home_score"], m["away_score"]
+                hrc = " 🟥" if m.get("home_red_cards", 0) else ""
+                arc = " 🟥" if m.get("away_red_cards", 0) else ""
+                score_color = "gray"
+                result_line = (
+                    f"**{m['home_team']}{hrc}** &nbsp; "
+                    f"`{hs} – {as_}` &nbsp; "
+                    f"**{m['away_team']}{arc}**"
+                    f"  <span style='color:{score_color}; font-size:0.8em'>({date_str} · FT)</span>"
+                )
+                st.markdown(result_line, unsafe_allow_html=True)
+
+        total_group = len(group_matches)
+        remaining = 6 - total_group
+        st.caption(f"{total_group}/6 matches played · {remaining} remaining")
 
 
 def _render_group_stage(probs: dict[str, Any], groups: dict[str, list[str]]) -> None:
