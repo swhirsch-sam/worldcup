@@ -11,6 +11,7 @@ pip install -r requirements.txt
 make ingest      # fetch and cache Elo / FIFA / odds
 make fit         # fit goals model on historical data
 make simulate    # run 1k Monte Carlo → results/simulation_summary.json
+make predict     # precompute per-match predictions → results/match_predictions.json
 make app         # launch Streamlit report
 ```
 

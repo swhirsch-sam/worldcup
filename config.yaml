@@ -5,9 +5,10 @@ simulation:
   fast_mode_iterations: 1000
 ensemble:
   weights:
-    elo: 0.6
-    fifa: 0.2
-    market: 0.2
+    elo: 0.50
+    fifa: 0.10
+    market: 0.20
+    polymarket: 0.20
   global_mean_rating: 1500.0
   provisional_shrinkage: 0.3
   provisional_cap_threshold: 30
@@ -75,10 +76,13 @@ data:
     url: https://www.fifa.com/en/ranking/men?dateId=id14317
     filename: fifa_rankings.json
   market:
-    enabled: false
+    enabled: true
     url: https://api.the-odds-api.com/v4/sports/soccer_world_cup_winner/odds/
     api_key_env: ODDS_API_KEY
     filename: market_odds.json
+  polymarket:
+    enabled: true
+    filename: polymarket_odds.json
   historical:
     filename: historical_results.csv
     earliest_date: '2000-01-01'
@@ -129,6 +133,7 @@ output:
   results_dir: results
   simulation_summary: results/simulation_summary.json
   run_manifest: results/run_manifest.json
+  match_predictions: results/match_predictions.json
   convergence_plot: results/convergence.png
   sensitivity_plot: results/sensitivity_tornado.png
   calibration_plot: results/calibration.png

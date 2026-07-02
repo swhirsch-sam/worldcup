@@ -1,0 +1,459 @@
+{
+  "meta": {
+    "stage": "knockout",
+    "season": "2026",
+    "updated": "2026-06-11",
+    "seeded_from": "model",
+    "third_slot_source": "annex_c",
+    "qualifying_thirds_groups": [
+      "A",
+      "B",
+      "C",
+      "E",
+      "F",
+      "I",
+      "K",
+      "L"
+    ],
+    "note": "Seeded from the model (higher-strength team advances). 'mine' = my pick (edit to override), 'actual' = filled as ties are played."
+  },
+  "groups": {
+    "A": {
+      "model": {
+        "first": "Mexico",
+        "second": "South Korea",
+        "third": "Czechia"
+      },
+      "mine": {
+        "first": "Mexico",
+        "second": "South Korea"
+      },
+      "actual": {
+        "first": null,
+        "second": null
+      }
+    },
+    "B": {
+      "model": {
+        "first": "Canada",
+        "second": "Switzerland",
+        "third": "Bosnia and Herzegovina"
+      },
+      "mine": {
+        "first": "Canada",
+        "second": "Switzerland"
+      },
+      "actual": {
+        "first": null,
+        "second": null
+      }
+    },
+    "C": {
+      "model": {
+        "first": "Brazil",
+        "second": "Morocco",
+        "third": "Scotland"
+      },
+      "mine": {
+        "first": "Brazil",
+        "second": "Morocco"
+      },
+      "actual": {
+        "first": null,
+        "second": null
+      }
+    },
+    "D": {
+      "model": {
+        "first": "Türkiye",
+        "second": "Australia",
+        "third": "United States"
+      },
+      "mine": {
+        "first": "Türkiye",
+        "second": "Australia"
+      },
+      "actual": {
+        "first": null,
+        "second": null
+      }
+    },
+    "E": {
+      "model": {
+        "first": "Ecuador",
+        "second": "Germany",
+        "third": "Côte d'Ivoire"
+      },
+      "mine": {
+        "first": "Ecuador",
+        "second": "Germany"
+      },
+      "actual": {
+        "first": null,
+        "second": null
+      }
+    },
+    "F": {
+      "model": {
+        "first": "Netherlands",
+        "second": "Japan",
+        "third": "Sweden"
+      },
+      "mine": {
+        "first": "Netherlands",
+        "second": "Japan"
+      },
+      "actual": {
+        "first": null,
+        "second": null
+      }
+    },
+    "G": {
+      "model": {
+        "first": "Belgium",
+        "second": "Iran",
+        "third": "Egypt"
+      },
+      "mine": {
+        "first": "Belgium",
+        "second": "Iran"
+      },
+      "actual": {
+        "first": null,
+        "second": null
+      }
+    },
+    "H": {
+      "model": {
+        "first": "Spain",
+        "second": "Uruguay",
+        "third": "Saudi Arabia"
+      },
+      "mine": {
+        "first": "Spain",
+        "second": "Uruguay"
+      },
+      "actual": {
+        "first": null,
+        "second": null
+      }
+    },
+    "I": {
+      "model": {
+        "first": "France",
+        "second": "Norway",
+        "third": "Senegal"
+      },
+      "mine": {
+        "first": "France",
+        "second": "Norway"
+      },
+      "actual": {
+        "first": null,
+        "second": null
+      }
+    },
+    "J": {
+      "model": {
+        "first": "Argentina",
+        "second": "Austria",
+        "third": "Algeria"
+      },
+      "mine": {
+        "first": "Argentina",
+        "second": "Austria"
+      },
+      "actual": {
+        "first": null,
+        "second": null
+      }
+    },
+    "K": {
+      "model": {
+        "first": "Colombia",
+        "second": "Portugal",
+        "third": "Uzbekistan"
+      },
+      "mine": {
+        "first": "Colombia",
+        "second": "Portugal"
+      },
+      "actual": {
+        "first": null,
+        "second": null
+      }
+    },
+    "L": {
+      "model": {
+        "first": "England",
+        "second": "Croatia",
+        "third": "Panama"
+      },
+      "mine": {
+        "first": "England",
+        "second": "Croatia"
+      },
+      "actual": {
+        "first": null,
+        "second": null
+      }
+    }
+  },
+  "best_thirds": {
+    "model": [
+      "Czechia",
+      "Bosnia and Herzegovina",
+      "Scotland",
+      "Côte d'Ivoire",
+      "Sweden",
+      "Senegal",
+      "Uzbekistan",
+      "Panama"
+    ],
+    "mine": [
+      "Czechia",
+      "Bosnia and Herzegovina",
+      "Scotland",
+      "Côte d'Ivoire",
+      "Sweden",
+      "Senegal",
+      "Uzbekistan",
+      "Panama"
+    ],
+    "actual": []
+  },
+  "champion": {
+    "model": "Spain",
+    "mine": "Spain",
+    "actual": null
+  },
+  "rounds": {
+    "R32": [
+      {
+        "team_a": "Ecuador",
+        "team_b": "Czechia",
+        "model": "Ecuador",
+        "mine": "Ecuador",
+        "actual": null
+      },
+      {
+        "team_a": "France",
+        "team_b": "Scotland",
+        "model": "France",
+        "mine": "France",
+        "actual": null
+      },
+      {
+        "team_a": "South Korea",
+        "team_b": "Switzerland",
+        "model": "Switzerland",
+        "mine": "Switzerland",
+        "actual": null
+      },
+      {
+        "team_a": "Netherlands",
+        "team_b": "Morocco",
+        "model": "Netherlands",
+        "mine": "Netherlands",
+        "actual": null
+      },
+      {
+        "team_a": "Portugal",
+        "team_b": "Croatia",
+        "model": "Portugal",
+        "mine": "Portugal",
+        "actual": null
+      },
+      {
+        "team_a": "Spain",
+        "team_b": "Austria",
+        "model": "Spain",
+        "mine": "Spain",
+        "actual": null
+      },
+      {
+        "team_a": "Türkiye",
+        "team_b": "Bosnia and Herzegovina",
+        "model": "Türkiye",
+        "mine": "Türkiye",
+        "actual": null
+      },
+      {
+        "team_a": "Belgium",
+        "team_b": "Côte d'Ivoire",
+        "model": "Belgium",
+        "mine": "Belgium",
+        "actual": null
+      },
+      {
+        "team_a": "Brazil",
+        "team_b": "Japan",
+        "model": "Brazil",
+        "mine": "Brazil",
+        "actual": null
+      },
+      {
+        "team_a": "Germany",
+        "team_b": "Norway",
+        "model": "Germany",
+        "mine": "Germany",
+        "actual": null
+      },
+      {
+        "team_a": "Mexico",
+        "team_b": "Sweden",
+        "model": "Mexico",
+        "mine": "Mexico",
+        "actual": null
+      },
+      {
+        "team_a": "England",
+        "team_b": "Uzbekistan",
+        "model": "England",
+        "mine": "England",
+        "actual": null
+      },
+      {
+        "team_a": "Argentina",
+        "team_b": "Uruguay",
+        "model": "Argentina",
+        "mine": "Argentina",
+        "actual": null
+      },
+      {
+        "team_a": "Australia",
+        "team_b": "Iran",
+        "model": "Australia",
+        "mine": "Australia",
+        "actual": null
+      },
+      {
+        "team_a": "Canada",
+        "team_b": "Senegal",
+        "model": "Canada",
+        "mine": "Canada",
+        "actual": null
+      },
+      {
+        "team_a": "Colombia",
+        "team_b": "Panama",
+        "model": "Colombia",
+        "mine": "Colombia",
+        "actual": null
+      }
+    ],
+    "R16": [
+      {
+        "team_a": "Ecuador",
+        "team_b": "France",
+        "model": "France",
+        "mine": "France",
+        "actual": null
+      },
+      {
+        "team_a": "Switzerland",
+        "team_b": "Netherlands",
+        "model": "Netherlands",
+        "mine": "Netherlands",
+        "actual": null
+      },
+      {
+        "team_a": "Portugal",
+        "team_b": "Spain",
+        "model": "Spain",
+        "mine": "Spain",
+        "actual": null
+      },
+      {
+        "team_a": "Türkiye",
+        "team_b": "Belgium",
+        "model": "Türkiye",
+        "mine": "Türkiye",
+        "actual": null
+      },
+      {
+        "team_a": "Brazil",
+        "team_b": "Germany",
+        "model": "Brazil",
+        "mine": "Brazil",
+        "actual": null
+      },
+      {
+        "team_a": "Mexico",
+        "team_b": "England",
+        "model": "England",
+        "mine": "England",
+        "actual": null
+      },
+      {
+        "team_a": "Argentina",
+        "team_b": "Australia",
+        "model": "Argentina",
+        "mine": "Argentina",
+        "actual": null
+      },
+      {
+        "team_a": "Canada",
+        "team_b": "Colombia",
+        "model": "Colombia",
+        "mine": "Colombia",
+        "actual": null
+      }
+    ],
+    "QF": [
+      {
+        "team_a": "France",
+        "team_b": "Netherlands",
+        "model": "France",
+        "mine": "France",
+        "actual": null
+      },
+      {
+        "team_a": "Spain",
+        "team_b": "Türkiye",
+        "model": "Spain",
+        "mine": "Spain",
+        "actual": null
+      },
+      {
+        "team_a": "Brazil",
+        "team_b": "England",
+        "model": "England",
+        "mine": "England",
+        "actual": null
+      },
+      {
+        "team_a": "Argentina",
+        "team_b": "Colombia",
+        "model": "Argentina",
+        "mine": "Argentina",
+        "actual": null
+      }
+    ],
+    "SF": [
+      {
+        "team_a": "France",
+        "team_b": "Spain",
+        "model": "Spain",
+        "mine": "Spain",
+        "actual": null
+      },
+      {
+        "team_a": "England",
+        "team_b": "Argentina",
+        "model": "Argentina",
+        "mine": "Argentina",
+        "actual": null
+      }
+    ],
+    "Final": [
+      {
+        "team_a": "Spain",
+        "team_b": "Argentina",
+        "model": "Spain",
+        "mine": "Spain",
+        "actual": null
+      }
+    ]
+  }
+}

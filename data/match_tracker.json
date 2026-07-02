@@ -1,0 +1,1163 @@
+{
+  "meta": {
+    "stage": "group",
+    "season": "2026",
+    "updated": "2026-06-11",
+    "note": "Personal tracker. Set my_pick and actual to a country name or 'Draw' (null = not played/unset).",
+    "n_matches": 72
+  },
+  "matches": [
+    {
+      "id": "A-MD1-01",
+      "group": "A",
+      "matchday": 1,
+      "date": "2026-06-11",
+      "home": "Mexico",
+      "away": "South Korea",
+      "model_pick": "Mexico",
+      "model_probs": {
+        "Mexico": 0.5585,
+        "Draw": 0.2554,
+        "South Korea": 0.1861
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "A-MD1-23",
+      "group": "A",
+      "matchday": 1,
+      "date": "2026-06-11",
+      "home": "South Africa",
+      "away": "Czechia",
+      "model_pick": "Czechia",
+      "model_probs": {
+        "South Africa": 0.2066,
+        "Draw": 0.2646,
+        "Czechia": 0.5289
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "B-MD1-01",
+      "group": "B",
+      "matchday": 1,
+      "date": "",
+      "home": "Canada",
+      "away": "Switzerland",
+      "model_pick": "Canada",
+      "model_probs": {
+        "Canada": 0.3722,
+        "Draw": 0.2912,
+        "Switzerland": 0.3365
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "B-MD1-23",
+      "group": "B",
+      "matchday": 1,
+      "date": "",
+      "home": "Qatar",
+      "away": "Bosnia and Herzegovina",
+      "model_pick": "Bosnia and Herzegovina",
+      "model_probs": {
+        "Qatar": 0.2738,
+        "Draw": 0.2843,
+        "Bosnia and Herzegovina": 0.442
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "C-MD1-01",
+      "group": "C",
+      "matchday": 1,
+      "date": "",
+      "home": "Brazil",
+      "away": "Morocco",
+      "model_pick": "Brazil",
+      "model_probs": {
+        "Brazil": 0.4453,
+        "Draw": 0.2837,
+        "Morocco": 0.271
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "C-MD1-23",
+      "group": "C",
+      "matchday": 1,
+      "date": "",
+      "home": "Haiti",
+      "away": "Scotland",
+      "model_pick": "Scotland",
+      "model_probs": {
+        "Haiti": 0.2302,
+        "Draw": 0.2731,
+        "Scotland": 0.4967
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "D-MD1-01",
+      "group": "D",
+      "matchday": 1,
+      "date": "",
+      "home": "United States",
+      "away": "Paraguay",
+      "model_pick": "Paraguay",
+      "model_probs": {
+        "United States": 0.3449,
+        "Draw": 0.2915,
+        "Paraguay": 0.3636
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "D-MD1-23",
+      "group": "D",
+      "matchday": 1,
+      "date": "",
+      "home": "Australia",
+      "away": "Türkiye",
+      "model_pick": "Türkiye",
+      "model_probs": {
+        "Australia": 0.2902,
+        "Draw": 0.287,
+        "Türkiye": 0.4228
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "E-MD1-01",
+      "group": "E",
+      "matchday": 1,
+      "date": "",
+      "home": "Germany",
+      "away": "Curaçao",
+      "model_pick": "Germany",
+      "model_probs": {
+        "Germany": 0.8048,
+        "Draw": 0.1396,
+        "Curaçao": 0.0556
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "E-MD1-23",
+      "group": "E",
+      "matchday": 1,
+      "date": "",
+      "home": "Côte d'Ivoire",
+      "away": "Ecuador",
+      "model_pick": "Ecuador",
+      "model_probs": {
+        "Côte d'Ivoire": 0.1595,
+        "Draw": 0.2409,
+        "Ecuador": 0.5996
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "F-MD1-01",
+      "group": "F",
+      "matchday": 1,
+      "date": "",
+      "home": "Netherlands",
+      "away": "Japan",
+      "model_pick": "Netherlands",
+      "model_probs": {
+        "Netherlands": 0.3671,
+        "Draw": 0.2914,
+        "Japan": 0.3415
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "F-MD1-23",
+      "group": "F",
+      "matchday": 1,
+      "date": "",
+      "home": "Tunisia",
+      "away": "Sweden",
+      "model_pick": "Sweden",
+      "model_probs": {
+        "Tunisia": 0.326,
+        "Draw": 0.2907,
+        "Sweden": 0.3833
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "G-MD1-01",
+      "group": "G",
+      "matchday": 1,
+      "date": "",
+      "home": "Belgium",
+      "away": "Egypt",
+      "model_pick": "Belgium",
+      "model_probs": {
+        "Belgium": 0.5131,
+        "Draw": 0.269,
+        "Egypt": 0.218
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "G-MD1-23",
+      "group": "G",
+      "matchday": 1,
+      "date": "",
+      "home": "Iran",
+      "away": "New Zealand",
+      "model_pick": "Iran",
+      "model_probs": {
+        "Iran": 0.5567,
+        "Draw": 0.256,
+        "New Zealand": 0.1873
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "H-MD1-01",
+      "group": "H",
+      "matchday": 1,
+      "date": "",
+      "home": "Spain",
+      "away": "Cabo Verde",
+      "model_pick": "Spain",
+      "model_probs": {
+        "Spain": 0.9009,
+        "Draw": 0.077,
+        "Cabo Verde": 0.0221
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "H-MD1-23",
+      "group": "H",
+      "matchday": 1,
+      "date": "",
+      "home": "Saudi Arabia",
+      "away": "Uruguay",
+      "model_pick": "Uruguay",
+      "model_probs": {
+        "Saudi Arabia": 0.1081,
+        "Draw": 0.2019,
+        "Uruguay": 0.69
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "I-MD1-01",
+      "group": "I",
+      "matchday": 1,
+      "date": "",
+      "home": "France",
+      "away": "Senegal",
+      "model_pick": "France",
+      "model_probs": {
+        "France": 0.5937,
+        "Draw": 0.2431,
+        "Senegal": 0.1632
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "I-MD1-23",
+      "group": "I",
+      "matchday": 1,
+      "date": "",
+      "home": "Norway",
+      "away": "Iraq",
+      "model_pick": "Norway",
+      "model_probs": {
+        "Norway": 0.6131,
+        "Draw": 0.2357,
+        "Iraq": 0.1512
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "J-MD1-01",
+      "group": "J",
+      "matchday": 1,
+      "date": "",
+      "home": "Argentina",
+      "away": "Algeria",
+      "model_pick": "Argentina",
+      "model_probs": {
+        "Argentina": 0.7167,
+        "Draw": 0.1886,
+        "Algeria": 0.0946
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "J-MD1-23",
+      "group": "J",
+      "matchday": 1,
+      "date": "",
+      "home": "Austria",
+      "away": "Jordan",
+      "model_pick": "Austria",
+      "model_probs": {
+        "Austria": 0.4813,
+        "Draw": 0.2767,
+        "Jordan": 0.242
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "K-MD1-01",
+      "group": "K",
+      "matchday": 1,
+      "date": "",
+      "home": "Portugal",
+      "away": "Uzbekistan",
+      "model_pick": "Portugal",
+      "model_probs": {
+        "Portugal": 0.6017,
+        "Draw": 0.2401,
+        "Uzbekistan": 0.1582
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "K-MD1-23",
+      "group": "K",
+      "matchday": 1,
+      "date": "",
+      "home": "Colombia",
+      "away": "DR Congo",
+      "model_pick": "Colombia",
+      "model_probs": {
+        "Colombia": 0.6869,
+        "Draw": 0.2034,
+        "DR Congo": 0.1097
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "L-MD1-01",
+      "group": "L",
+      "matchday": 1,
+      "date": "",
+      "home": "England",
+      "away": "Croatia",
+      "model_pick": "England",
+      "model_probs": {
+        "England": 0.4889,
+        "Draw": 0.275,
+        "Croatia": 0.2361
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "L-MD1-23",
+      "group": "L",
+      "matchday": 1,
+      "date": "",
+      "home": "Ghana",
+      "away": "Panama",
+      "model_pick": "Panama",
+      "model_probs": {
+        "Ghana": 0.1426,
+        "Draw": 0.2298,
+        "Panama": 0.6275
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "A-MD2-02",
+      "group": "A",
+      "matchday": 2,
+      "date": "",
+      "home": "Mexico",
+      "away": "South Africa",
+      "model_pick": "Mexico",
+      "model_probs": {
+        "Mexico": 0.804,
+        "Draw": 0.1401,
+        "South Africa": 0.0559
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "A-MD2-13",
+      "group": "A",
+      "matchday": 2,
+      "date": "",
+      "home": "South Korea",
+      "away": "Czechia",
+      "model_pick": "South Korea",
+      "model_probs": {
+        "South Korea": 0.4441,
+        "Draw": 0.2839,
+        "Czechia": 0.272
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "B-MD2-02",
+      "group": "B",
+      "matchday": 2,
+      "date": "",
+      "home": "Canada",
+      "away": "Qatar",
+      "model_pick": "Canada",
+      "model_probs": {
+        "Canada": 0.8054,
+        "Draw": 0.1393,
+        "Qatar": 0.0553
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "B-MD2-13",
+      "group": "B",
+      "matchday": 2,
+      "date": "",
+      "home": "Switzerland",
+      "away": "Bosnia and Herzegovina",
+      "model_pick": "Switzerland",
+      "model_probs": {
+        "Switzerland": 0.7146,
+        "Draw": 0.1897,
+        "Bosnia and Herzegovina": 0.0957
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "C-MD2-02",
+      "group": "C",
+      "matchday": 2,
+      "date": "",
+      "home": "Brazil",
+      "away": "Haiti",
+      "model_pick": "Brazil",
+      "model_probs": {
+        "Brazil": 0.7622,
+        "Draw": 0.1643,
+        "Haiti": 0.0734
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "C-MD2-13",
+      "group": "C",
+      "matchday": 2,
+      "date": "",
+      "home": "Morocco",
+      "away": "Scotland",
+      "model_pick": "Morocco",
+      "model_probs": {
+        "Morocco": 0.536,
+        "Draw": 0.2625,
+        "Scotland": 0.2015
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "D-MD2-02",
+      "group": "D",
+      "matchday": 2,
+      "date": "",
+      "home": "United States",
+      "away": "Australia",
+      "model_pick": "United States",
+      "model_probs": {
+        "United States": 0.362,
+        "Draw": 0.2915,
+        "Australia": 0.3465
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "D-MD2-13",
+      "group": "D",
+      "matchday": 2,
+      "date": "",
+      "home": "Paraguay",
+      "away": "Türkiye",
+      "model_pick": "Türkiye",
+      "model_probs": {
+        "Paraguay": 0.3061,
+        "Draw": 0.289,
+        "Türkiye": 0.4049
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "E-MD2-02",
+      "group": "E",
+      "matchday": 2,
+      "date": "",
+      "home": "Germany",
+      "away": "Côte d'Ivoire",
+      "model_pick": "Germany",
+      "model_probs": {
+        "Germany": 0.5667,
+        "Draw": 0.2527,
+        "Côte d'Ivoire": 0.1806
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "E-MD2-13",
+      "group": "E",
+      "matchday": 2,
+      "date": "",
+      "home": "Curaçao",
+      "away": "Ecuador",
+      "model_pick": "Ecuador",
+      "model_probs": {
+        "Curaçao": 0.0464,
+        "Draw": 0.125,
+        "Ecuador": 0.8286
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "F-MD2-02",
+      "group": "F",
+      "matchday": 2,
+      "date": "",
+      "home": "Netherlands",
+      "away": "Tunisia",
+      "model_pick": "Netherlands",
+      "model_probs": {
+        "Netherlands": 0.6592,
+        "Draw": 0.2162,
+        "Tunisia": 0.1246
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "F-MD2-13",
+      "group": "F",
+      "matchday": 2,
+      "date": "",
+      "home": "Japan",
+      "away": "Sweden",
+      "model_pick": "Japan",
+      "model_probs": {
+        "Japan": 0.6161,
+        "Draw": 0.2345,
+        "Sweden": 0.1495
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "G-MD2-02",
+      "group": "G",
+      "matchday": 2,
+      "date": "",
+      "home": "Belgium",
+      "away": "Iran",
+      "model_pick": "Belgium",
+      "model_probs": {
+        "Belgium": 0.4082,
+        "Draw": 0.2887,
+        "Iran": 0.3031
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "G-MD2-13",
+      "group": "G",
+      "matchday": 2,
+      "date": "",
+      "home": "Egypt",
+      "away": "New Zealand",
+      "model_pick": "Egypt",
+      "model_probs": {
+        "Egypt": 0.4508,
+        "Draw": 0.2828,
+        "New Zealand": 0.2664
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "H-MD2-02",
+      "group": "H",
+      "matchday": 2,
+      "date": "",
+      "home": "Spain",
+      "away": "Saudi Arabia",
+      "model_pick": "Spain",
+      "model_probs": {
+        "Spain": 0.8987,
+        "Draw": 0.0785,
+        "Saudi Arabia": 0.0228
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "H-MD2-13",
+      "group": "H",
+      "matchday": 2,
+      "date": "",
+      "home": "Cabo Verde",
+      "away": "Uruguay",
+      "model_pick": "Uruguay",
+      "model_probs": {
+        "Cabo Verde": 0.106,
+        "Draw": 0.1999,
+        "Uruguay": 0.6941
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "I-MD2-02",
+      "group": "I",
+      "matchday": 2,
+      "date": "",
+      "home": "France",
+      "away": "Norway",
+      "model_pick": "France",
+      "model_probs": {
+        "France": 0.5327,
+        "Draw": 0.2635,
+        "Norway": 0.2038
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "I-MD2-13",
+      "group": "I",
+      "matchday": 2,
+      "date": "",
+      "home": "Senegal",
+      "away": "Iraq",
+      "model_pick": "Senegal",
+      "model_probs": {
+        "Senegal": 0.5525,
+        "Draw": 0.2574,
+        "Iraq": 0.1901
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "J-MD2-02",
+      "group": "J",
+      "matchday": 2,
+      "date": "",
+      "home": "Argentina",
+      "away": "Austria",
+      "model_pick": "Argentina",
+      "model_probs": {
+        "Argentina": 0.699,
+        "Draw": 0.1975,
+        "Austria": 0.1035
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "J-MD2-13",
+      "group": "J",
+      "matchday": 2,
+      "date": "",
+      "home": "Algeria",
+      "away": "Jordan",
+      "model_pick": "Algeria",
+      "model_probs": {
+        "Algeria": 0.4616,
+        "Draw": 0.2808,
+        "Jordan": 0.2576
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "K-MD2-02",
+      "group": "K",
+      "matchday": 2,
+      "date": "",
+      "home": "Portugal",
+      "away": "Colombia",
+      "model_pick": "Colombia",
+      "model_probs": {
+        "Portugal": 0.3336,
+        "Draw": 0.2911,
+        "Colombia": 0.3753
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "K-MD2-13",
+      "group": "K",
+      "matchday": 2,
+      "date": "",
+      "home": "Uzbekistan",
+      "away": "DR Congo",
+      "model_pick": "Uzbekistan",
+      "model_probs": {
+        "Uzbekistan": 0.4176,
+        "Draw": 0.2877,
+        "DR Congo": 0.2947
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "L-MD2-02",
+      "group": "L",
+      "matchday": 2,
+      "date": "",
+      "home": "England",
+      "away": "Ghana",
+      "model_pick": "England",
+      "model_probs": {
+        "England": 0.8494,
+        "Draw": 0.1118,
+        "Ghana": 0.0388
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "L-MD2-13",
+      "group": "L",
+      "matchday": 2,
+      "date": "",
+      "home": "Croatia",
+      "away": "Panama",
+      "model_pick": "Croatia",
+      "model_probs": {
+        "Croatia": 0.479,
+        "Draw": 0.2772,
+        "Panama": 0.2437
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "A-MD3-03",
+      "group": "A",
+      "matchday": 3,
+      "date": "",
+      "home": "Mexico",
+      "away": "Czechia",
+      "model_pick": "Mexico",
+      "model_probs": {
+        "Mexico": 0.6504,
+        "Draw": 0.2201,
+        "Czechia": 0.1295
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "A-MD3-12",
+      "group": "A",
+      "matchday": 3,
+      "date": "",
+      "home": "South Korea",
+      "away": "South Africa",
+      "model_pick": "South Korea",
+      "model_probs": {
+        "South Korea": 0.6219,
+        "Draw": 0.2322,
+        "South Africa": 0.146
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "B-MD3-03",
+      "group": "B",
+      "matchday": 3,
+      "date": "",
+      "home": "Canada",
+      "away": "Bosnia and Herzegovina",
+      "model_pick": "Canada",
+      "model_probs": {
+        "Canada": 0.7316,
+        "Draw": 0.181,
+        "Bosnia and Herzegovina": 0.0875
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "B-MD3-12",
+      "group": "B",
+      "matchday": 3,
+      "date": "",
+      "home": "Switzerland",
+      "away": "Qatar",
+      "model_pick": "Switzerland",
+      "model_probs": {
+        "Switzerland": 0.7908,
+        "Draw": 0.148,
+        "Qatar": 0.0612
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "C-MD3-03",
+      "group": "C",
+      "matchday": 3,
+      "date": "",
+      "home": "Brazil",
+      "away": "Scotland",
+      "model_pick": "Brazil",
+      "model_probs": {
+        "Brazil": 0.63,
+        "Draw": 0.2288,
+        "Scotland": 0.1412
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "C-MD3-12",
+      "group": "C",
+      "matchday": 3,
+      "date": "",
+      "home": "Morocco",
+      "away": "Haiti",
+      "model_pick": "Morocco",
+      "model_probs": {
+        "Morocco": 0.679,
+        "Draw": 0.2072,
+        "Haiti": 0.1139
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "D-MD3-03",
+      "group": "D",
+      "matchday": 3,
+      "date": "",
+      "home": "United States",
+      "away": "Türkiye",
+      "model_pick": "Türkiye",
+      "model_probs": {
+        "United States": 0.2973,
+        "Draw": 0.288,
+        "Türkiye": 0.4147
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "D-MD3-12",
+      "group": "D",
+      "matchday": 3,
+      "date": "",
+      "home": "Paraguay",
+      "away": "Australia",
+      "model_pick": "Paraguay",
+      "model_probs": {
+        "Paraguay": 0.3715,
+        "Draw": 0.2913,
+        "Australia": 0.3373
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "E-MD3-03",
+      "group": "E",
+      "matchday": 3,
+      "date": "",
+      "home": "Germany",
+      "away": "Ecuador",
+      "model_pick": "Ecuador",
+      "model_probs": {
+        "Germany": 0.3241,
+        "Draw": 0.2906,
+        "Ecuador": 0.3853
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "E-MD3-12",
+      "group": "E",
+      "matchday": 3,
+      "date": "",
+      "home": "Curaçao",
+      "away": "Côte d'Ivoire",
+      "model_pick": "Côte d'Ivoire",
+      "model_probs": {
+        "Curaçao": 0.1502,
+        "Draw": 0.235,
+        "Côte d'Ivoire": 0.6149
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "F-MD3-03",
+      "group": "F",
+      "matchday": 3,
+      "date": "",
+      "home": "Netherlands",
+      "away": "Sweden",
+      "model_pick": "Netherlands",
+      "model_probs": {
+        "Netherlands": 0.6295,
+        "Draw": 0.229,
+        "Sweden": 0.1415
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "F-MD3-12",
+      "group": "F",
+      "matchday": 3,
+      "date": "",
+      "home": "Japan",
+      "away": "Tunisia",
+      "model_pick": "Japan",
+      "model_probs": {
+        "Japan": 0.646,
+        "Draw": 0.222,
+        "Tunisia": 0.1319
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "G-MD3-03",
+      "group": "G",
+      "matchday": 3,
+      "date": "",
+      "home": "Belgium",
+      "away": "New Zealand",
+      "model_pick": "Belgium",
+      "model_probs": {
+        "Belgium": 0.6131,
+        "Draw": 0.2357,
+        "New Zealand": 0.1512
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "G-MD3-12",
+      "group": "G",
+      "matchday": 3,
+      "date": "",
+      "home": "Egypt",
+      "away": "Iran",
+      "model_pick": "Iran",
+      "model_probs": {
+        "Egypt": 0.262,
+        "Draw": 0.2818,
+        "Iran": 0.4561
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "H-MD3-03",
+      "group": "H",
+      "matchday": 3,
+      "date": "",
+      "home": "Spain",
+      "away": "Uruguay",
+      "model_pick": "Spain",
+      "model_probs": {
+        "Spain": 0.6368,
+        "Draw": 0.226,
+        "Uruguay": 0.1372
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "H-MD3-12",
+      "group": "H",
+      "matchday": 3,
+      "date": "",
+      "home": "Cabo Verde",
+      "away": "Saudi Arabia",
+      "model_pick": "Saudi Arabia",
+      "model_probs": {
+        "Cabo Verde": 0.35,
+        "Draw": 0.2915,
+        "Saudi Arabia": 0.3584
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "I-MD3-03",
+      "group": "I",
+      "matchday": 3,
+      "date": "",
+      "home": "France",
+      "away": "Iraq",
+      "model_pick": "France",
+      "model_probs": {
+        "France": 0.7773,
+        "Draw": 0.1558,
+        "Iraq": 0.0669
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "I-MD3-12",
+      "group": "I",
+      "matchday": 3,
+      "date": "",
+      "home": "Senegal",
+      "away": "Norway",
+      "model_pick": "Norway",
+      "model_probs": {
+        "Senegal": 0.2995,
+        "Draw": 0.2883,
+        "Norway": 0.4123
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "J-MD3-03",
+      "group": "J",
+      "matchday": 3,
+      "date": "",
+      "home": "Argentina",
+      "away": "Jordan",
+      "model_pick": "Argentina",
+      "model_probs": {
+        "Argentina": 0.8075,
+        "Draw": 0.138,
+        "Jordan": 0.0545
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "J-MD3-12",
+      "group": "J",
+      "matchday": 3,
+      "date": "",
+      "home": "Algeria",
+      "away": "Austria",
+      "model_pick": "Austria",
+      "model_probs": {
+        "Algeria": 0.3361,
+        "Draw": 0.2912,
+        "Austria": 0.3727
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "K-MD3-03",
+      "group": "K",
+      "matchday": 3,
+      "date": "",
+      "home": "Portugal",
+      "away": "DR Congo",
+      "model_pick": "Portugal",
+      "model_probs": {
+        "Portugal": 0.6659,
+        "Draw": 0.2132,
+        "DR Congo": 0.1209
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "K-MD3-12",
+      "group": "K",
+      "matchday": 3,
+      "date": "",
+      "home": "Uzbekistan",
+      "away": "Colombia",
+      "model_pick": "Colombia",
+      "model_probs": {
+        "Uzbekistan": 0.1449,
+        "Draw": 0.2314,
+        "Colombia": 0.6237
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "L-MD3-03",
+      "group": "L",
+      "matchday": 3,
+      "date": "",
+      "home": "England",
+      "away": "Panama",
+      "model_pick": "England",
+      "model_probs": {
+        "England": 0.6173,
+        "Draw": 0.234,
+        "Panama": 0.1487
+      },
+      "my_pick": null,
+      "actual": null
+    },
+    {
+      "id": "L-MD3-12",
+      "group": "L",
+      "matchday": 3,
+      "date": "",
+      "home": "Croatia",
+      "away": "Ghana",
+      "model_pick": "Croatia",
+      "model_probs": {
+        "Croatia": 0.7454,
+        "Draw": 0.1735,
+        "Ghana": 0.081
+      },
+      "my_pick": null,
+      "actual": null
+    }
+  ]
+}

@@ -1,0 +1,2235 @@
+{
+  "metadata": {
+    "generated_at": "2026-06-22T18:09:25Z",
+    "model": "dixon_coles",
+    "signals_used": [
+      "elo"
+    ],
+    "intercept": 0.18805260559433645,
+    "slope": 0.0018876860720877838,
+    "rho": -0.060918682601896486,
+    "lambda_floor": 0.1,
+    "lambda_cap": 6.0
+  },
+  "model_params": {
+    "intercept": 0.18805260559433645,
+    "slope": 0.0018876860720877838,
+    "rho": -0.060918682601896486,
+    "lambda_floor": 0.1,
+    "lambda_cap": 6.0
+  },
+  "team_strength": {
+    "Spain": 1837.0,
+    "Argentina": 1807.1,
+    "France": 1744.2,
+    "England": 1704.1,
+    "Brazil": 1685.4,
+    "Colombia": 1679.3,
+    "Mexico": 1675.4,
+    "Portugal": 1660.4,
+    "Ecuador": 1644.5,
+    "Netherlands": 1625.6,
+    "Germany": 1616.7,
+    "Japan": 1614.0,
+    "Morocco": 1605.8,
+    "Uruguay": 1595.7,
+    "Canada": 1594.0,
+    "Norway": 1591.2,
+    "Croatia": 1587.7,
+    "Türkiye": 1583.7,
+    "Switzerland": 1577.8,
+    "Belgium": 1571.1,
+    "Senegal": 1539.9,
+    "Paraguay": 1538.8,
+    "United States": 1530.3,
+    "Iran": 1523.3,
+    "Australia": 1523.3,
+    "Austria": 1510.1,
+    "South Korea": 1500.8,
+    "Algeria": 1493.5,
+    "Panama": 1479.6,
+    "Scotland": 1450.0,
+    "Uzbekistan": 1449.3,
+    "Côte d'Ivoire": 1435.2,
+    "Egypt": 1434.5,
+    "Czechia": 1422.2,
+    "Jordan": 1400.1,
+    "DR Congo": 1393.4,
+    "Sweden": 1390.6,
+    "Iraq": 1370.3,
+    "Tunisia": 1364.6,
+    "New Zealand": 1350.2,
+    "Haiti": 1327.1,
+    "Saudi Arabia": 1307.0,
+    "Cabo Verde": 1303.2,
+    "South Africa": 1272.4,
+    "Bosnia and Herzegovina": 1266.2,
+    "Ghana": 1246.3,
+    "Curaçao": 1212.8,
+    "Qatar": 1189.4
+  },
+  "groups": {
+    "A": [
+      "Mexico",
+      "South Korea",
+      "South Africa",
+      "Czechia"
+    ],
+    "B": [
+      "Canada",
+      "Switzerland",
+      "Qatar",
+      "Bosnia and Herzegovina"
+    ],
+    "C": [
+      "Brazil",
+      "Morocco",
+      "Haiti",
+      "Scotland"
+    ],
+    "D": [
+      "United States",
+      "Paraguay",
+      "Australia",
+      "Türkiye"
+    ],
+    "E": [
+      "Germany",
+      "Curaçao",
+      "Côte d'Ivoire",
+      "Ecuador"
+    ],
+    "F": [
+      "Netherlands",
+      "Japan",
+      "Tunisia",
+      "Sweden"
+    ],
+    "G": [
+      "Belgium",
+      "Egypt",
+      "Iran",
+      "New Zealand"
+    ],
+    "H": [
+      "Spain",
+      "Cabo Verde",
+      "Saudi Arabia",
+      "Uruguay"
+    ],
+    "I": [
+      "France",
+      "Senegal",
+      "Norway",
+      "Iraq"
+    ],
+    "J": [
+      "Argentina",
+      "Algeria",
+      "Austria",
+      "Jordan"
+    ],
+    "K": [
+      "Portugal",
+      "Uzbekistan",
+      "Colombia",
+      "DR Congo"
+    ],
+    "L": [
+      "England",
+      "Croatia",
+      "Ghana",
+      "Panama"
+    ]
+  },
+  "group_matches": [
+    {
+      "home": "Mexico",
+      "away": "South Korea",
+      "p_home": 0.5584836676293994,
+      "p_draw": 0.25543614134595394,
+      "p_away": 0.18608019102464668,
+      "exp_home": 1.6780518089043819,
+      "exp_away": 0.8680227016549829,
+      "top_scores": [
+        {
+          "home": 1,
+          "away": 0,
+          "prob": 0.12458415764019239
+        },
+        {
+          "home": 1,
+          "away": 1,
+          "prob": 0.12113522653889436
+        },
+        {
+          "home": 2,
+          "away": 0,
+          "prob": 0.11036632692906553
+        }
+      ],
+      "favorite": "Mexico",
+      "favorite_prob": 0.5584836676293994,
+      "group": "A"
+    },
+    {
+      "home": "Mexico",
+      "away": "South Africa",
+      "p_home": 0.8039975955771903,
+      "p_draw": 0.14012715641121085,
+      "p_away": 0.05587524801159872,
+      "exp_home": 2.581873065839001,
+      "exp_away": 0.5640091061447351,
+      "top_scores": [
+        {
+          "home": 2,
+          "away": 0,
+          "prob": 0.14340573256853525
+        },
+        {
+          "home": 3,
+          "away": 0,
+          "prob": 0.12345240626438332
+        },
+        {
+          "home": 1,
+          "away": 0,
+          "prob": 0.1072403053940692
+        }
+      ],
+      "favorite": "Mexico",
+      "favorite_prob": 0.8039975955771903,
+      "group": "A"
+    },
+    {
+      "home": "Mexico",
+      "away": "Czechia",
+      "p_home": 0.650355841004166,
+      "p_draw": 0.22014165032184685,
+      "p_away": 0.12950250867398697,
+      "exp_home": 1.9464048465149333,
+      "exp_away": 0.7483312772414477,
+      "top_scores": [
+        {
+          "home": 2,
+          "away": 0,
+          "prob": 0.12797668386577932
+        },
+        {
+          "home": 1,
+          "away": 0,
+          "prob": 0.12550196194629687
+        },
+        {
+          "home": 1,
+          "away": 1,
+          "prob": 0.10439755526320074
+        }
+      ],
+      "favorite": "Mexico",
+      "favorite_prob": 0.650355841004166,
+      "group": "A"
+    },
+    {
+      "home": "South Korea",
+      "away": "South Africa",
+      "p_home": 0.6218649428052719,
+      "p_draw": 0.232159830303228,
+      "p_away": 0.1459752268915002,
+      "exp_home": 1.8574026374055146,
+      "exp_away": 0.7841970865371614,
+      "top_scores": [
+        {
+          "home": 1,
+          "away": 0,
+          "prob": 0.1260110683491987
+        },
+        {
+          "home": 2,
+          "away": 0,
+          "prob": 0.12290033161039046
+        },
+        {
+          "home": 1,
+          "away": 1,
+          "prob": 0.11009692476885767
+        }
+      ],
+      "favorite": "South Korea",
+      "favorite_prob": 0.6218649428052719,
+      "group": "A"
+    },
+    {
+      "home": "South Korea",
+      "away": "Czechia",
+      "p_home": 0.4441159045306449,
+      "p_draw": 0.28390770051068465,
+      "p_away": 0.2719763949586703,
+      "exp_home": 1.3999307428658385,
+      "exp_away": 1.040478117164355,
+      "top_scores": [
+        {
+          "home": 1,
+          "away": 1,
+          "prob": 0.13463726564409717
+        },
+        {
+          "home": 1,
+          "away": 0,
+          "prob": 0.11423823440226288
+        },
+        {
+          "home": 0,
+          "away": 0,
+          "prob": 0.0948559599898055
+        }
+      ],
+      "favorite": "South Korea",
+      "favorite_prob": 0.4441159045306449,
+      "group": "A"
+    },
+    {
+      "home": "South Africa",
+      "away": "Czechia",
+      "p_home": 0.20655895730868745,
+      "p_draw": 0.26457297395262686,
+      "p_away": 0.5288680687386855,
+      "exp_home": 0.9096250375457198,
+      "exp_away": 1.6013096397516404,
+      "top_scores": [
+        {
+          "home": 1,
+          "away": 1,
+          "prob": 0.1254681775528947
+        },
+        {
+          "home": 0,
+          "away": 1,
+          "prob": 0.12280921575762219
+        },
+        {
+          "home": 0,
+          "away": 2,
+          "prob": 0.10409672482063971
+        }
+      ],
+      "favorite": "Czechia",
+      "favorite_prob": 0.5288680687386855,
+      "group": "A"
+    },
+    {
+      "home": "Canada",
+      "away": "Switzerland",
+      "p_home": 0.3722361506113743,
+      "p_draw": 0.29123719633561396,
+      "p_away": 0.33652665305301177,
+      "exp_home": 1.2443737771304568,
+      "exp_away": 1.1705476057316946,
+      "top_scores": [
+        {
+          "home": 1,
+          "away": 1,
+          "prob": 0.138113125138726
+        },
+        {
+          "home": 1,
+          "away": 0,
+          "prob": 0.1032845076050103
+        },
+        {
+          "home": 0,
+          "away": 0,
+          "prob": 0.09730480643343614
+        }
+      ],
+      "favorite": "Canada",
+      "favorite_prob": 0.3722361506113743,
+      "group": "B"
+    },
+    {
+      "home": "Canada",
+      "away": "Qatar",
+      "p_home": 0.80541598555886,
+      "p_draw": 0.13927374526926445,
+      "p_away": 0.05531026917187558,
+      "exp_home": 2.5896667516862837,
+      "exp_away": 0.5623082006515835,
+      "top_scores": [
+        {
+          "home": 2,
+          "away": 0,
+          "prob": 0.14339593998498087
+        },
+        {
+          "home": 3,
+          "away": 0,
+          "prob": 0.12381737737765883
+        },
+        {
+          "home": 1,
+          "away": 0,
+          "prob": 0.10692106727351179
+        }
+      ],
+      "favorite": "Canada",
+      "favorite_prob": 0.80541598555886,
+      "group": "B"
+    },
+    {
+      "home": "Canada",
+      "away": "Bosnia and Herzegovina",
+      "p_home": 0.731559060139092,
+      "p_draw": 0.18095404618617864,
+      "p_away": 0.08748689367472964,
+      "exp_home": 2.240597404799487,
+      "exp_away": 0.6500338173368251,
+      "top_scores": [
+        {
+          "home": 2,
+          "away": 0,
+          "prob": 0.13941606816364913
+        },
+        {
+          "home": 1,
+          "away": 0,
+          "prob": 0.11950631953742498
+        },
+        {
+          "home": 3,
+          "away": 0,
+          "prob": 0.10413483706494137
+        }
+      ],
+      "favorite": "Canada",
+      "favorite_prob": 0.731559060139092,
+      "group": "B"
+    },
+    {
+      "home": "Switzerland",
+      "away": "Qatar",
+      "p_home": 0.7908057775207827,
+      "p_draw": 0.14796519744447717,
+      "p_away": 0.06122902503474009,
+      "exp_home": 2.511815948688135,
+      "exp_away": 0.5797695015988829,
+      "top_scores": [
+        {
+          "home": 2,
+          "away": 0,
+          "prob": 0.14330629939674727
+        },
+        {
+          "home": 3,
+          "away": 0,
+          "prob": 0.12001321727750233
+        },
+        {
+          "home": 1,
+          "away": 0,
+          "prob": 0.11005101257270852
+        }
+      ],
+      "favorite": "Switzerland",
+      "favorite_prob": 0.7908057775207827,
+      "group": "B"
+    },
+    {
+      "home": "Switzerland",
+      "away": "Bosnia and Herzegovina",
+      "p_home": 0.7146109898192077,
+      "p_draw": 0.18971821993135424,
+      "p_away": 0.09567079024943817,
+      "exp_home": 2.1731589735797483,
+      "exp_away": 0.6702192528655749,
+      "top_scores": [
+        {
+          "home": 2,
+          "away": 0,
+          "prob": 0.13749651032702792
+        },
+        {
+          "home": 1,
+          "away": 0,
+          "prob": 0.12136522093102901
+        },
+        {
+          "home": 3,
+          "away": 0,
+          "prob": 0.09960793542250447
+        }
+      ],
+      "favorite": "Switzerland",
+      "favorite_prob": 0.7146109898192077,
+      "group": "B"
+    },
+    {
+      "home": "Qatar",
+      "away": "Bosnia and Herzegovina",
+      "p_home": 0.2737502610320367,
+      "p_draw": 0.28425066232246915,
+      "p_away": 0.4419990766454942,
+      "exp_home": 1.0440194984986413,
+      "exp_away": 1.3951821604091874,
+      "top_scores": [
+        {
+          "home": 1,
+          "away": 1,
+          "prob": 0.13479990808203018
+        },
+        {
+          "home": 0,
+          "away": 1,
+          "prob": 0.11396200701380456
+        },
+        {
+          "home": 0,
+          "away": 0,
+          "prob": 0.09497054642701074
+        }
+      ],
+      "favorite": "Bosnia and Herzegovina",
+      "favorite_prob": 0.4419990766454942,
+      "group": "B"
+    },
+    {
+      "home": "Brazil",
+      "away": "Morocco",
+      "p_home": 0.4452927745611672,
+      "p_draw": 0.28371389120575446,
+      "p_away": 0.2709933342330783,
+      "exp_home": 1.40257582333174,
+      "exp_away": 1.0385158762684803,
+      "top_scores": [
+        {
+          "home": 1,
+          "away": 1,
+          "prob": 0.13454535565072523
+        },
+        {
+          "home": 1,
+          "away": 0,
+          "prob": 0.11439054947083499
+        },
+        {
+          "home": 0,
+          "away": 0,
+          "prob": 0.0947912066645486
+        }
+      ],
+      "favorite": "Brazil",
+      "favorite_prob": 0.4452927745611672,
+      "group": "C"
+    },
+    {
+      "home": "Brazil",
+      "away": "Haiti",
+      "p_home": 0.7622437671351074,
+      "p_draw": 0.16432196413560907,
+      "p_away": 0.07343426872928346,
+      "exp_home": 2.3732606281198563,
+      "exp_away": 0.6136654830597873,
+      "top_scores": [
+        {
+          "home": 2,
+          "away": 0,
+          "prob": 0.14205242751942185
+        },
+        {
+          "home": 1,
+          "away": 0,
+          "prob": 0.11521874720540816
+        },
+        {
+          "home": 3,
+          "away": 0,
+          "prob": 0.11239218807130881
+        }
+      ],
+      "favorite": "Brazil",
+      "favorite_prob": 0.7622437671351074,
+      "group": "C"
+    },
+    {
+      "home": "Brazil",
+      "away": "Scotland",
+      "p_home": 0.6299651780082396,
+      "p_draw": 0.22883790792341085,
+      "p_away": 0.14119691406834955,
+      "exp_home": 1.8821043732756155,
+      "exp_away": 0.7739030237382107,
+      "top_scores": [
+        {
+          "home": 1,
+          "away": 0,
+          "prob": 0.1259430428342627
+        },
+        {
+          "home": 2,
+          "away": 0,
+          "prob": 0.12438594465930827
+        },
+        {
+          "home": 1,
+          "away": 1,
+          "prob": 0.10852157283195704
+        }
+      ],
+      "favorite": "Brazil",
+      "favorite_prob": 0.6299651780082396,
+      "group": "C"
+    },
+    {
+      "home": "Morocco",
+      "away": "Haiti",
+      "p_home": 0.6789641705539747,
+      "p_draw": 0.2071527758701432,
+      "p_away": 0.1138830535758821,
+      "exp_home": 2.0423590872200403,
+      "exp_away": 0.7131628330499966,
+      "top_scores": [
+        {
+          "home": 2,
+          "away": 0,
+          "prob": 0.13259580545331545
+        },
+        {
+          "home": 1,
+          "away": 0,
+          "prob": 0.12419898319498494
+        },
+        {
+          "home": 1,
+          "away": 1,
+          "prob": 0.09823785428705183
+        }
+      ],
+      "favorite": "Morocco",
+      "favorite_prob": 0.6789641705539747,
+      "group": "C"
+    },
+    {
+      "home": "Morocco",
+      "away": "Scotland",
+      "p_home": 0.536042779799472,
+      "p_draw": 0.26246606321934285,
+      "p_away": 0.20149115698118497,
+      "exp_home": 1.6195483623086786,
+      "exp_away": 0.8993806463674479,
+      "top_scores": [
+        {
+          "home": 1,
+          "away": 1,
+          "prob": 0.12446901937727878
+        },
+        {
+          "home": 1,
+          "away": 0,
+          "prob": 0.12330035968391681
+        },
+        {
+          "home": 2,
+          "away": 0,
+          "prob": 0.10563369793770286
+        }
+      ],
+      "favorite": "Morocco",
+      "favorite_prob": 0.536042779799472,
+      "group": "C"
+    },
+    {
+      "home": "Haiti",
+      "away": "Scotland",
+      "p_home": 0.23015032784063422,
+      "p_draw": 0.27314895841157005,
+      "p_away": 0.4967007137477957,
+      "exp_home": 0.9570074710090836,
+      "exp_away": 1.5220303662500254,
+      "top_scores": [
+        {
+          "home": 1,
+          "away": 1,
+          "prob": 0.12953515810918617
+        },
+        {
+          "home": 0,
+          "away": 1,
+          "prob": 0.12014423643066294
+        },
+        {
+          "home": 0,
+          "away": 2,
+          "prob": 0.09709240723931852
+        }
+      ],
+      "favorite": "Scotland",
+      "favorite_prob": 0.4967007137477957,
+      "group": "C"
+    },
+    {
+      "home": "United States",
+      "away": "Paraguay",
+      "p_home": 0.3448920518221954,
+      "p_draw": 0.2914755285534766,
+      "p_away": 0.36363241962432813,
+      "exp_home": 1.187685915012228,
+      "exp_away": 1.2264174963596415,
+      "top_scores": [
+        {
+          "home": 1,
+          "away": 1,
+          "prob": 0.13822614918869083
+        },
+        {
+          "home": 0,
+          "away": 1,
+          "prob": 0.10176287692571798
+        },
+        {
+          "home": 1,
+          "away": 0,
+          "prob": 0.09829841948357876
+        }
+      ],
+      "favorite": "Paraguay",
+      "favorite_prob": 0.36363241962432813,
+      "group": "D"
+    },
+    {
+      "home": "United States",
+      "away": "Australia",
+      "p_home": 0.36196448088958694,
+      "p_draw": 0.29150467528435886,
+      "p_away": 0.34653084382605404,
+      "exp_home": 1.22294978999596,
+      "exp_away": 1.1910536337986044,
+      "top_scores": [
+        {
+          "home": 1,
+          "away": 1,
+          "prob": 0.13823997141380628
+        },
+        {
+          "home": 1,
+          "away": 0,
+          "prob": 0.10146284274698911
+        },
+        {
+          "home": 0,
+          "away": 1,
+          "prob": 0.09860951424587351
+        }
+      ],
+      "favorite": "United States",
+      "favorite_prob": 0.36196448088958694,
+      "group": "D"
+    },
+    {
+      "home": "United States",
+      "away": "Türkiye",
+      "p_home": 0.2973073424105061,
+      "p_draw": 0.2880093715563295,
+      "p_away": 0.41468328603316446,
+      "exp_home": 1.0911693811287677,
+      "exp_away": 1.334896470606201,
+      "top_scores": [
+        {
+          "home": 1,
+          "away": 1,
+          "prob": 0.13658239701307323
+        },
+        {
+          "home": 0,
+          "away": 1,
+          "prob": 0.11014059744505258
+        },
+        {
+          "home": 0,
+          "away": 0,
+          "prob": 0.09622636291969149
+        }
+      ],
+      "favorite": "Türkiye",
+      "favorite_prob": 0.41468328603316446,
+      "group": "D"
+    },
+    {
+      "home": "Paraguay",
+      "away": "Australia",
+      "p_home": 0.3714511651545176,
+      "p_draw": 0.29126499456390437,
+      "p_away": 0.33728384028157776,
+      "exp_home": 1.242730582190841,
+      "exp_away": 1.1720953609073188,
+      "top_scores": [
+        {
+          "home": 1,
+          "away": 1,
+          "prob": 0.13812630786480232
+        },
+        {
+          "home": 1,
+          "away": 0,
+          "prob": 0.10314749163386161
+        },
+        {
+          "home": 0,
+          "away": 0,
+          "prob": 0.09731409405622962
+        }
+      ],
+      "favorite": "Paraguay",
+      "favorite_prob": 0.3714511651545176,
+      "group": "D"
+    },
+    {
+      "home": "Paraguay",
+      "away": "Türkiye",
+      "p_home": 0.3060847778273366,
+      "p_draw": 0.28904765374730435,
+      "p_away": 0.4048675684253591,
+      "exp_home": 1.108818734513608,
+      "exp_away": 1.313648757465329,
+      "top_scores": [
+        {
+          "home": 1,
+          "away": 1,
+          "prob": 0.1370747805409182
+        },
+        {
+          "home": 0,
+          "away": 1,
+          "prob": 0.10865291359244754
+        },
+        {
+          "home": 0,
+          "away": 0,
+          "prob": 0.09657326176670432
+        }
+      ],
+      "favorite": "Türkiye",
+      "favorite_prob": 0.4048675684253591,
+      "group": "D"
+    },
+    {
+      "home": "Australia",
+      "away": "Türkiye",
+      "p_home": 0.2901654323400288,
+      "p_draw": 0.2870224861833745,
+      "p_away": 0.4228120814765968,
+      "exp_home": 1.076845754307279,
+      "exp_away": 1.3526523698611563,
+      "top_scores": [
+        {
+          "home": 1,
+          "away": 1,
+          "prob": 0.13611438734697467
+        },
+        {
+          "home": 0,
+          "away": 1,
+          "prob": 0.11132716818199898
+        },
+        {
+          "home": 0,
+          "away": 0,
+          "prob": 0.09589663618356155
+        }
+      ],
+      "favorite": "Türkiye",
+      "favorite_prob": 0.4228120814765968,
+      "group": "D"
+    },
+    {
+      "home": "Germany",
+      "away": "Curaçao",
+      "p_home": 0.8047961104852281,
+      "p_draw": 0.13964696400493745,
+      "p_away": 0.055556925509834494,
+      "exp_home": 2.5862541658136213,
+      "exp_away": 0.5630517147233134,
+      "top_scores": [
+        {
+          "home": 2,
+          "away": 0,
+          "prob": 0.1434007301740688
+        },
+        {
+          "home": 3,
+          "away": 0,
+          "prob": 0.1236580062871938
+        },
+        {
+          "home": 1,
+          "away": 0,
+          "prob": 0.10706099905492972
+        }
+      ],
+      "favorite": "Germany",
+      "favorite_prob": 0.8047961104852281,
+      "group": "E"
+    },
+    {
+      "home": "Germany",
+      "away": "Côte d'Ivoire",
+      "p_home": 0.5666955405363538,
+      "p_draw": 0.2527006339334438,
+      "p_away": 0.1806038255302022,
+      "exp_home": 1.70004968182273,
+      "exp_away": 0.8567899912805828,
+      "top_scores": [
+        {
+          "home": 1,
+          "away": 0,
+          "prob": 0.12495601464248081
+        },
+        {
+          "home": 1,
+          "away": 1,
+          "prob": 0.11983796958705037
+        },
+        {
+          "home": 2,
+          "away": 0,
+          "prob": 0.11206602718881023
+        }
+      ],
+      "favorite": "Germany",
+      "favorite_prob": 0.5666955405363538,
+      "group": "E"
+    },
+    {
+      "home": "Germany",
+      "away": "Ecuador",
+      "p_home": 0.32407827415918,
+      "p_draw": 0.2905984304720296,
+      "p_away": 0.3853232953687903,
+      "exp_home": 1.1451946157303698,
+      "exp_away": 1.271922356325475,
+      "top_scores": [
+        {
+          "home": 1,
+          "away": 1,
+          "prob": 0.13781020384034248
+        },
+        {
+          "home": 0,
+          "away": 1,
+          "prob": 0.10551472760285405
+        },
+        {
+          "home": 0,
+          "away": 0,
+          "prob": 0.09709138936482539
+        }
+      ],
+      "favorite": "Ecuador",
+      "favorite_prob": 0.3853232953687903,
+      "group": "E"
+    },
+    {
+      "home": "Curaçao",
+      "away": "Côte d'Ivoire",
+      "p_home": 0.1501516723736101,
+      "p_draw": 0.23495926378625204,
+      "p_away": 0.6148890638401379,
+      "exp_home": 0.793129482275096,
+      "exp_away": 1.8364875707869202,
+      "top_scores": [
+        {
+          "home": 0,
+          "away": 1,
+          "prob": 0.12602220397339756
+        },
+        {
+          "home": 0,
+          "away": 2,
+          "prob": 0.12159642595174923
+        },
+        {
+          "home": 1,
+          "away": 1,
+          "prob": 0.11142449731736172
+        }
+      ],
+      "favorite": "Côte d'Ivoire",
+      "favorite_prob": 0.6148890638401379,
+      "group": "E"
+    },
+    {
+      "home": "Curaçao",
+      "away": "Ecuador",
+      "p_home": 0.04637062205219612,
+      "p_draw": 0.12503166983700775,
+      "p_away": 0.828597708110796,
+      "exp_home": 0.5342659811261742,
+      "exp_away": 2.7252420851486683,
+      "top_scores": [
+        {
+          "home": 0,
+          "away": 2,
+          "prob": 0.14260062308243732
+        },
+        {
+          "home": 0,
+          "away": 3,
+          "prob": 0.1295934537765744
+        },
+        {
+          "home": 0,
+          "away": 1,
+          "prob": 0.10120419096153362
+        }
+      ],
+      "favorite": "Ecuador",
+      "favorite_prob": 0.828597708110796,
+      "group": "E"
+    },
+    {
+      "home": "Côte d'Ivoire",
+      "away": "Ecuador",
+      "p_home": 0.15952931303601187,
+      "p_draw": 0.2409071726443208,
+      "p_away": 0.5995635143196673,
+      "exp_home": 0.8129870447236517,
+      "exp_away": 1.7916368508375418,
+      "top_scores": [
+        {
+          "home": 0,
+          "away": 1,
+          "prob": 0.12589610899717035
+        },
+        {
+          "home": 0,
+          "away": 2,
+          "prob": 0.11865851335979993
+        },
+        {
+          "home": 1,
+          "away": 1,
+          "prob": 0.11424516820268892
+        }
+      ],
+      "favorite": "Ecuador",
+      "favorite_prob": 0.5995635143196673,
+      "group": "E"
+    },
+    {
+      "home": "Netherlands",
+      "away": "Japan",
+      "p_home": 0.36708795862580096,
+      "p_draw": 0.2913974277018991,
+      "p_away": 0.3415146136723,
+      "exp_home": 1.2336152784010084,
+      "exp_away": 1.180756106455304,
+      "top_scores": [
+        {
+          "home": 1,
+          "away": 1,
+          "prob": 0.13818911149974494
+        },
+        {
+          "home": 1,
+          "away": 0,
+          "prob": 0.10237926392086787
+        },
+        {
+          "home": 0,
+          "away": 1,
+          "prob": 0.09765239041580641
+        }
+      ],
+      "favorite": "Netherlands",
+      "favorite_prob": 0.36708795862580096,
+      "group": "F"
+    },
+    {
+      "home": "Netherlands",
+      "away": "Tunisia",
+      "p_home": 0.6591873518813472,
+      "p_draw": 0.2162290228844202,
+      "p_away": 0.12458362523423241,
+      "exp_home": 1.975268016988486,
+      "exp_away": 0.737393605070465,
+      "top_scores": [
+        {
+          "home": 2,
+          "away": 0,
+          "prob": 0.12945883130256433
+        },
+        {
+          "home": 1,
+          "away": 0,
+          "prob": 0.12518719372017917
+        },
+        {
+          "home": 1,
+          "away": 1,
+          "prob": 0.10254207385599823
+        }
+      ],
+      "favorite": "Netherlands",
+      "favorite_prob": 0.6591873518813472,
+      "group": "F"
+    },
+    {
+      "home": "Netherlands",
+      "away": "Sweden",
+      "p_home": 0.6295034708087457,
+      "p_draw": 0.22902930042031328,
+      "p_away": 0.14146722877094114,
+      "exp_home": 1.8806840498379265,
+      "exp_away": 0.7744875987398679,
+      "top_scores": [
+        {
+          "home": 1,
+          "away": 0,
+          "prob": 0.12594853015205193
+        },
+        {
+          "home": 2,
+          "away": 0,
+          "prob": 0.12430212045568063
+        },
+        {
+          "home": 1,
+          "away": 1,
+          "prob": 0.1086123367048685
+        }
+      ],
+      "favorite": "Netherlands",
+      "favorite_prob": 0.6295034708087457,
+      "group": "F"
+    },
+    {
+      "home": "Japan",
+      "away": "Tunisia",
+      "p_home": 0.6460294684414412,
+      "p_draw": 0.22202633276133066,
+      "p_away": 0.13194419879722807,
+      "exp_home": 1.9324961728981742,
+      "exp_away": 0.7537185108542545,
+      "top_scores": [
+        {
+          "home": 2,
+          "away": 0,
+          "prob": 0.12723381572899045
+        },
+        {
+          "home": 1,
+          "away": 0,
+          "prob": 0.1256284891916845
+        },
+        {
+          "home": 1,
+          "away": 1,
+          "prob": 0.10529132633669791
+        }
+      ],
+      "favorite": "Japan",
+      "favorite_prob": 0.6460294684414412,
+      "group": "F"
+    },
+    {
+      "home": "Japan",
+      "away": "Sweden",
+      "p_home": 0.6160537190452302,
+      "p_draw": 0.23449586048292959,
+      "p_away": 0.14945042047184032,
+      "exp_home": 1.8399570092533832,
+      "exp_away": 0.7916337151792379,
+      "top_scores": [
+        {
+          "home": 1,
+          "away": 0,
+          "prob": 0.12602336457460575
+        },
+        {
+          "home": 2,
+          "away": 0,
+          "prob": 0.1218156371764255
+        },
+        {
+          "home": 1,
+          "away": 1,
+          "prob": 0.1112047380310248
+        }
+      ],
+      "favorite": "Japan",
+      "favorite_prob": 0.6160537190452302,
+      "group": "F"
+    },
+    {
+      "home": "Tunisia",
+      "away": "Sweden",
+      "p_home": 0.32599743842208617,
+      "p_draw": 0.2907195328619031,
+      "p_away": 0.3832830287160107,
+      "exp_home": 1.1490924043521402,
+      "exp_away": 1.26760793987111,
+      "top_scores": [
+        {
+          "home": 1,
+          "away": 1,
+          "prob": 0.13786763410590488
+        },
+        {
+          "home": 0,
+          "away": 1,
+          "prob": 0.10517378369799019
+        },
+        {
+          "home": 0,
+          "away": 0,
+          "prob": 0.09713185069584195
+        }
+      ],
+      "favorite": "Sweden",
+      "favorite_prob": 0.3832830287160107,
+      "group": "F"
+    },
+    {
+      "home": "Belgium",
+      "away": "Egypt",
+      "p_home": 0.5130778310528319,
+      "p_draw": 0.26896315523875963,
+      "p_away": 0.2179590137084085,
+      "exp_home": 1.5619039045552365,
+      "exp_away": 0.9325753132819367,
+      "top_scores": [
+        {
+          "home": 1,
+          "away": 1,
+          "prob": 0.12755012884545766
+        },
+        {
+          "home": 1,
+          "away": 0,
+          "prob": 0.12159437150291673
+        },
+        {
+          "home": 2,
+          "away": 0,
+          "prob": 0.10067956952736569
+        }
+      ],
+      "favorite": "Belgium",
+      "favorite_prob": 0.5130778310528319,
+      "group": "G"
+    },
+    {
+      "home": "Belgium",
+      "away": "Iran",
+      "p_home": 0.40820939459694927,
+      "p_draw": 0.28871324508597085,
+      "p_away": 0.30307736031707955,
+      "exp_home": 1.320859697887633,
+      "exp_away": 1.1027653372027182,
+      "top_scores": [
+        {
+          "home": 1,
+          "away": 1,
+          "prob": 0.13691619425499274
+        },
+        {
+          "home": 1,
+          "away": 0,
+          "prob": 0.10916610391019207
+        },
+        {
+          "home": 0,
+          "away": 0,
+          "prob": 0.09646153300928557
+        }
+      ],
+      "favorite": "Belgium",
+      "favorite_prob": 0.40820939459694927,
+      "group": "G"
+    },
+    {
+      "home": "Belgium",
+      "away": "New Zealand",
+      "p_home": 0.6131406193073182,
+      "p_draw": 0.2356519470628052,
+      "p_away": 0.15120743362987643,
+      "exp_home": 1.8312956603214778,
+      "exp_away": 0.7953784337162233,
+      "top_scores": [
+        {
+          "home": 1,
+          "away": 0,
+          "prob": 0.1260182046102241
+        },
+        {
+          "home": 2,
+          "away": 0,
+          "prob": 0.12126621846002342
+        },
+        {
+          "home": 1,
+          "away": 1,
+          "prob": 0.11175298781672034
+        }
+      ],
+      "favorite": "Belgium",
+      "favorite_prob": 0.6131406193073182,
+      "group": "G"
+    },
+    {
+      "home": "Egypt",
+      "away": "Iran",
+      "p_home": 0.2620311807987487,
+      "p_draw": 0.28182190754514364,
+      "p_away": 0.45614691165610766,
+      "exp_home": 1.0206359981493756,
+      "exp_away": 1.427146235345291,
+      "top_scores": [
+        {
+          "home": 1,
+          "away": 1,
+          "prob": 0.13364812212641522
+        },
+        {
+          "home": 0,
+          "away": 1,
+          "prob": 0.11575273472584313
+        },
+        {
+          "home": 0,
+          "away": 0,
+          "prob": 0.09415907894807786
+        }
+      ],
+      "favorite": "Iran",
+      "favorite_prob": 0.45614691165610766,
+      "group": "G"
+    },
+    {
+      "home": "Egypt",
+      "away": "New Zealand",
+      "p_home": 0.4508319359645969,
+      "p_draw": 0.2827717975008948,
+      "p_away": 0.2663962665345082,
+      "exp_home": 1.4150747921013445,
+      "exp_away": 1.0293427978508467,
+      "top_scores": [
+        {
+          "home": 1,
+          "away": 1,
+          "prob": 0.1340985874927124
+        },
+        {
+          "home": 1,
+          "away": 0,
+          "prob": 0.11509534413956714
+        },
+        {
+          "home": 0,
+          "away": 0,
+          "prob": 0.0944764452029395
+        }
+      ],
+      "favorite": "Egypt",
+      "favorite_prob": 0.4508319359645969,
+      "group": "G"
+    },
+    {
+      "home": "Iran",
+      "away": "New Zealand",
+      "p_home": 0.5566963848030295,
+      "p_draw": 0.25602007523502396,
+      "p_away": 0.18728353996194663,
+      "exp_home": 1.6733074320936896,
+      "exp_away": 0.8704840155581992,
+      "top_scores": [
+        {
+          "home": 1,
+          "away": 0,
+          "prob": 0.12449617809936539
+        },
+        {
+          "home": 1,
+          "away": 1,
+          "prob": 0.12141214492469327
+        },
+        {
+          "home": 2,
+          "away": 0,
+          "prob": 0.10999395803311685
+        }
+      ],
+      "favorite": "Iran",
+      "favorite_prob": 0.5566963848030295,
+      "group": "G"
+    },
+    {
+      "home": "Spain",
+      "away": "Cabo Verde",
+      "p_home": 0.9009146935311392,
+      "p_draw": 0.07695557425207944,
+      "p_away": 0.022129732216781554,
+      "exp_home": 3.300657966399151,
+      "exp_away": 0.440610409244583,
+      "top_scores": [
+        {
+          "home": 3,
+          "away": 0,
+          "prob": 0.142203872421286
+        },
+        {
+          "home": 2,
+          "away": 0,
+          "prob": 0.1290467326043136
+        },
+        {
+          "home": 4,
+          "away": 0,
+          "prob": 0.1175268501001945
+        }
+      ],
+      "favorite": "Spain",
+      "favorite_prob": 0.9009146935311392,
+      "group": "H"
+    },
+    {
+      "home": "Spain",
+      "away": "Saudi Arabia",
+      "p_home": 0.8986573198618382,
+      "p_draw": 0.07854320173302291,
+      "p_away": 0.02279947840513903,
+      "exp_home": 3.277309551179162,
+      "exp_away": 0.44378236188301184,
+      "top_scores": [
+        {
+          "home": 3,
+          "away": 0,
+          "prob": 0.1420476613171227
+        },
+        {
+          "home": 2,
+          "away": 0,
+          "prob": 0.1298329610482879
+        },
+        {
+          "home": 4,
+          "away": 0,
+          "prob": 0.11655864151954166
+        }
+      ],
+      "favorite": "Spain",
+      "favorite_prob": 0.8986573198618382,
+      "group": "H"
+    },
+    {
+      "home": "Spain",
+      "away": "Uruguay",
+      "p_home": 0.6367582269793179,
+      "p_draw": 0.2259935690341982,
+      "p_away": 0.1372482039864839,
+      "exp_home": 1.9031789775142076,
+      "exp_away": 0.7653316172836869,
+      "top_scores": [
+        {
+          "home": 1,
+          "away": 0,
+          "prob": 0.1258395360085992
+        },
+        {
+          "home": 2,
+          "away": 0,
+          "prob": 0.1256068135433996
+        },
+        {
+          "home": 1,
+          "away": 1,
+          "prob": 0.1071727048374648
+        }
+      ],
+      "favorite": "Spain",
+      "favorite_prob": 0.6367582269793179,
+      "group": "H"
+    },
+    {
+      "home": "Cabo Verde",
+      "away": "Saudi Arabia",
+      "p_home": 0.3500367088088943,
+      "p_draw": 0.2915480051322119,
+      "p_away": 0.3584152860588939,
+      "exp_home": 1.1982700493150067,
+      "exp_away": 1.2155847503238013,
+      "top_scores": [
+        {
+          "home": 1,
+          "away": 1,
+          "prob": 0.13826051968433647
+        },
+        {
+          "home": 0,
+          "away": 1,
+          "prob": 0.10081897316230119
+        },
+        {
+          "home": 1,
+          "away": 0,
+          "prob": 0.09926982496178029
+        }
+      ],
+      "favorite": "Saudi Arabia",
+      "favorite_prob": 0.3584152860588939,
+      "group": "H"
+    },
+    {
+      "home": "Cabo Verde",
+      "away": "Uruguay",
+      "p_home": 0.1059807300443378,
+      "p_draw": 0.19991499702543628,
+      "p_away": 0.694104272930226,
+      "exp_home": 0.6948247843166451,
+      "exp_away": 2.0962399902939053,
+      "top_scores": [
+        {
+          "home": 0,
+          "away": 2,
+          "prob": 0.13480661532236554
+        },
+        {
+          "home": 0,
+          "away": 1,
+          "prob": 0.1231666023302255
+        },
+        {
+          "home": 1,
+          "away": 1,
+          "prob": 0.09480548964447548
+        }
+      ],
+      "favorite": "Uruguay",
+      "favorite_prob": 0.694104272930226,
+      "group": "H"
+    },
+    {
+      "home": "Saudi Arabia",
+      "away": "Uruguay",
+      "p_home": 0.10811851252013609,
+      "p_draw": 0.20192032822138328,
+      "p_away": 0.6899611592584807,
+      "exp_home": 0.6998268250899028,
+      "exp_away": 2.0812634042707043,
+      "top_scores": [
+        {
+          "home": 0,
+          "away": 2,
+          "prob": 0.13421940366329582
+        },
+        {
+          "home": 0,
+          "away": 1,
+          "prob": 0.12347360756805462
+        },
+        {
+          "home": 1,
+          "away": 1,
+          "prob": 0.09575647585741533
+        }
+      ],
+      "favorite": "Uruguay",
+      "favorite_prob": 0.6899611592584807,
+      "group": "H"
+    },
+    {
+      "home": "France",
+      "away": "Senegal",
+      "p_home": 0.5936832543580592,
+      "p_draw": 0.24311455030468232,
+      "p_away": 0.16320219533725827,
+      "exp_home": 1.7748082373638863,
+      "exp_away": 0.8206966914370846,
+      "top_scores": [
+        {
+          "home": 1,
+          "away": 0,
+          "prob": 0.12579396845461824
+        },
+        {
+          "home": 2,
+          "away": 0,
+          "prob": 0.11750653165774459
+        },
+        {
+          "home": 1,
+          "away": 1,
+          "prob": 0.11529197070892722
+        }
+      ],
+      "favorite": "France",
+      "favorite_prob": 0.5936832543580592,
+      "group": "I"
+    },
+    {
+      "home": "France",
+      "away": "Norway",
+      "p_home": 0.5326950296093049,
+      "p_draw": 0.2634577690487591,
+      "p_away": 0.2038472013419361,
+      "exp_home": 1.6110112611416687,
+      "exp_away": 0.9041469249745009,
+      "top_scores": [
+        {
+          "home": 1,
+          "away": 1,
+          "prob": 0.12493931504363702
+        },
+        {
+          "home": 1,
+          "away": 0,
+          "prob": 0.12307597754880718
+        },
+        {
+          "home": 2,
+          "away": 0,
+          "prob": 0.10491785207835204
+        }
+      ],
+      "favorite": "France",
+      "favorite_prob": 0.5326950296093049,
+      "group": "I"
+    },
+    {
+      "home": "France",
+      "away": "Iraq",
+      "p_home": 0.7772704140019171,
+      "p_draw": 0.15582130730855437,
+      "p_away": 0.06690827868952838,
+      "exp_home": 2.4440981399869486,
+      "exp_away": 0.5958578079678,
+      "top_scores": [
+        {
+          "home": 2,
+          "away": 0,
+          "prob": 0.14287558095766095
+        },
+        {
+          "home": 3,
+          "away": 0,
+          "prob": 0.11642186107453052
+        },
+        {
+          "home": 1,
+          "away": 0,
+          "prob": 0.11265036134366292
+        }
+      ],
+      "favorite": "France",
+      "favorite_prob": 0.7772704140019171,
+      "group": "I"
+    },
+    {
+      "home": "Senegal",
+      "away": "Norway",
+      "p_home": 0.29946527758136676,
+      "p_draw": 0.288282277047516,
+      "p_away": 0.4122524453711173,
+      "exp_home": 1.0955035063034333,
+      "exp_away": 1.3296152863413568,
+      "top_scores": [
+        {
+          "home": 1,
+          "away": 1,
+          "prob": 0.13671181671196314
+        },
+        {
+          "home": 0,
+          "away": 1,
+          "prob": 0.10977774329035726
+        },
+        {
+          "home": 0,
+          "away": 0,
+          "prob": 0.09631754294864603
+        }
+      ],
+      "favorite": "Norway",
+      "favorite_prob": 0.4122524453711173,
+      "group": "I"
+    },
+    {
+      "home": "Senegal",
+      "away": "Iraq",
+      "p_home": 0.552523493744326,
+      "p_draw": 0.2573673795775273,
+      "p_away": 0.19010912667814645,
+      "exp_home": 1.662289288016881,
+      "exp_away": 0.8762542566426313,
+      "top_scores": [
+        {
+          "home": 1,
+          "away": 0,
+          "prob": 0.12428105132216674
+        },
+        {
+          "home": 1,
+          "away": 1,
+          "prob": 0.1220510757192395
+        },
+        {
+          "home": 2,
+          "away": 0,
+          "prob": 0.10912132440660782
+        }
+      ],
+      "favorite": "Senegal",
+      "favorite_prob": 0.552523493744326,
+      "group": "I"
+    },
+    {
+      "home": "Norway",
+      "away": "Iraq",
+      "p_home": 0.6131406193073186,
+      "p_draw": 0.23565194706280512,
+      "p_away": 0.15120743362987626,
+      "exp_home": 1.831295660321479,
+      "exp_away": 0.7953784337162227,
+      "top_scores": [
+        {
+          "home": 1,
+          "away": 0,
+          "prob": 0.12601820461022414
+        },
+        {
+          "home": 2,
+          "away": 0,
+          "prob": 0.1212662184600235
+        },
+        {
+          "home": 1,
+          "away": 1,
+          "prob": 0.1117529878167203
+        }
+      ],
+      "favorite": "Norway",
+      "favorite_prob": 0.6131406193073186,
+      "group": "I"
+    },
+    {
+      "home": "Argentina",
+      "away": "Algeria",
+      "p_home": 0.7167262184180669,
+      "p_draw": 0.18864095384177512,
+      "p_away": 0.09463282774015777,
+      "exp_home": 2.1813741435130836,
+      "exp_away": 0.6676936962853202,
+      "top_scores": [
+        {
+          "home": 2,
+          "away": 0,
+          "prob": 0.13775198477601305
+        },
+        {
+          "home": 1,
+          "away": 0,
+          "prob": 0.12115196795310987
+        },
+        {
+          "home": 3,
+          "away": 0,
+          "prob": 0.10017047911183219
+        }
+      ],
+      "favorite": "Argentina",
+      "favorite_prob": 0.7167262184180669,
+      "group": "J"
+    },
+    {
+      "home": "Argentina",
+      "away": "Austria",
+      "p_home": 0.6989841850194307,
+      "p_draw": 0.19752931604196994,
+      "p_away": 0.10348649893859924,
+      "exp_home": 2.1141143866150163,
+      "exp_away": 0.6889475324563119,
+      "top_scores": [
+        {
+          "home": 2,
+          "away": 0,
+          "prob": 0.13548015806670216
+        },
+        {
+          "home": 1,
+          "away": 0,
+          "prob": 0.12278084934158473
+        },
+        {
+          "home": 3,
+          "away": 0,
+          "prob": 0.09547918589618158
+        }
+      ],
+      "favorite": "Argentina",
+      "favorite_prob": 0.6989841850194307,
+      "group": "J"
+    },
+    {
+      "home": "Argentina",
+      "away": "Jordan",
+      "p_home": 0.8075333315345763,
+      "p_draw": 0.13799593453985998,
+      "p_away": 0.054470733925563806,
+      "exp_home": 2.6014007569594004,
+      "exp_away": 0.5597664553706517,
+      "top_scores": [
+        {
+          "home": 2,
+          "away": 0,
+          "prob": 0.14337353341899603
+        },
+        {
+          "home": 3,
+          "away": 0,
+          "prob": 0.12436016284774452
+        },
+        {
+          "home": 1,
+          "away": 0,
+          "prob": 0.10643819381258256
+        }
+      ],
+      "favorite": "Argentina",
+      "favorite_prob": 0.8075333315345763,
+      "group": "J"
+    },
+    {
+      "home": "Algeria",
+      "away": "Austria",
+      "p_home": 0.33609427534577097,
+      "p_draw": 0.2912207615054144,
+      "p_away": 0.3726849631488145,
+      "exp_home": 1.169664091978064,
+      "exp_away": 1.2453137209324079,
+      "top_scores": [
+        {
+          "home": 1,
+          "away": 1,
+          "prob": 0.13810533126559257
+        },
+        {
+          "home": 0,
+          "away": 1,
+          "prob": 0.10336268176653951
+        },
+        {
+          "home": 0,
+          "away": 0,
+          "prob": 0.09729931541789467
+        }
+      ],
+      "favorite": "Austria",
+      "favorite_prob": 0.3726849631488145,
+      "group": "J"
+    },
+    {
+      "home": "Algeria",
+      "away": "Jordan",
+      "p_home": 0.4615907650242679,
+      "p_draw": 0.2808029390566343,
+      "p_away": 0.2576062959190979,
+      "exp_home": 1.4395923563323518,
+      "exp_away": 1.0118118289369664,
+      "top_scores": [
+        {
+          "home": 1,
+          "away": 1,
+          "prob": 0.13316489771642695
+        },
+        {
+          "home": 1,
+          "away": 0,
+          "prob": 0.11640674819461741
+        },
+        {
+          "home": 0,
+          "away": 0,
+          "prob": 0.09381863297213901
+        }
+      ],
+      "favorite": "Algeria",
+      "favorite_prob": 0.4615907650242679,
+      "group": "J"
+    },
+    {
+      "home": "Austria",
+      "away": "Jordan",
+      "p_home": 0.48131247703887997,
+      "p_draw": 0.2767300739446253,
+      "p_away": 0.24195744901649482,
+      "exp_home": 1.4854159149999342,
+      "exp_away": 0.9805977470321712,
+      "top_scores": [
+        {
+          "home": 1,
+          "away": 1,
+          "prob": 0.13123342695662804
+        },
+        {
+          "home": 1,
+          "away": 0,
+          "prob": 0.11860989374814218
+        },
+        {
+          "home": 2,
+          "away": 0,
+          "prob": 0.09368950377751123
+        }
+      ],
+      "favorite": "Austria",
+      "favorite_prob": 0.48131247703887997,
+      "group": "J"
+    },
+    {
+      "home": "Portugal",
+      "away": "Uzbekistan",
+      "p_home": 0.6016764636135183,
+      "p_draw": 0.2401038054212233,
+      "p_away": 0.15821973096525832,
+      "exp_home": 1.7977340955291072,
+      "exp_away": 0.8102293371011126,
+      "top_scores": [
+        {
+          "home": 1,
+          "away": 0,
+          "prob": 0.12592560208538936
+        },
+        {
+          "home": 2,
+          "away": 0,
+          "prob": 0.11906922788779145
+        },
+        {
+          "home": 1,
+          "away": 1,
+          "prob": 0.1138641881657566
+        }
+      ],
+      "favorite": "Portugal",
+      "favorite_prob": 0.6016764636135183,
+      "group": "K"
+    },
+    {
+      "home": "Portugal",
+      "away": "Colombia",
+      "p_home": 0.3336123714240673,
+      "p_draw": 0.2911185002136533,
+      "p_away": 0.3752691283622795,
+      "exp_home": 1.1645968133756683,
+      "exp_away": 1.2507321917992988,
+      "top_scores": [
+        {
+          "home": 1,
+          "away": 1,
+          "prob": 0.13805683599519597
+        },
+        {
+          "home": 0,
+          "away": 1,
+          "prob": 0.10381046412710185
+        },
+        {
+          "home": 0,
+          "away": 0,
+          "prob": 0.0972651490568472
+        }
+      ],
+      "favorite": "Colombia",
+      "favorite_prob": 0.3752691283622795,
+      "group": "K"
+    },
+    {
+      "home": "Portugal",
+      "away": "DR Congo",
+      "p_home": 0.6659338421945682,
+      "p_draw": 0.21318142652821465,
+      "p_away": 0.12088473127721705,
+      "exp_home": 1.9977607439261023,
+      "exp_away": 0.7290889184022114,
+      "top_scores": [
+        {
+          "home": 2,
+          "away": 0,
+          "prob": 0.1305583942579133
+        },
+        {
+          "home": 1,
+          "away": 0,
+          "prob": 0.1248947374787528
+        },
+        {
+          "home": 1,
+          "away": 1,
+          "prob": 0.10109681527566257
+        }
+      ],
+      "favorite": "Portugal",
+      "favorite_prob": 0.6659338421945682,
+      "group": "K"
+    },
+    {
+      "home": "Uzbekistan",
+      "away": "Colombia",
+      "p_home": 0.14487409875939178,
+      "p_draw": 0.23140573672815112,
+      "p_away": 0.623720164512457,
+      "exp_home": 0.7818321513081795,
+      "exp_away": 1.8630200517961784,
+      "top_scores": [
+        {
+          "home": 0,
+          "away": 1,
+          "prob": 0.126000752303096
+        },
+        {
+          "home": 0,
+          "away": 2,
+          "prob": 0.12324335021895179
+        },
+        {
+          "home": 1,
+          "away": 1,
+          "prob": 0.10973931172488072
+        }
+      ],
+      "favorite": "Colombia",
+      "favorite_prob": 0.623720164512457,
+      "group": "K"
+    },
+    {
+      "home": "Uzbekistan",
+      "away": "DR Congo",
+      "p_home": 0.4175819108372628,
+      "p_draw": 0.28767052061031,
+      "p_away": 0.29474756855242734,
+      "exp_home": 1.3412109495156508,
+      "exp_away": 1.0860320595463981,
+      "top_scores": [
+        {
+          "home": 1,
+          "away": 1,
+          "prob": 0.1364217040669118
+        },
+        {
+          "home": 1,
+          "away": 0,
+          "prob": 0.11056846160754549
+        },
+        {
+          "home": 0,
+          "away": 0,
+          "prob": 0.09611314995744945
+        }
+      ],
+      "favorite": "Uzbekistan",
+      "favorite_prob": 0.4175819108372628,
+      "group": "K"
+    },
+    {
+      "home": "Colombia",
+      "away": "DR Congo",
+      "p_home": 0.6868955566266539,
+      "p_draw": 0.20339217571570237,
+      "p_away": 0.10971226765764369,
+      "exp_home": 2.070296318533076,
+      "exp_away": 0.7035355670177527,
+      "top_scores": [
+        {
+          "home": 2,
+          "away": 0,
+          "prob": 0.1337761084757759
+        },
+        {
+          "home": 1,
+          "away": 0,
+          "prob": 0.12368879563511374
+        },
+        {
+          "home": 1,
+          "away": 1,
+          "prob": 0.0964544686266279
+        }
+      ],
+      "favorite": "Colombia",
+      "favorite_prob": 0.6868955566266539,
+      "group": "K"
+    },
+    {
+      "home": "England",
+      "away": "Croatia",
+      "p_home": 0.4889416553863082,
+      "p_draw": 0.27499795274597766,
+      "p_away": 0.23606039186771416,
+      "exp_home": 1.5034698171805543,
+      "exp_away": 0.9688222413379016,
+      "top_scores": [
+        {
+          "home": 1,
+          "away": 1,
+          "prob": 0.1304120048482083
+        },
+        {
+          "home": 1,
+          "away": 0,
+          "prob": 0.11939111827909592
+        },
+        {
+          "home": 2,
+          "away": 0,
+          "prob": 0.09538006835451938
+        }
+      ],
+      "favorite": "England",
+      "favorite_prob": 0.4889416553863082,
+      "group": "L"
+    },
+    {
+      "home": "England",
+      "away": "Ghana",
+      "p_home": 0.8493770877334262,
+      "p_draw": 0.11179106403238333,
+      "p_away": 0.038831848234190475,
+      "exp_home": 2.862373834922967,
+      "exp_away": 0.5085813589283448,
+      "top_scores": [
+        {
+          "home": 2,
+          "away": 0,
+          "prob": 0.1407027706522066
+        },
+        {
+          "home": 3,
+          "away": 0,
+          "prob": 0.13432639966746915
+        },
+        {
+          "home": 4,
+          "away": 0,
+          "prob": 0.09617924489325795
+        }
+      ],
+      "favorite": "England",
+      "favorite_prob": 0.8493770877334262,
+      "group": "L"
+    },
+    {
+      "home": "England",
+      "away": "Panama",
+      "p_home": 0.6173339260834898,
+      "p_draw": 0.2339846383666774,
+      "p_away": 0.14868143554983265,
+      "exp_home": 1.8437809527606188,
+      "exp_away": 0.789991629276333,
+      "top_scores": [
+        {
+          "home": 1,
+          "away": 0,
+          "prob": 0.12602324881699858
+        },
+        {
+          "home": 2,
+          "away": 0,
+          "prob": 0.12205590413936482
+        },
+        {
+          "home": 1,
+          "away": 1,
+          "prob": 0.11096230167672666
+        }
+      ],
+      "favorite": "England",
+      "favorite_prob": 0.6173339260834898,
+      "group": "L"
+    },
+    {
+      "home": "Croatia",
+      "away": "Ghana",
+      "p_home": 0.745446848090515,
+      "p_draw": 0.17354775133808079,
+      "p_away": 0.08100540057140451,
+      "exp_home": 2.298816711576525,
+      "exp_away": 0.6335581948935787,
+      "top_scores": [
+        {
+          "home": 2,
+          "away": 0,
+          "prob": 0.14075453605652677
+        },
+        {
+          "home": 1,
+          "away": 0,
+          "prob": 0.11771847507822641
+        },
+        {
+          "home": 3,
+          "away": 0,
+          "prob": 0.10786860177711224
+        }
+      ],
+      "favorite": "Croatia",
+      "favorite_prob": 0.745446848090515,
+      "group": "L"
+    },
+    {
+      "home": "Croatia",
+      "away": "Panama",
+      "p_home": 0.47904994415231683,
+      "p_draw": 0.2772271744658341,
+      "p_away": 0.24372288138184925,
+      "exp_home": 1.480098004909074,
+      "exp_away": 0.9841210742481352,
+      "top_scores": [
+        {
+          "home": 1,
+          "away": 1,
+          "prob": 0.13146916644099366
+        },
+        {
+          "home": 1,
+          "away": 0,
+          "prob": 0.11837052265844697
+        },
+        {
+          "home": 2,
+          "away": 0,
+          "prob": 0.09318694922795376
+        }
+      ],
+      "favorite": "Croatia",
+      "favorite_prob": 0.47904994415231683,
+      "group": "L"
+    },
+    {
+      "home": "Ghana",
+      "away": "Panama",
+      "p_home": 0.14261975940222243,
+      "p_draw": 0.22984062612649678,
+      "p_away": 0.6275396144712808,
+      "exp_home": 0.7769769727271347,
+      "exp_away": 1.8746596055369453,
+      "top_scores": [
+        {
+          "home": 0,
+          "away": 1,
+          "prob": 0.1259696857945879
+        },
+        {
+          "home": 0,
+          "away": 2,
+          "prob": 0.12394440508154954
+        },
+        {
+          "home": 1,
+          "away": 1,
+          "prob": 0.10899709088529694
+        }
+      ],
+      "favorite": "Panama",
+      "favorite_prob": 0.6275396144712808,
+      "group": "L"
+    }
+  ]
+}
