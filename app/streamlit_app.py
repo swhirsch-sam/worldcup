@@ -25,6 +25,7 @@ _ROOT = Path(__file__).resolve().parent.parent
 SIMULATION_SUMMARY = _ROOT / "results" / "simulation_summary.json"
 RUN_MANIFEST = _ROOT / "results" / "run_manifest.json"
 GROUPS_JSON = _ROOT / "data" / "groups.json"
+ACTUAL_RESULTS_JSON = _ROOT / "data" / "actual_results.json"
 
 # ---------------------------------------------------------------------------
 # Constants
@@ -91,6 +92,14 @@ def load_groups() -> dict[str, list[str]]:
         return json.load(f)["groups"]
 
 
+@st.cache_data
+def load_actual_results() -> dict[str, Any]:
+    if not ACTUAL_RESULTS_JSON.exists():
+        return {}
+    with open(ACTUAL_RESULTS_JSON) as f:
+        return json.load(f)
+
+
 # ---------------------------------------------------------------------------
 # Derived data helpers
 # ---------------------------------------------------------------------------
@@ -126,10 +135,54 @@ def ci_half(p: float, n: int) -> float:
 # ---------------------------------------------------------------------------
 
 
+def _compute_group_accuracy(
+    probs: dict[str, Any],
+    groups: dict[str, list[str]],
+    actual: dict[str, Any],
+) -> dict[str, Any]:
+    """Return accuracy stats comparing model predictions to actual group finishes."""
+    standings = actual.get("group_standings", {})
+    first_correct = 0
+    second_correct = 0
+    top2_correct = 0
+    total_groups = len(standings)
+
+    for g, teams in groups.items():
+        if g not in standings:
+            continue
+        pred_1st = max(teams, key=lambda t: probs.get(t, {}).get("group_first", 0.0))
+        pred_2nd = max(
+            [t for t in teams if t != pred_1st],
+            key=lambda t: probs.get(t, {}).get("group_second", 0.0),
+        )
+        actual_order = standings[g]
+        actual_1st = actual_order[0]
+        actual_2nd = actual_order[1]
+
+        if pred_1st == actual_1st:
+            first_correct += 1
+        if pred_2nd == actual_2nd:
+            second_correct += 1
+        # top-2 regardless of order
+        if pred_1st in (actual_1st, actual_2nd):
+            top2_correct += 1
+        if pred_2nd in (actual_1st, actual_2nd):
+            top2_correct += 1
+
+    return {
+        "total_groups": total_groups,
+        "first_correct": first_correct,
+        "second_correct": second_correct,
+        "top2_correct": top2_correct,
+        "top2_total": total_groups * 2,
+    }
+
+
 def main() -> None:
     results = load_results()
     manifest = load_manifest()
     groups = load_groups()
+    actual = load_actual_results()
 
     meta = results["metadata"]
     probs: dict[str, Any] = results["probabilities"]
@@ -137,13 +190,40 @@ def main() -> None:
 
     team_df = build_team_df(probs, groups)
 
+    group_stage_done = actual.get("_metadata", {}).get("group_stage_complete", False)
+    accuracy = _compute_group_accuracy(probs, groups, actual) if group_stage_done else None
+
     # -- Header --
     st.title("FIFA World Cup 2026 — Bracket Predictor")
-    c1, c2, c3, c4 = st.columns(4)
-    c1.metric("Simulations", f"{n_iter:,}")
-    c2.metric("Model", meta.get("model", "dixon_coles").replace("_", "-").title())
-    c3.metric("Rho (Dixon-Coles)", f"{meta.get('rho', 0):.4f}")
-    c4.metric("Generated", meta.get("generated_at", "")[:10])
+
+    if group_stage_done:
+        st.success("✅ Group Stage Complete (ended June 27, 2026) — Round of 32 in progress")
+
+    if accuracy:
+        c1, c2, c3, c4, c5 = st.columns(5)
+        c1.metric("Simulations", f"{n_iter:,}")
+        c2.metric("Model", meta.get("model", "dixon_coles").replace("_", "-").title())
+        c3.metric(
+            "1st Place Accuracy",
+            f"{accuracy['first_correct']}/{accuracy['total_groups']}",
+            f"{accuracy['first_correct']/accuracy['total_groups']:.0%}",
+        )
+        c4.metric(
+            "2nd Place Accuracy",
+            f"{accuracy['second_correct']}/{accuracy['total_groups']}",
+            f"{accuracy['second_correct']/accuracy['total_groups']:.0%}",
+        )
+        c5.metric(
+            "Top-2 Picks Correct",
+            f"{accuracy['top2_correct']}/{accuracy['top2_total']}",
+            f"{accuracy['top2_correct']/accuracy['top2_total']:.0%}",
+        )
+    else:
+        c1, c2, c3, c4 = st.columns(4)
+        c1.metric("Simulations", f"{n_iter:,}")
+        c2.metric("Model", meta.get("model", "dixon_coles").replace("_", "-").title())
+        c3.metric("Rho (Dixon-Coles)", f"{meta.get('rho', 0):.4f}")
+        c4.metric("Generated", meta.get("generated_at", "")[:10])
 
     st.divider()
 
@@ -152,7 +232,7 @@ def main() -> None:
     )
 
     with tab1:
-        _render_group_stage(probs, groups)
+        _render_group_stage(probs, groups, actual)
     with tab2:
         _render_best_third(team_df, groups, n_iter)
     with tab3:
@@ -160,7 +240,7 @@ def main() -> None:
     with tab4:
         _render_champion_odds(team_df, n_iter)
     with tab5:
-        _render_model_stats(team_df, meta, n_iter)
+        _render_model_stats(team_df, meta, n_iter, accuracy)
     with tab6:
         _render_methodology(manifest, meta)
 
@@ -170,37 +250,110 @@ def main() -> None:
 # ---------------------------------------------------------------------------
 
 
-def _render_group_stage(probs: dict[str, Any], groups: dict[str, list[str]]) -> None:
-    st.header("Group Stage Advancement Probabilities")
-    st.caption(
-        "P(1st) / P(2nd) / P(Advance R32) for each group. "
-        "P(Advance) includes automatic top-2 qualification plus best-third selection."
-    )
+_FINISH_EMOJI = {1: "🥇", 2: "🥈", 3: "🥉", 4: ""}
+_RANK_LABELS = {1: "1st", 2: "2nd", 3: "3rd", 4: "4th"}
+
+
+def _render_group_stage(
+    probs: dict[str, Any],
+    groups: dict[str, list[str]],
+    actual: dict[str, Any],
+) -> None:
+    actual_standings = actual.get("group_standings", {})
+    actual_stats = actual.get("group_stats", {})
+    group_stage_done = bool(actual_standings)
+
+    if group_stage_done:
+        st.header("Group Stage — Predicted vs Actual")
+        st.caption(
+            "Each group shows the model's pre-tournament probabilities alongside the actual final standings. "
+            "✅ = model correctly predicted finish position."
+        )
+        view = st.radio(
+            "View", ["Compare (predicted vs actual)", "Predicted only"],
+            horizontal=True, label_visibility="collapsed"
+        )
+    else:
+        st.header("Group Stage Advancement Probabilities")
+        st.caption(
+            "P(1st) / P(2nd) / P(Advance R32) for each group. "
+            "P(Advance) includes automatic top-2 qualification plus best-third selection."
+        )
+        view = "Predicted only"
 
     cols = st.columns(3)
     for idx, (group_id, teams) in enumerate(sorted(groups.items())):
         with cols[idx % 3]:
             st.subheader(f"Group {group_id}")
-            rows = []
-            for team in teams:
-                p = probs.get(team, {})
-                flag = "HOST " if team in HOSTS else ""
-                rows.append(
-                    {
-                        "Team": flag + team,
-                        "P(1st)": p.get("group_first", 0.0),
-                        "P(2nd)": p.get("group_second", 0.0),
-                        "P(R32)": p.get("r32", 0.0),
-                    }
+
+            actual_order: list[str] = actual_standings.get(group_id, [])
+            actual_rank: dict[str, int] = {t: i + 1 for i, t in enumerate(actual_order)}
+            stats = actual_stats.get(group_id, {})
+
+            if group_stage_done and view == "Compare (predicted vs actual)":
+                # Predicted top-2 by highest probability
+                pred_1st = max(teams, key=lambda t: probs.get(t, {}).get("group_first", 0.0))
+                pred_2nd = max(
+                    [t for t in teams if t != pred_1st],
+                    key=lambda t: probs.get(t, {}).get("group_second", 0.0),
                 )
-            df = pd.DataFrame(rows).sort_values("P(R32)", ascending=False).reset_index(drop=True)
-            st.dataframe(
-                df.style.format(
-                    {"P(1st)": "{:.1%}", "P(2nd)": "{:.1%}", "P(R32)": "{:.1%}"}
-                ).background_gradient(subset=["P(R32)"], cmap="YlGn"),
-                hide_index=True,
-                use_container_width=True,
-            )
+                pred_rank: dict[str, str] = {}
+                remaining = [t for t in teams if t not in (pred_1st, pred_2nd)]
+                remaining_sorted = sorted(
+                    remaining,
+                    key=lambda t: probs.get(t, {}).get("r32", 0.0),
+                    reverse=True,
+                )
+                for i, t in enumerate([pred_1st, pred_2nd] + remaining_sorted):
+                    pred_rank[t] = _RANK_LABELS[i + 1]
+
+                rows = []
+                for team in actual_order:
+                    p = probs.get(team, {})
+                    flag = "🏠 " if team in HOSTS else ""
+                    ar = actual_rank.get(team, 0)
+                    pr = pred_rank.get(team, "?")
+                    match_icon = "✅" if pr == _RANK_LABELS[ar] else "❌"
+                    ts = stats.get(team, {})
+                    rows.append(
+                        {
+                            "Team": flag + team,
+                            "Actual": _FINISH_EMOJI.get(ar, "") + " " + _RANK_LABELS.get(ar, "?"),
+                            "Predicted": pr,
+                            "✓": match_icon,
+                            "Pts": ts.get("pts", ""),
+                            "GD": ts.get("gf", 0) - ts.get("ga", 0),
+                            "P(1st)": p.get("group_first", 0.0),
+                            "P(R32)": p.get("r32", 0.0),
+                        }
+                    )
+                df = pd.DataFrame(rows)
+                st.dataframe(
+                    df.style.format({"P(1st)": "{:.0%}", "P(R32)": "{:.0%}"}),
+                    hide_index=True,
+                    use_container_width=True,
+                )
+            else:
+                rows = []
+                for team in teams:
+                    p = probs.get(team, {})
+                    flag = "🏠 " if team in HOSTS else ""
+                    rows.append(
+                        {
+                            "Team": flag + team,
+                            "P(1st)": p.get("group_first", 0.0),
+                            "P(2nd)": p.get("group_second", 0.0),
+                            "P(R32)": p.get("r32", 0.0),
+                        }
+                    )
+                df = pd.DataFrame(rows).sort_values("P(R32)", ascending=False).reset_index(drop=True)
+                st.dataframe(
+                    df.style.format(
+                        {"P(1st)": "{:.1%}", "P(2nd)": "{:.1%}", "P(R32)": "{:.1%}"}
+                    ).background_gradient(subset=["P(R32)"], cmap="YlGn"),
+                    hide_index=True,
+                    use_container_width=True,
+                )
 
 
 def _render_best_third(
@@ -370,6 +523,7 @@ def _render_model_stats(
     team_df: pd.DataFrame,
     meta: dict[str, Any],
     n_iter: int,
+    accuracy: dict[str, Any] | None = None,
 ) -> None:
     st.header("Model & Simulation Statistics")
 
@@ -439,10 +593,27 @@ def _render_model_stats(
     fig.update_layout(height=300)
     st.plotly_chart(fig, use_container_width=True)
 
-    st.info(
-        "Formal backtesting against 2018 and 2022 World Cup results will be "
-        "added in Phase 7 (calibration & eval suite)."
-    )
+    if accuracy:
+        st.subheader("Group Stage Prediction Accuracy (2026 actual results)")
+        n = accuracy["total_groups"]
+        rows_acc = [
+            ("1st place correct", accuracy["first_correct"], n,
+             f"{accuracy['first_correct']/n:.0%}"),
+            ("2nd place correct", accuracy["second_correct"], n,
+             f"{accuracy['second_correct']/n:.0%}"),
+            ("Either top-2 pick correct (per slot)", accuracy["top2_correct"],
+             accuracy["top2_total"],
+             f"{accuracy['top2_correct']/accuracy['top2_total']:.0%}"),
+        ]
+        st.table(
+            pd.DataFrame(rows_acc, columns=["Metric", "Correct", "Total", "Accuracy"]).set_index(
+                "Metric"
+            )
+        )
+    else:
+        st.info(
+            "Group stage prediction accuracy will be shown here once the group stage is complete."
+        )
 
 
 def _render_methodology(manifest: dict[str, Any], meta: dict[str, Any]) -> None:
