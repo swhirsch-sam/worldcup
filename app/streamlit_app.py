@@ -418,9 +418,9 @@ def main() -> None:
         st.success("Group Stage Complete (ended June 27, 2026) — Round of 32 in progress")
 
     if group_accuracy:
-        c1, c2, c3, c4, c5 = st.columns(5)
-    else:
         c1, c2, c3, c4 = st.columns(4)
+    else:
+        c1, c2, c3 = st.columns(3)
     c1.metric(
         "Projected Champion",
         top_team,
@@ -448,17 +448,9 @@ def main() -> None:
             "No results are in yet."
         ),
     )
-    c4.metric(
-        "Last Updated",
-        meta.get("generated_at", "")[:10],
-        help=(
-            "Date the simulation was last run. "
-            "Run `python3 -m src.model.montecarlo` to refresh with the latest data."
-        ),
-    )
     if group_accuracy:
         ga = group_accuracy
-        c5.metric(
+        c4.metric(
             "Group Finish Accuracy",
             f"{ga['top2_correct']}/{ga['top2_total']}",
             f"{ga['top2_correct']/ga['top2_total']:.0%} top-2 correct",
